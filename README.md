@@ -6,7 +6,7 @@ names and validators) and the conformance tests any game can run.
 - Start with [AGENTS.md](AGENTS.md) (for people and for AI agents) and
   [docs/GAME-INTEGRATION-STANDARD.md](docs/GAME-INTEGRATION-STANDARD.md).
 - Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`.
-- Install: `npm install github:ahku/vortex-game-kit#v0.1.0`
+- Install: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.1.0.tar.gz`
 
 ```
 npm install
