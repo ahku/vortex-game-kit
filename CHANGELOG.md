@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.4.0
+
+- The layer editor description (`docs/PREVIEWER-STANDARD.md`, section 10): a game with a 2D map of pictures on a stage
+  adds `layers` to a manifest `content` entry, so a layer editor can open its maps. The editor owns the picture field
+  names (`id`, `src`, `x`, `y`, `width`, `layer`; optional `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
+  `animation`); the game says where things are, the depth bands and its own extra fields.
+- `vortex-game-kit/protocol`: `LAYER_EDITOR_VERSION` (1), `readLayerEditor`, `valueAt`, `checkLayerEditorAgainst` (for
+  a game's own tests, run over every shipped map), `LAYER_REQUIRED_FIELDS`, `LAYER_OPTIONAL_FIELDS` and the types.
+- `readManifest` leaves out a broken or newer `layers` and reports it in a new `warnings` list (present only when not
+  empty); the manifest is still accepted. `MANIFEST_CONTRACT` stays 1.
+
 ## 0.3.0
 
 - The manifest (`docs/PREVIEWER-STANDARD.md`, section 9): a game serves `vortex-manifest.json` so an editor can learn

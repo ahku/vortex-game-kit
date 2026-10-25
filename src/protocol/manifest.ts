@@ -1,3 +1,6 @@
+import { LAYER_EDITOR_VERSION, readLayerEditor } from "./layers.js";
+import type { LayerEditorDescriptor } from "./layers.js";
+
 /**
  * The manifest: a small JSON file a game serves at `<game address>/vortex-manifest.json` so an editor can learn what the
  * game is and what it can do, instead of being told by hand (docs/PREVIEWER-STANDARD.md, section 9). Plain data: it
@@ -8,11 +11,15 @@
 export const MANIFEST_CONTRACT = 1;
 
 /** Where the manifest lives, relative to the game's address. */
-export const MANIFEST_PATH = 'vortex-manifest.json';
+export const MANIFEST_PATH = "vortex-manifest.json";
 
 /** The messages beyond `load` and `command` a previewer may answer. Absent means the game does not answer it. */
-export type ManifestMessage = 'validate' | 'references' | 'migrate';
-export const MANIFEST_MESSAGES: readonly ManifestMessage[] = ['validate', 'references', 'migrate'];
+export type ManifestMessage = "validate" | "references" | "migrate";
+export const MANIFEST_MESSAGES: readonly ManifestMessage[] = [
+  "validate",
+  "references",
+  "migrate",
+];
 
 /** One kind of content the game owns, for example its maps. */
 export interface ManifestContent {
@@ -26,6 +33,8 @@ export interface ManifestContent {
   schemaVersion: number;
   /** The editor the game suggests for it, as a name the editor knows (for example `json`). */
   editor?: string;
+  /** For a 2D map made of pictures on a stage: where things are, so a layer editor can open it (section 10). */
+  layers?: LayerEditorDescriptor;
 }
 
 export interface GameManifest {
@@ -48,12 +57,14 @@ export type ManifestReadResult =
       manifest: GameManifest;
       /** The game is newer than this kit: the parts understood are given, the rest is ignored. */
       newer: boolean;
+      /** Parts of the manifest that were left out because they are wrong (a broken `layers`, say). */
+      warnings?: string[];
     }
   | { ok: false; errors: string[] };
 
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const isObject = (value: unknown): value is Record<string, unknown> =>
-  !!value && typeof value === 'object' && !Array.isArray(value);
+  !!value && typeof value === "object" && !Array.isArray(value);
 
 /**
  * Reads the parsed JSON of a manifest. Unknown fields are ignored. A newer `contract` is not an error: whatever can be
@@ -61,56 +72,110 @@ const isObject = (value: unknown): value is Record<string, unknown> =>
  * contract, or a wrong shape, is refused with sentences about what is wrong.
  */
 export function readManifest(data: unknown): ManifestReadResult {
-  if (!isObject(data)) return { ok: false, errors: ['The manifest must be a JSON object.'] };
+  if (!isObject(data))
+    return { ok: false, errors: ["The manifest must be a JSON object."] };
   const errors: string[] = [];
   const contract = data.contract;
-  if (typeof contract !== 'number' || !Number.isInteger(contract) || contract < 1)
+  if (
+    typeof contract !== "number" ||
+    !Number.isInteger(contract) ||
+    contract < 1
+  )
     errors.push('"contract" must be a whole number, 1 or more.');
-  const newer = typeof contract === 'number' && contract > MANIFEST_CONTRACT;
+  const newer = typeof contract === "number" && contract > MANIFEST_CONTRACT;
   const id = data.id;
-  if (typeof id !== 'string' || !SLUG.test(id))
-    errors.push('"id" must be lowercase letters, digits and dashes, up to 40 characters.');
-  const name = typeof data.name === 'string' ? data.name.trim() : '';
+  if (typeof id !== "string" || !SLUG.test(id))
+    errors.push(
+      '"id" must be lowercase letters, digits and dashes, up to 40 characters.',
+    );
+  const name = typeof data.name === "string" ? data.name.trim() : "";
   if (!name) errors.push('"name" must be a text.');
 
-  let previewer: GameManifest['previewer'];
+  let previewer: GameManifest["previewer"];
   if (data.previewer !== undefined) {
-    if (!isObject(data.previewer)) errors.push('"previewer" must be an object.');
+    if (!isObject(data.previewer))
+      errors.push('"previewer" must be an object.');
     else {
       const messages = Array.isArray(data.previewer.messages)
-        ? MANIFEST_MESSAGES.filter((m) => (data.previewer as { messages: unknown[] }).messages.includes(m))
+        ? MANIFEST_MESSAGES.filter((m) =>
+            (data.previewer as { messages: unknown[] }).messages.includes(m),
+          )
         : [];
-      if (data.previewer.messages !== undefined && !Array.isArray(data.previewer.messages))
+      if (
+        data.previewer.messages !== undefined &&
+        !Array.isArray(data.previewer.messages)
+      )
         errors.push('"previewer.messages" must be a list.');
       const page = data.previewer.page;
-      if (page !== undefined && (typeof page !== 'string' || !page || page.startsWith('/') || page.includes('://')))
-        errors.push('"previewer.page" must be a path inside the game, without a leading slash.');
-      previewer = { ...(typeof page === 'string' ? { page } : {}), messages };
+      if (
+        page !== undefined &&
+        (typeof page !== "string" ||
+          !page ||
+          page.startsWith("/") ||
+          page.includes("://"))
+      )
+        errors.push(
+          '"previewer.page" must be a path inside the game, without a leading slash.',
+        );
+      previewer = { ...(typeof page === "string" ? { page } : {}), messages };
     }
   }
 
   const content: ManifestContent[] = [];
+  const warnings: string[] = [];
   if (data.content !== undefined) {
     if (!Array.isArray(data.content)) errors.push('"content" must be a list.');
     else
       data.content.forEach((entry, i) => {
         const at = `content[${i}]`;
-        if (!isObject(entry)) return void errors.push(`${at} must be an object.`);
+        if (!isObject(entry))
+          return void errors.push(`${at} must be an object.`);
         const { module, type, title, schemaVersion, editor } = entry;
-        if (typeof module !== 'string' || !SLUG.test(module)) errors.push(`${at}.module must be a slug.`);
-        if (typeof type !== 'string' || !SLUG.test(type)) errors.push(`${at}.type must be a slug.`);
-        if (typeof title !== 'string' || !title.trim()) errors.push(`${at}.title must be a text.`);
-        if (typeof schemaVersion !== 'number' || !Number.isInteger(schemaVersion) || schemaVersion < 0)
+        if (typeof module !== "string" || !SLUG.test(module))
+          errors.push(`${at}.module must be a slug.`);
+        if (typeof type !== "string" || !SLUG.test(type))
+          errors.push(`${at}.type must be a slug.`);
+        if (typeof title !== "string" || !title.trim())
+          errors.push(`${at}.title must be a text.`);
+        if (
+          typeof schemaVersion !== "number" ||
+          !Number.isInteger(schemaVersion) ||
+          schemaVersion < 0
+        )
           errors.push(`${at}.schemaVersion must be a whole number.`);
-        if (editor !== undefined && (typeof editor !== 'string' || !SLUG.test(editor)))
+        if (
+          editor !== undefined &&
+          (typeof editor !== "string" || !SLUG.test(editor))
+        )
           errors.push(`${at}.editor must be a slug.`);
+        let layers: LayerEditorDescriptor | undefined;
+        if (entry.layers !== undefined) {
+          const rawLayers = entry.layers;
+          const futureLayers =
+            isObject(rawLayers) &&
+            typeof rawLayers.version === "number" &&
+            rawLayers.version > LAYER_EDITOR_VERSION;
+          if (futureLayers)
+            warnings.push(
+              `${at}.layers is newer than this editor understands and was left out.`,
+            );
+          else {
+            const read = readLayerEditor(rawLayers);
+            if (read.ok) layers = read.descriptor;
+            else
+              warnings.push(
+                `${at}.layers was left out: ${read.errors.join(" ")}`,
+              );
+          }
+        }
         if (errors.length === 0 || newer)
           content.push({
             module: module as string,
             type: type as string,
-            title: String(title ?? '').trim(),
+            title: String(title ?? "").trim(),
             schemaVersion: schemaVersion as number,
-            ...(typeof editor === 'string' ? { editor } : {}),
+            ...(typeof editor === "string" ? { editor } : {}),
+            ...(layers ? { layers } : {}),
           });
       });
   }
@@ -120,11 +185,12 @@ export function readManifest(data: unknown): ManifestReadResult {
   return {
     ok: true,
     newer,
+    ...(warnings.length ? { warnings } : {}),
     manifest: {
       contract: contract as number,
       id: id as string,
       name,
-      ...(typeof data.version === 'string' ? { version: data.version } : {}),
+      ...(typeof data.version === "string" ? { version: data.version } : {}),
       ...(previewer ? { previewer } : {}),
       content,
     },

@@ -1,3 +1,4 @@
+import type { LayerEditorDescriptor } from "./layers.js";
 /**
  * The manifest: a small JSON file a game serves at `<game address>/vortex-manifest.json` so an editor can learn what the
  * game is and what it can do, instead of being told by hand (docs/PREVIEWER-STANDARD.md, section 9). Plain data: it
@@ -8,7 +9,7 @@ export declare const MANIFEST_CONTRACT = 1;
 /** Where the manifest lives, relative to the game's address. */
 export declare const MANIFEST_PATH = "vortex-manifest.json";
 /** The messages beyond `load` and `command` a previewer may answer. Absent means the game does not answer it. */
-export type ManifestMessage = 'validate' | 'references' | 'migrate';
+export type ManifestMessage = "validate" | "references" | "migrate";
 export declare const MANIFEST_MESSAGES: readonly ManifestMessage[];
 /** One kind of content the game owns, for example its maps. */
 export interface ManifestContent {
@@ -22,6 +23,8 @@ export interface ManifestContent {
     schemaVersion: number;
     /** The editor the game suggests for it, as a name the editor knows (for example `json`). */
     editor?: string;
+    /** For a 2D map made of pictures on a stage: where things are, so a layer editor can open it (section 10). */
+    layers?: LayerEditorDescriptor;
 }
 export interface GameManifest {
     contract: number;
@@ -41,6 +44,8 @@ export type ManifestReadResult = {
     manifest: GameManifest;
     /** The game is newer than this kit: the parts understood are given, the rest is ignored. */
     newer: boolean;
+    /** Parts of the manifest that were left out because they are wrong (a broken `layers`, say). */
+    warnings?: string[];
 } | {
     ok: false;
     errors: string[];

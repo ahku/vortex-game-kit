@@ -190,3 +190,40 @@ it saves the editor's owner from typing in what the game already knows. The edit
   suggestion, a name the editor knows; an editor that does not know it uses its plain JSON editor.
 - Unknown fields are ignored. The kit gives `readManifest(json)` to check one and `manifestUrl(gameUrl)` for the
   address. The game does not need either: it just serves the file with CORS allowing the editor (`Access-Control-Allow-Origin`).
+
+## 10. The layer editor description
+
+A game whose map is pictures on a flat stage (a top-down or side-on 2D game) may add `layers` to its `content` entry in
+the manifest. The layer editor then lets the owner drag, resize, flip and re-layer the pictures. A game without it keeps
+the plain JSON editor, and a game of another kind (3D, say) gets an editor of its own instead.
+
+The editor owns the names of a picture's fields. The game's map must call them exactly this:
+`id`, `src`, `x`, `y`, `width`, `layer` (always) and `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
+`animation` (optional: the description lists which ones the game understands in `pictureFields`; the editor shows
+controls only for those). The game says only where things live and what is special about it:
+
+```json
+"layers": {
+  "version": 1,
+  "stage": { "width": ["arena", "width"], "height": ["arena", "height"], "backdrop": ["arena", "backdrop"] },
+  "pictures": ["arena", "sprites"],
+  "bands": [
+    { "value": "under", "label": "Under characters" },
+    { "value": "sorted", "label": "With characters", "sorted": true },
+    { "value": "over", "label": "Over characters" }
+  ],
+  "pictureFields": ["rotation", "flipX", "flipY", "anchor", "sortY"],
+  "fields": [{ "key": "solid", "label": "Solid", "type": "boolean", "default": false }]
+}
+```
+
+- A path is a list of keys from the top of the map, 1 to 12 long. No path may be inside another one.
+- `bands` are the values of `layer`, from back to front, with labels the owner sees. `sorted: true` marks a band whose
+  pictures are ordered by `sortY` together with characters.
+- `fields` are the game's own extra picture properties: `number`, `text`, `boolean` or `choice` (with 2 to 20
+  `choices`). A key may not be a standard field name.
+- The editor changes only the fields it knows. Everything else in the map, and any picture field it does not know, is
+  kept exactly as it was.
+- A broken or newer `layers` is left out by `readManifest` with a warning; the game is still added.
+- Test it: run `checkLayerEditorAgainst(descriptor, map)` over every shipped map in the game's own tests; it returns
+  sentences about what does not fit, or nothing.
