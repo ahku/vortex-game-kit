@@ -12,9 +12,9 @@ export declare const LAYER_EDITOR_VERSION = 1;
 /** A place in a map: the keys to follow from the top, for example `['arena', 'sprites']`. */
 export type FieldPath = string[];
 /** The fields every picture has, under these exact names. */
-export declare const LAYER_REQUIRED_FIELDS: readonly ["id", "src", "x", "y", "width", "layer"];
+export declare const LAYER_REQUIRED_FIELDS: readonly ["id", "src", "x", "y", "width"];
 /** The fields a game may or may not have. The descriptor says which ones it understands. */
-export declare const LAYER_OPTIONAL_FIELDS: readonly ["rotation", "flipX", "flipY", "anchor", "sortY", "parallax", "animation"];
+export declare const LAYER_OPTIONAL_FIELDS: readonly ["layer", "rotation", "flipX", "flipY", "anchor", "sortY", "parallax", "animation"];
 export type LayerOptionalField = (typeof LAYER_OPTIONAL_FIELDS)[number];
 /** A depth band, as the value stored in the picture's `layer` field. `sorted` bands sort by `sortY` with characters. */
 export interface LayerBand {
@@ -22,7 +22,7 @@ export interface LayerBand {
     label: string;
     sorted?: boolean;
 }
-export type LayerFieldType = "number" | "text" | "boolean" | "choice";
+export type LayerFieldType = 'number' | 'text' | 'boolean' | 'choice';
 /** An extra property of a picture that only this game has, shown in the editor's properties panel. */
 export interface LayerField {
     key: string;
@@ -44,6 +44,11 @@ export interface LayerEditorDescriptor {
     /** The list of pictures. */
     pictures: FieldPath;
     bands: LayerBand[];
+    /**
+     * The band a picture is in when it has no `layer`. The editor leaves `layer` out when a picture goes into this band.
+     * Without it, every picture must have a `layer`.
+     */
+    defaultBand?: string;
     /** Optional standard fields the game understands; the editor shows controls only for these. */
     pictureFields?: LayerOptionalField[];
     /** The game's own extra properties of a picture. */

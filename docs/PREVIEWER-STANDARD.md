@@ -198,7 +198,7 @@ the manifest. The layer editor then lets the owner drag, resize, flip and re-lay
 the plain JSON editor, and a game of another kind (3D, say) gets an editor of its own instead.
 
 The editor owns the names of a picture's fields. The game's map must call them exactly this:
-`id`, `src`, `x`, `y`, `width`, `layer` (always) and `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
+`id`, `src`, `x`, `y`, `width` (always) and `layer`, `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
 `animation` (optional: the description lists which ones the game understands in `pictureFields`; the editor shows
 controls only for those). The game says only where things live and what is special about it:
 
@@ -212,6 +212,7 @@ controls only for those). The game says only where things live and what is speci
     { "value": "sorted", "label": "With characters", "sorted": true },
     { "value": "over", "label": "Over characters" }
   ],
+  "defaultBand": "sorted",
   "pictureFields": ["rotation", "flipX", "flipY", "anchor", "sortY"],
   "fields": [{ "key": "solid", "label": "Solid", "type": "boolean", "default": false }]
 }
@@ -220,6 +221,8 @@ controls only for those). The game says only where things live and what is speci
 - A path is a list of keys from the top of the map, 1 to 12 long. No path may be inside another one.
 - `bands` are the values of `layer`, from back to front, with labels the owner sees. `sorted: true` marks a band whose
   pictures are ordered by `sortY` together with characters.
+- `defaultBand` is the band of a picture that has no `layer`; the editor leaves `layer` out when a picture is put in
+  that band. Without it, every picture must have a `layer`.
 - `fields` are the game's own extra picture properties: `number`, `text`, `boolean` or `choice` (with 2 to 20
   `choices`). A key may not be a standard field name.
 - The editor changes only the fields it knows. Everything else in the map, and any picture field it does not know, is

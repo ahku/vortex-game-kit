@@ -10,39 +10,30 @@
 /** Rises only when the descriptor changes in a way an older editor cannot ignore. */
 export const LAYER_EDITOR_VERSION = 1;
 /** The fields every picture has, under these exact names. */
-export const LAYER_REQUIRED_FIELDS = [
-    "id",
-    "src",
-    "x",
-    "y",
-    "width",
-    "layer",
-];
+export const LAYER_REQUIRED_FIELDS = ['id', 'src', 'x', 'y', 'width'];
 /** The fields a game may or may not have. The descriptor says which ones it understands. */
 export const LAYER_OPTIONAL_FIELDS = [
-    "rotation",
-    "flipX",
-    "flipY",
-    "anchor",
-    "sortY",
-    "parallax",
-    "animation",
+    'layer',
+    'rotation',
+    'flipX',
+    'flipY',
+    'anchor',
+    'sortY',
+    'parallax',
+    'animation',
 ];
 const KEY = /^[A-Za-z_][A-Za-z0-9_]*$/;
-const FORBIDDEN = new Set(["__proto__", "prototype", "constructor"]);
-const isObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
-const isKey = (value) => typeof value === "string" && KEY.test(value) && !FORBIDDEN.has(value);
-const isPath = (value) => Array.isArray(value) &&
-    value.length > 0 &&
-    value.length <= 12 &&
-    value.every(isKey);
+const FORBIDDEN = new Set(['__proto__', 'prototype', 'constructor']);
+const isObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
+const isKey = (value) => typeof value === 'string' && KEY.test(value) && !FORBIDDEN.has(value);
+const isPath = (value) => Array.isArray(value) && value.length > 0 && value.length <= 12 && value.every(isKey);
 const startsWith = (a, b) => a.length <= b.length && a.every((k, i) => k === b[i]);
 /** Reads the parsed JSON of a descriptor. Unknown fields are ignored; anything wrong is listed. */
 export function readLayerEditor(data) {
     if (!isObject(data))
         return {
             ok: false,
-            errors: ["The layer editor description must be an object."],
+            errors: ['The layer editor description must be an object.'],
         };
     const errors = [];
     if (data.version !== LAYER_EDITOR_VERSION)
@@ -76,10 +67,10 @@ export function readLayerEditor(data) {
         errors.push('"pictures" must be a path: a list of keys.');
     // A path inside another path would make an edit overwrite the other thing.
     const named = [
-        ["stage.width", width],
-        ["stage.height", height],
-        ["stage.backdrop", backdrop],
-        ["pictures", pictures],
+        ['stage.width', width],
+        ['stage.height', height],
+        ['stage.backdrop', backdrop],
+        ['pictures', pictures],
     ];
     const present = named.filter((n) => !!n[1] && n[1].length > 0);
     for (const [nameA, a] of present)
@@ -87,20 +78,18 @@ export function readLayerEditor(data) {
             if (nameA < nameB && (startsWith(a, b) || startsWith(b, a)))
                 errors.push(`"${nameA}" and "${nameB}" must not be the same place or inside each other.`);
     const bands = [];
-    if (!Array.isArray(data.bands) ||
-        data.bands.length < 1 ||
-        data.bands.length > 12)
+    if (!Array.isArray(data.bands) || data.bands.length < 1 || data.bands.length > 12)
         errors.push('"bands" must be a list of 1 to 12 depth bands.');
     else
         data.bands.forEach((band, i) => {
             if (!isObject(band) ||
-                typeof band.value !== "string" ||
+                typeof band.value !== 'string' ||
                 !band.value ||
                 band.value.length > 64 ||
-                typeof band.label !== "string" ||
+                typeof band.label !== 'string' ||
                 !band.label.trim() ||
                 band.label.length > 80 ||
-                (band.sorted !== undefined && typeof band.sorted !== "boolean"))
+                (band.sorted !== undefined && typeof band.sorted !== 'boolean'))
                 return void errors.push(`bands[${i}] needs a "value" and a "label" (and "sorted" must be true or false).`);
             if (bands.some((b) => b.value === band.value))
                 errors.push(`bands[${i}] repeats the value "${band.value}".`);
@@ -110,6 +99,13 @@ export function readLayerEditor(data) {
                 ...(band.sorted ? { sorted: true } : {}),
             });
         });
+    let defaultBand;
+    if (data.defaultBand !== undefined) {
+        if (typeof data.defaultBand === 'string' && bands.some((b) => b.value === data.defaultBand))
+            defaultBand = data.defaultBand;
+        else
+            errors.push('"defaultBand" must be the value of one of the bands.');
+    }
     let pictureFields;
     if (data.pictureFields !== undefined) {
         const list = data.pictureFields;
@@ -118,7 +114,7 @@ export function readLayerEditor(data) {
         else {
             const unknown = list.filter((f) => !LAYER_OPTIONAL_FIELDS.includes(f));
             if (unknown.length)
-                errors.push(`"pictureFields" has unknown fields: ${unknown.map(String).join(", ")}.`);
+                errors.push(`"pictureFields" has unknown fields: ${unknown.map(String).join(', ')}.`);
             pictureFields = LAYER_OPTIONAL_FIELDS.filter((f) => list.includes(f));
         }
     }
@@ -139,25 +135,17 @@ export function readLayerEditor(data) {
                     return void errors.push(`${at}.key "${key}" is a standard picture field; pick another name.`);
                 if (fields.some((f) => f.key === key))
                     return void errors.push(`${at} repeats the key "${key}".`);
-                if (typeof label !== "string" || !label.trim())
+                if (typeof label !== 'string' || !label.trim())
                     return void errors.push(`${at}.label must be a text.`);
-                if (type !== "number" &&
-                    type !== "text" &&
-                    type !== "boolean" &&
-                    type !== "choice")
+                if (type !== 'number' && type !== 'text' && type !== 'boolean' && type !== 'choice')
                     return void errors.push(`${at}.type must be number, text, boolean or choice.`);
                 const field = { key, label: label.trim(), type };
-                if (type === "choice") {
+                if (type === 'choice') {
                     if (!Array.isArray(choices) ||
                         choices.length < 2 ||
                         choices.length > 20 ||
-                        !choices.every((c) => isObject(c) &&
-                            typeof c.value === "string" &&
-                            typeof c.label === "string" &&
-                            c.value &&
-                            c.label) ||
-                        new Set(choices.map((c) => c.value)).size !==
-                            choices.length)
+                        !choices.every((c) => isObject(c) && typeof c.value === 'string' && typeof c.label === 'string' && c.value && c.label) ||
+                        new Set(choices.map((c) => c.value)).size !== choices.length)
                         return void errors.push(`${at}.choices must be 2 to 20 different { value, label } pairs.`);
                     field.choices = choices.map((c) => ({
                         value: c.value,
@@ -166,14 +154,10 @@ export function readLayerEditor(data) {
                 }
                 if (raw.default !== undefined) {
                     const d = raw.default;
-                    const ok = (type === "number" &&
-                        typeof d === "number" &&
-                        Number.isFinite(d)) ||
-                        (type === "text" && typeof d === "string") ||
-                        (type === "boolean" && typeof d === "boolean") ||
-                        (type === "choice" &&
-                            typeof d === "string" &&
-                            !!field.choices?.some((c) => c.value === d));
+                    const ok = (type === 'number' && typeof d === 'number' && Number.isFinite(d)) ||
+                        (type === 'text' && typeof d === 'string') ||
+                        (type === 'boolean' && typeof d === 'boolean') ||
+                        (type === 'choice' && typeof d === 'string' && !!field.choices?.some((c) => c.value === d));
                     if (!ok)
                         return void errors.push(`${at}.default does not fit its type.`);
                     field.default = d;
@@ -190,6 +174,7 @@ export function readLayerEditor(data) {
             stage: { width, height, ...(backdrop ? { backdrop } : {}) },
             pictures,
             bands,
+            ...(defaultBand ? { defaultBand } : {}),
             ...(pictureFields ? { pictureFields } : {}),
             ...(fields.length ? { fields } : {}),
         },
@@ -213,40 +198,43 @@ export function checkLayerEditorAgainst(descriptor, map) {
     const problems = [];
     const number = (path, name) => {
         const v = valueAt(map, path);
-        if (typeof v !== "number" || !Number.isFinite(v) || v <= 0)
-            problems.push(`${name} (${path.join(".")}) is not a positive number.`);
+        if (typeof v !== 'number' || !Number.isFinite(v) || v <= 0)
+            problems.push(`${name} (${path.join('.')}) is not a positive number.`);
     };
-    number(descriptor.stage.width, "The stage width");
-    number(descriptor.stage.height, "The stage height");
+    number(descriptor.stage.width, 'The stage width');
+    number(descriptor.stage.height, 'The stage height');
     if (descriptor.stage.backdrop) {
         const b = valueAt(map, descriptor.stage.backdrop);
-        if (b !== undefined && typeof b !== "string")
-            problems.push("The backdrop is not a text.");
+        if (b !== undefined && typeof b !== 'string')
+            problems.push('The backdrop is not a text.');
     }
     const list = valueAt(map, descriptor.pictures) ?? [];
     if (!Array.isArray(list))
-        return [
-            ...problems,
-            `The pictures (${descriptor.pictures.join(".")}) are not a list.`,
-        ];
+        return [...problems, `The pictures (${descriptor.pictures.join('.')}) are not a list.`];
     const bands = new Set(descriptor.bands.map((b) => b.value));
     const ids = new Set();
     list.forEach((item, i) => {
         const at = `Picture ${i + 1}`;
         if (!isObject(item))
             return void problems.push(`${at} is not an object.`);
-        for (const f of ["id", "src", "layer"])
-            if (typeof item[f] !== "string" || !item[f])
+        for (const f of ['id', 'src'])
+            if (typeof item[f] !== 'string' || !item[f])
                 problems.push(`${at} has no text "${f}".`);
-        for (const f of ["x", "y", "width"])
-            if (typeof item[f] !== "number" || !Number.isFinite(item[f]))
+        for (const f of ['x', 'y', 'width'])
+            if (typeof item[f] !== 'number' || !Number.isFinite(item[f]))
                 problems.push(`${at} has no number "${f}".`);
-        if (typeof item.id === "string") {
+        if (typeof item.id === 'string') {
             if (ids.has(item.id))
                 problems.push(`${at} repeats the id "${item.id}".`);
             ids.add(item.id);
         }
-        if (typeof item.layer === "string" && !bands.has(item.layer))
+        if (item.layer === undefined) {
+            if (!descriptor.defaultBand)
+                problems.push(`${at} has no "layer" and the descriptor has no defaultBand.`);
+        }
+        else if (typeof item.layer !== 'string')
+            problems.push(`${at} has a "layer" that is not a text.`);
+        else if (!bands.has(item.layer))
             problems.push(`${at} is in the band "${item.layer}", which the descriptor does not list.`);
     });
     return problems;

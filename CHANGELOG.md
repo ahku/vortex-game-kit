@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.4.1
+
+- Layer editor description: `layer` is now an optional picture field, and a descriptor may give `defaultBand`, the band
+  of a picture with no `layer`. Without `defaultBand` every picture still needs a `layer`. `LAYER_REQUIRED_FIELDS` no
+  longer lists `layer`; `LAYER_OPTIONAL_FIELDS` does.
+
 ## 0.4.0
 
 - The layer editor description (`docs/PREVIEWER-STANDARD.md`, section 10): a game with a 2D map of pictures on a stage

@@ -34,9 +34,9 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 
 ## Installing and updating (for people who are new to Git)
 
-Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.4.0.tar.gz` (or `npm install` with the same URL).
-Update: change the version in that URL (`v0.4.0`) to the new one and run it again. The project's `package.json` keeps it.
-Use the URL form, not `github:ahku/vortex-game-kit#v0.4.0`: pnpm puts that one in a folder with a `#` in its name, which
+Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.4.1.tar.gz` (or `npm install` with the same URL).
+Update: change the version in that URL (`v0.4.1`) to the new one and run it again. The project's `package.json` keeps it.
+Use the URL form, not `github:ahku/vortex-game-kit#v0.4.1`: pnpm puts that one in a folder with a `#` in its name, which
 Vite and Vitest cannot read.
 
 Use it in a game's tests:
