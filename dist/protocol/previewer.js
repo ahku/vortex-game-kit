@@ -23,6 +23,7 @@ export function assetIdOf(text) {
     return ASSET_ID.test(id) ? id : null;
 }
 export const isAssetRef = (text) => assetIdOf(text) !== null;
+const REQUEST_ID = /^[A-Za-z0-9_.:-]{1,64}$/;
 const isObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
 /** Only web addresses (or paths on the game's own site): a picture link never needs anything else. */
 export function isSafePictureUrl(value, base) {
@@ -57,6 +58,25 @@ export function readPreviewerMessage(data, base, checkDocument = defaultDocument
                 message: { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'command', name: data.name },
             };
         return { ok: false, error: `Unknown command "${String(data.name)}".` };
+    }
+    if (data.type === 'validate' || data.type === 'references' || data.type === 'migrate') {
+        // These ask the game to look at a map, so a map the game would refuse to play must still get through: no checkDocument.
+        if (!isObject(data.document))
+            return { ok: false, error: '"document" must be an object.' };
+        const id = data.id;
+        if (id !== undefined && !(typeof id === 'string' && REQUEST_ID.test(id)))
+            return { ok: false, error: '"id" must be a short text of letters, digits and _ . : -.' };
+        const base = {
+            protocol: PREVIEWER_PROTOCOL_VERSION,
+            ...(id !== undefined ? { id } : {}),
+            document: data.document,
+        };
+        if (data.type === 'migrate') {
+            if (typeof data.from !== 'number' || !Number.isInteger(data.from) || data.from < 0)
+                return { ok: false, error: '"from" must be a whole number, the schemaVersion of the map.' };
+            return { ok: true, message: { ...base, type: 'migrate', from: data.from } };
+        }
+        return { ok: true, message: { ...base, type: data.type } };
     }
     if (data.type === 'load') {
         const problem = checkDocument(data.document);

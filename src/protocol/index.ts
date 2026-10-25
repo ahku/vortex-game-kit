@@ -6,3 +6,4 @@ export * from './version.js';
 export * from './previewer.js';
 export * from './previewerHost.js';
 export type { GameModule, GameSaveLike } from './module.js';
+export * from './manifest.js';

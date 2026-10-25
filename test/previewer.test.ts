@@ -11,6 +11,9 @@ import {
   isSafePictureUrl,
   previewerCommand,
   previewerLoad,
+  previewerMigrate,
+  previewerReferences,
+  previewerValidate,
   previewerUrl,
   readPreviewerMessage,
   readPreviewerReply,
@@ -103,6 +106,75 @@ describe('readPreviewerMessage', () => {
   });
 });
 
+describe('validate, references and migrate', () => {
+  it('reads them with an optional id and without the game\'s own map rule', () => {
+    const never = () => 'never playable';
+    expect(readPreviewerMessage(previewerValidate({ a: 1 }, 'v1'), BASE, never)).toEqual({
+      ok: true,
+      message: { protocol: 1, type: 'validate', id: 'v1', document: { a: 1 } },
+    });
+    expect(readPreviewerMessage(previewerReferences({ a: 1 }), BASE, never)).toEqual({
+      ok: true,
+      message: { protocol: 1, type: 'references', document: { a: 1 } },
+    });
+    expect(readPreviewerMessage(previewerMigrate({ a: 1 }, 2, 'm.1'), BASE, never)).toEqual({
+      ok: true,
+      message: { protocol: 1, type: 'migrate', id: 'm.1', document: { a: 1 }, from: 2 },
+    });
+  });
+
+  it('refuses a bad document, id or version', () => {
+    for (const data of [
+      { protocol: 1, type: 'validate' },
+      { protocol: 1, type: 'validate', document: [] },
+      { protocol: 1, type: 'references', document: {}, id: 'a b' },
+      { protocol: 1, type: 'references', document: {}, id: 5 },
+      { protocol: 1, type: 'migrate', document: {} },
+      { protocol: 1, type: 'migrate', document: {}, from: 1.5 },
+      { protocol: 1, type: 'migrate', document: {}, from: -1 },
+      { protocol: 1, type: 'migrate', document: {}, from: '1' },
+    ])
+      expect(readPreviewerMessage(data, BASE).ok, JSON.stringify(data)).toBe(false);
+  });
+
+  it('reads the three replies', () => {
+    expect(readPreviewerReply({ protocol: 1, type: 'validated', id: 'v1', problems: ['p', 2] })).toEqual({
+      protocol: 1,
+      type: 'validated',
+      id: 'v1',
+      problems: ['p'],
+    });
+    expect(
+      readPreviewerReply({
+        protocol: 1,
+        type: 'referenced',
+        assets: ['a', 'a', 'b', 3],
+        characters: [{ id: 'c1', slot: 'npc' }, { id: 'c2' }, { id: '' }, 'x', null],
+      }),
+    ).toEqual({
+      protocol: 1,
+      type: 'referenced',
+      assets: ['a', 'b'],
+      characters: [{ id: 'c1', slot: 'npc' }, { id: 'c2' }],
+    });
+    expect(readPreviewerReply({ protocol: 1, type: 'migrated', schemaVersion: 3, document: { a: 1 } })).toEqual({
+      protocol: 1,
+      type: 'migrated',
+      schemaVersion: 3,
+      document: { a: 1 },
+    });
+  });
+
+  it('drops a migrated reply that has no usable version or map', () => {
+    for (const r of [
+      { protocol: 1, type: 'migrated', schemaVersion: 'x', document: {} },
+      { protocol: 1, type: 'migrated', schemaVersion: 2 },
+      { protocol: 1, type: 'migrated', schemaVersion: 2, document: [] },
+    ])
+      expect(readPreviewerReply(r)).toBeNull();
+  });
+});
+
 describe('the editor side', () => {
   it('finds the previewer page from the game address', () => {
     expect(previewerUrl('https://game.example')).toEqual({ url: 'https://game.example/previewer.html', origin: 'https://game.example' });
@@ -134,7 +206,9 @@ describe('the editor side', () => {
 });
 
 /** A small reference previewer that follows the standard, to prove the suite passes a good one and fails a bad one. */
-function referencePreviewer(options: { acceptsAnyUrl?: boolean; breaksAfterRefusal?: boolean } = {}): PreviewerSubject {
+function referencePreviewer(
+  options: { acceptsAnyUrl?: boolean; breaksAfterRefusal?: boolean; extras?: boolean; noEcho?: boolean } = {},
+): PreviewerSubject {
   return {
     async create() {
       let refused = false;
@@ -142,6 +216,9 @@ function referencePreviewer(options: { acceptsAnyUrl?: boolean; breaksAfterRefus
       const check = (d: unknown) => ((d as { arena?: unknown })?.arena ? null : 'needs an arena');
       return {
         playableMap: playable,
+        ...(options.extras
+          ? { supports: ['validate', 'references', 'migrate'] as const as never, oldMap: { document: { arena: { w: 4 } }, from: 1 } }
+          : {}),
         unplayableMap: { arena: { width: -1, height: 4 } },
         async send(message: unknown): Promise<PreviewerOutgoing[]> {
           const read = readPreviewerMessage(message, BASE, check);
@@ -151,6 +228,16 @@ function referencePreviewer(options: { acceptsAnyUrl?: boolean; breaksAfterRefus
           }
           if (!read.ok) return [{ protocol: V, type: 'error', code: 'bad_message', message: read.error }];
           if (read.message.type === 'command') return [];
+          const msg = read.message;
+          if (msg.type === 'validate' || msg.type === 'references' || msg.type === 'migrate') {
+            const id = options.noEcho || msg.id === undefined ? {} : { id: msg.id };
+            if (msg.type === 'validate') {
+              const w = (msg.document as { arena?: { width?: number } }).arena?.width;
+              return [{ protocol: V, type: 'validated', ...id, problems: typeof w === 'number' && w > 0 ? [] : ['The arena is empty.'] }];
+            }
+            if (msg.type === 'references') return [{ protocol: V, type: 'referenced', ...id, assets: [], characters: [] }];
+            return [{ protocol: V, type: 'migrated', ...id, schemaVersion: msg.from + 1, document: { arena: { width: 4, height: 4 } } }];
+          }
           if (refused && options.breaksAfterRefusal) return [{ protocol: V, type: 'error', code: 'start_failed', message: 'stuck' }];
           const arena = (read.message.document as { arena: { width: number } }).arena;
           if (arena.width < 0) {
@@ -175,5 +262,22 @@ describe('the previewer conformance suite', () => {
   it('fails a previewer that cannot load a map after refusing one', async () => {
     const c = previewerCases(referencePreviewer({ breaksAfterRefusal: true })).find((x) => x.name.includes('does not stop'))!;
     await expect(c.run()).rejects.toThrow(/after a refused one/);
+  });
+});
+
+describe('the extra messages in the conformance suite', () => {
+  const names = (o: Parameters<typeof referencePreviewer>[0]) => previewerCases(referencePreviewer(o));
+
+  for (const c of names({ extras: true })) it(`passes a previewer that supports them: ${c.name}`, c.run);
+
+  it('skips them for a game that does not declare support', async () => {
+    const extra = names({}).filter((c) => /^(validate|references|migrate):/.test(c.name));
+    expect(extra.length).toBe(4);
+    for (const c of extra) await expect(c.run()).resolves.toBeUndefined();
+  });
+
+  it('fails a previewer that does not repeat the id', async () => {
+    const c = names({ extras: true, noEcho: true }).find((x) => x.name.startsWith('validate: a map is answered'))!;
+    await expect(c.run()).rejects.toThrow(/repeat the id/);
   });
 });

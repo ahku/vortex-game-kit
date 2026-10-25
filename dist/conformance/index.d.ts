@@ -1,6 +1,7 @@
 import { checkDeclaration } from '../protocol/validate.js';
 import type { HandoverGame } from '../protocol/types.js';
 import type { PreviewerOutgoing } from '../protocol/previewer.js';
+import type { ManifestMessage } from '../protocol/manifest.js';
 export { checkDeclaration };
 /** What the suite needs from a game: a running session it can talk to like a host. */
 export interface ConformanceSubject {
@@ -42,6 +43,16 @@ export interface PreviewerSubject {
         playableMap: unknown;
         /** A `document` that is well formed but that the game refuses to play. */
         unplayableMap: unknown;
+        /**
+         * The extra messages this previewer answers, the same list its manifest gives. The cases for `validate`,
+         * `references` and `migrate` run only for those named here. Leave it out for a game without them.
+         */
+        supports?: ManifestMessage[];
+        /** For `migrate`: a map as an older version saved it, and that version. */
+        oldMap?: {
+            document: unknown;
+            from: number;
+        };
     }>;
 }
 /**

@@ -2,6 +2,7 @@
  * The editor's side of the previewer (docs/PREVIEWER-STANDARD.md): finding the pictures a map needs, building the
  * messages and reading what the game answers. Pure functions; Vortex Studio imports this, a game does not need it.
  */
+import { MANIFEST_PATH } from './manifest.js';
 import { PREVIEWER_PROTOCOL_VERSION, assetIdOf } from './previewer.js';
 /** Every `asset:<id>` text anywhere inside a map, each id once, in the order found. */
 export function assetIdsIn(value) {
@@ -34,6 +35,10 @@ export function previewerUrl(gameUrl, page = 'previewer.html') {
         return null;
     }
 }
+/** Where a game's manifest lives, from the address of the game; `null` unless it is a web address. */
+export function manifestUrl(gameUrl) {
+    return previewerUrl(gameUrl, MANIFEST_PATH)?.url ?? null;
+}
 export const previewerLoad = (document, assets) => ({
     protocol: PREVIEWER_PROTOCOL_VERSION,
     type: 'load',
@@ -44,6 +49,25 @@ export const previewerCommand = (name) => ({
     protocol: PREVIEWER_PROTOCOL_VERSION,
     type: 'command',
     name,
+});
+export const previewerValidate = (document, id) => ({
+    protocol: PREVIEWER_PROTOCOL_VERSION,
+    type: 'validate',
+    ...(id !== undefined ? { id } : {}),
+    document,
+});
+export const previewerReferences = (document, id) => ({
+    protocol: PREVIEWER_PROTOCOL_VERSION,
+    type: 'references',
+    ...(id !== undefined ? { id } : {}),
+    document,
+});
+export const previewerMigrate = (document, from, id) => ({
+    protocol: PREVIEWER_PROTOCOL_VERSION,
+    type: 'migrate',
+    ...(id !== undefined ? { id } : {}),
+    document,
+    from,
 });
 /**
  * What the previewer said, or `null` for anything else: other pages' messages are none of the editor's business. The
@@ -56,6 +80,36 @@ export function readPreviewerReply(data) {
     if (m.protocol !== PREVIEWER_PROTOCOL_VERSION)
         return null;
     const texts = (value) => Array.isArray(value) ? value.filter((v) => typeof v === 'string') : [];
+    const id = typeof m.id === 'string' ? { id: m.id } : {};
+    if (m.type === 'validated')
+        return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'validated', ...id, problems: texts(m.problems) };
+    if (m.type === 'referenced') {
+        const characters = [];
+        if (Array.isArray(m.characters))
+            for (const c of m.characters) {
+                if (!c || typeof c !== 'object')
+                    continue;
+                const { id: cid, slot } = c;
+                if (typeof cid !== 'string' || !cid)
+                    continue;
+                characters.push(typeof slot === 'string' ? { id: cid, slot } : { id: cid });
+            }
+        return {
+            protocol: PREVIEWER_PROTOCOL_VERSION,
+            type: 'referenced',
+            ...id,
+            assets: [...new Set(texts(m.assets))],
+            characters,
+        };
+    }
+    if (m.type === 'migrated') {
+        const v = m.schemaVersion;
+        if (typeof v !== 'number' || !Number.isInteger(v) || v < 0)
+            return null;
+        if (!m.document || typeof m.document !== 'object' || Array.isArray(m.document))
+            return null;
+        return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'migrated', ...id, schemaVersion: v, document: m.document };
+    }
     if (m.type === 'ready')
         return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'ready' };
     if (m.type === 'loaded')

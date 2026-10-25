@@ -31,7 +31,37 @@ export interface PreviewerCommand {
     type: 'command';
     name: PreviewerCommandName;
 }
-export type PreviewerIncoming<Document = unknown> = PreviewerLoad<Document> | PreviewerCommand;
+/** Optional correlation id: the game copies it into the reply so an editor can match answers to questions. */
+export type PreviewerRequestId = string;
+/** Editor to game: list what is wrong with this map, without playing it. Needs the manifest to declare `validate`. */
+export interface PreviewerValidate<Document = unknown> {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'validate';
+    id?: PreviewerRequestId;
+    document: Document;
+}
+/** Editor to game: which pictures and characters does this map use? Needs `references` in the manifest. */
+export interface PreviewerReferences<Document = unknown> {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'references';
+    id?: PreviewerRequestId;
+    document: Document;
+}
+/** Editor to game: bring a map saved under an older `schemaVersion` up to the current one. Needs `migrate`. */
+export interface PreviewerMigrate<Document = unknown> {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'migrate';
+    id?: PreviewerRequestId;
+    document: Document;
+    /** The `schemaVersion` the map was saved with. */
+    from: number;
+}
+export type PreviewerIncoming<Document = unknown> = PreviewerLoad<Document> | PreviewerCommand | PreviewerValidate<Document> | PreviewerReferences<Document> | PreviewerMigrate<Document>;
+/** A character a map uses, optionally with the place (slot) where it appears. */
+export interface PreviewerCharacterRef {
+    id: string;
+    slot?: string;
+}
 /** What went wrong. A game uses these three; an editor must cope with a code it does not know. */
 export type PreviewerErrorCode = 'bad_message' | 'invalid_map' | 'start_failed' | (string & {});
 /** Game to editor. `ready` is sent once the page is listening; the editor waits for it before it sends a map. */
@@ -42,6 +72,25 @@ export type PreviewerOutgoing = {
     protocol: typeof PREVIEWER_PROTOCOL_VERSION;
     type: 'loaded';
     warnings: string[];
+} | {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'validated';
+    id?: PreviewerRequestId;
+    /** Sentences about what is wrong; empty when the map is fine. */
+    problems: string[];
+} | {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'referenced';
+    id?: PreviewerRequestId;
+    /** Editor picture ids (the part after `asset:`), each once. */
+    assets: string[];
+    characters: PreviewerCharacterRef[];
+} | {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'migrated';
+    id?: PreviewerRequestId;
+    schemaVersion: number;
+    document: unknown;
 } | {
     protocol: typeof PREVIEWER_PROTOCOL_VERSION;
     type: 'error';

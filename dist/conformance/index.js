@@ -132,7 +132,7 @@ export function previewerCases(subject) {
         document,
         assets,
     });
-    return [
+    const cases = [
         {
             name: 'a playable map is loaded and reported with a list of warnings',
             async run() {
@@ -218,4 +218,57 @@ export function previewerCases(subject) {
             },
         },
     ];
+    // The extra messages are optional, so their cases are decided by what the game says it supports. The manifest check
+    // is the editor's: a game that claims `validate` and then answers `bad_message` fails here.
+    const extra = async (name) => (await subject.create()).supports?.includes(name) ?? false;
+    const lazy = (message, name, run) => ({
+        name: `${message}: ${name}`,
+        async run() {
+            if (!(await extra(message)))
+                return; // not offered by this game
+            await run();
+        },
+    });
+    cases.push(lazy('validate', 'a map is answered with a list of problems, none for a playable one', async () => {
+        const { send, playableMap } = await subject.create();
+        const replies = await send({ protocol: V, type: 'validate', id: 'v1', document: playableMap });
+        const answer = replies.find((r) => r.type === 'validated');
+        if (!answer || answer.type !== 'validated')
+            fail(`validate was answered with ${codes(replies).join(', ') || 'nothing'}`);
+        if (answer.id !== 'v1')
+            fail('"validated" must repeat the id it was asked with');
+        if (answer.problems.length > 0)
+            fail(`a playable map was said to have problems: ${answer.problems.join('; ')}`);
+    }), lazy('validate', 'a map the game refuses to play is described, not refused', async () => {
+        const { send, unplayableMap } = await subject.create();
+        const replies = await send({ protocol: V, type: 'validate', document: unplayableMap });
+        const answer = replies.find((r) => r.type === 'validated');
+        if (!answer || answer.type !== 'validated')
+            fail(`validate of an unplayable map was answered with ${codes(replies).join(', ') || 'nothing'}`);
+        if (answer.problems.length === 0)
+            fail('an unplayable map was reported with no problems');
+    }), lazy('references', 'a map is answered with the pictures and characters it uses', async () => {
+        const { send, playableMap } = await subject.create();
+        const replies = await send({ protocol: V, type: 'references', id: 'r1', document: playableMap });
+        const answer = replies.find((r) => r.type === 'referenced');
+        if (!answer || answer.type !== 'referenced')
+            fail(`references was answered with ${codes(replies).join(', ') || 'nothing'}`);
+        if (answer.id !== 'r1')
+            fail('"referenced" must repeat the id it was asked with');
+        if (!Array.isArray(answer.assets) || !Array.isArray(answer.characters))
+            fail('"referenced" must carry lists of assets and characters');
+    }), lazy('migrate', 'an old map comes back as a newer version of itself', async () => {
+        const { send, oldMap } = await subject.create();
+        if (!oldMap)
+            fail('the subject supports migrate but gives no oldMap to try it with');
+        const replies = await send({ protocol: V, type: 'migrate', id: 'm1', document: oldMap.document, from: oldMap.from });
+        const answer = replies.find((r) => r.type === 'migrated');
+        if (!answer || answer.type !== 'migrated')
+            fail(`migrate was answered with ${codes(replies).join(', ') || 'nothing'}`);
+        if (answer.id !== 'm1')
+            fail('"migrated" must repeat the id it was asked with');
+        if (answer.schemaVersion <= oldMap.from)
+            fail('a migrated map must have a higher schemaVersion than it came with');
+    }));
+    return cases;
 }

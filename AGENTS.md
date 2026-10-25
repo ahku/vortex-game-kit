@@ -15,7 +15,7 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 1. [docs/GAME-INTEGRATION-STANDARD.md](docs/GAME-INTEGRATION-STANDARD.md) before you build or change anything where a
    story and a game meet. It says who owns what and how to add an objective, a parameter, a message or a game.
 2. [docs/PREVIEWER-STANDARD.md](docs/PREVIEWER-STANDARD.md) before you make a game's maps previewable in the studio
-   (section 6 is the checklist, in order).
+   (section 6 is the checklist, in order; section 9 is the manifest).
 3. The game's own `docs/STORY-INTEGRATION.md`, if you are in a game.
 
 ## Rules for this repository
@@ -34,9 +34,9 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 
 ## Installing and updating (for people who are new to Git)
 
-Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.2.0.tar.gz` (or `npm install` with the same URL).
-Update: change the version in that URL (`v0.2.0`) to the new one and run it again. The project's `package.json` keeps it.
-Use the URL form, not `github:ahku/vortex-game-kit#v0.2.0`: pnpm puts that one in a folder with a `#` in its name, which
+Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.3.0.tar.gz` (or `npm install` with the same URL).
+Update: change the version in that URL (`v0.3.0`) to the new one and run it again. The project's `package.json` keeps it.
+Use the URL form, not `github:ahku/vortex-game-kit#v0.3.0`: pnpm puts that one in a folder with a `#` in its name, which
 Vite and Vitest cannot read.
 
 Use it in a game's tests:

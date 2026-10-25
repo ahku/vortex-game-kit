@@ -47,7 +47,48 @@ export interface PreviewerCommand {
   name: PreviewerCommandName;
 }
 
-export type PreviewerIncoming<Document = unknown> = PreviewerLoad<Document> | PreviewerCommand;
+/** Optional correlation id: the game copies it into the reply so an editor can match answers to questions. */
+export type PreviewerRequestId = string;
+const REQUEST_ID = /^[A-Za-z0-9_.:-]{1,64}$/;
+
+/** Editor to game: list what is wrong with this map, without playing it. Needs the manifest to declare `validate`. */
+export interface PreviewerValidate<Document = unknown> {
+  protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+  type: 'validate';
+  id?: PreviewerRequestId;
+  document: Document;
+}
+
+/** Editor to game: which pictures and characters does this map use? Needs `references` in the manifest. */
+export interface PreviewerReferences<Document = unknown> {
+  protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+  type: 'references';
+  id?: PreviewerRequestId;
+  document: Document;
+}
+
+/** Editor to game: bring a map saved under an older `schemaVersion` up to the current one. Needs `migrate`. */
+export interface PreviewerMigrate<Document = unknown> {
+  protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+  type: 'migrate';
+  id?: PreviewerRequestId;
+  document: Document;
+  /** The `schemaVersion` the map was saved with. */
+  from: number;
+}
+
+export type PreviewerIncoming<Document = unknown> =
+  | PreviewerLoad<Document>
+  | PreviewerCommand
+  | PreviewerValidate<Document>
+  | PreviewerReferences<Document>
+  | PreviewerMigrate<Document>;
+
+/** A character a map uses, optionally with the place (slot) where it appears. */
+export interface PreviewerCharacterRef {
+  id: string;
+  slot?: string;
+}
 
 /** What went wrong. A game uses these three; an editor must cope with a code it does not know. */
 export type PreviewerErrorCode = 'bad_message' | 'invalid_map' | 'start_failed' | (string & {});
@@ -56,6 +97,28 @@ export type PreviewerErrorCode = 'bad_message' | 'invalid_map' | 'start_failed' 
 export type PreviewerOutgoing =
   | { protocol: typeof PREVIEWER_PROTOCOL_VERSION; type: 'ready' }
   | { protocol: typeof PREVIEWER_PROTOCOL_VERSION; type: 'loaded'; warnings: string[] }
+  | {
+      protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+      type: 'validated';
+      id?: PreviewerRequestId;
+      /** Sentences about what is wrong; empty when the map is fine. */
+      problems: string[];
+    }
+  | {
+      protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+      type: 'referenced';
+      id?: PreviewerRequestId;
+      /** Editor picture ids (the part after `asset:`), each once. */
+      assets: string[];
+      characters: PreviewerCharacterRef[];
+    }
+  | {
+      protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+      type: 'migrated';
+      id?: PreviewerRequestId;
+      schemaVersion: number;
+      document: unknown;
+    }
   | {
       protocol: typeof PREVIEWER_PROTOCOL_VERSION;
       type: 'error';
@@ -106,6 +169,24 @@ export function readPreviewerMessage<Document = unknown>(
         message: { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'command', name: data.name },
       };
     return { ok: false, error: `Unknown command "${String(data.name)}".` };
+  }
+  if (data.type === 'validate' || data.type === 'references' || data.type === 'migrate') {
+    // These ask the game to look at a map, so a map the game would refuse to play must still get through: no checkDocument.
+    if (!isObject(data.document)) return { ok: false, error: '"document" must be an object.' };
+    const id = data.id;
+    if (id !== undefined && !(typeof id === 'string' && REQUEST_ID.test(id)))
+      return { ok: false, error: '"id" must be a short text of letters, digits and _ . : -.' };
+    const base = {
+      protocol: PREVIEWER_PROTOCOL_VERSION,
+      ...(id !== undefined ? { id } : {}),
+      document: data.document as Document,
+    } as const;
+    if (data.type === 'migrate') {
+      if (typeof data.from !== 'number' || !Number.isInteger(data.from) || data.from < 0)
+        return { ok: false, error: '"from" must be a whole number, the schemaVersion of the map.' };
+      return { ok: true, message: { ...base, type: 'migrate', from: data.from } };
+    }
+    return { ok: true, message: { ...base, type: data.type } };
   }
   if (data.type === 'load') {
     const problem = checkDocument(data.document);

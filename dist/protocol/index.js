@@ -5,3 +5,4 @@ export * from './validate.js';
 export * from './version.js';
 export * from './previewer.js';
 export * from './previewerHost.js';
+export * from './manifest.js';

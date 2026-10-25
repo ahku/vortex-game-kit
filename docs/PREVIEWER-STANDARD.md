@@ -51,6 +51,9 @@ Every message is an object with `protocol` (the version, 1) and `type`. Anything
 | --------- | -------------------------------------------- | -------------------------------------------------------- |
 | `load`    | `document` (the map), `assets` (id to URL)   | Play this map. The newest `load` wins.                   |
 | `command` | `name`: `restart`, `pause` or `resume`       | Restart reloads the last map. Pause and resume hold/run. |
+| `validate`   | `document`, optional `id`                 | List what is wrong with this map, without playing it. *(optional, section 9)* |
+| `references` | `document`, optional `id`                 | Which pictures and characters does this map use? *(optional)* |
+| `migrate`    | `document`, `from` (its schemaVersion), optional `id` | Bring an older map up to date. *(optional)* |
 
 **Game to editor**
 
@@ -59,6 +62,9 @@ Every message is an object with `protocol` (the version, 1) and `type`. Anything
 | `ready`  | none                                    | The page is listening. Sent once, after the listener is installed.   |
 | `loaded` | `warnings`: list of sentences           | The map is playing. Pictures that failed to load are warnings here.  |
 | `error`  | `code`, `message`, optional `details`   | Something was refused. Codes below.                                  |
+| `validated`  | `problems`: list of sentences, `id`  | Answer to `validate`. An empty list means the map is fine.           |
+| `referenced` | `assets`: picture ids, `characters`: `{id, slot?}`, `id` | Answer to `references`. Picture ids are the part after `asset:`. |
+| `migrated`   | `schemaVersion`, `document`, `id`    | Answer to `migrate`: the map as the current version writes it.       |
 
 Error codes: `bad_message` (not a message this standard defines, wrong version, unsafe picture address, unknown
 command), `invalid_map` (well formed but the game cannot play it; `details` lists why), `start_failed` (the map was
@@ -73,6 +79,10 @@ Rules:
    and carry on. Never wait forever on a picture: use a time limit (Downbeat uses 20 seconds).
 5. `restart` reloads the last map. Without one, it is ignored.
 6. A game ignores fields it does not know.
+7. `validate`, `references` and `migrate` are optional and need only an object as `document`: a map the game would
+   refuse to play must still be described, so do not use the `load` rule on them. A game answers one only if its
+   manifest names it (section 9). A game that does not know one answers `bad_message`, which is how an editor learns
+   it is missing. The `id`, if sent, is copied into the reply.
 
 ## 4. Pictures
 
@@ -102,7 +112,7 @@ The page is embedded by an editor on another origin, so both sides check:
 
 Do these in order. Each step says how to know it is done.
 
-1. **Install the kit.** `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.2.0.tar.gz`.
+1. **Install the kit.** `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.3.0.tar.gz`.
    Done when `import { readPreviewerMessage } from 'vortex-game-kit/protocol'` type checks.
 2. **Let your map format hold `asset:<id>` pictures** next to ordinary site paths (`assetIdOf` / `assetRef`).
    Done when a map with a backdrop of `asset:abc` passes your validator.
@@ -119,7 +129,9 @@ Do these in order. Each step says how to know it is done.
 6. **Allow framing.** `frame-ancestors` for the editor origins on the previewer page (section 5).
 7. **Run the conformance suite** (section 7).
 8. **Tell the editor's owner your origin** so it goes on `GAME_ORIGINS`.
-9. **Check by hand once:** open the previewer page directly (it should wait, not crash), then use the editor's game
+9. **Optional, once the basics work: serve a manifest** (section 9) and answer `validate`, `references` and
+   `migrate` for the ones you name in it. Done when the conformance suite runs their cases (section 7).
+10. **Check by hand once:** open the previewer page directly (it should wait, not crash), then use the editor's game
    preview page with your game's address and a map that uses one editor picture. Done when the picture shows in the
    game and a deliberately wrong map is reported as `invalid_map`.
 
@@ -136,6 +148,9 @@ const subject = {
       send: (message) => session.receive(message),
       playableMap: { /* a map your game can play */ },
       unplayableMap: { /* well formed, but your game refuses it */ },
+      // Only if your manifest names them: the cases for those messages then run too.
+      supports: ['validate', 'references', 'migrate'],
+      oldMap: { document: { /* a map as an older version saved it */ }, from: 1 },
     };
   },
 };
@@ -144,10 +159,34 @@ for (const c of previewerCases(subject)) it(c.name, c.run);
 
 The suite checks the message handling in section 3. It does not check origins or headers; those are the manual steps.
 
-## 8. Versions and what is not here yet
+## 8. Versions
 
-- `PREVIEWER_PROTOCOL_VERSION` rises only when a message changes in a way an older side cannot ignore. Adding a field
-  or a command is not such a change.
-- Not yet: the game declaring its abilities to the editor (a manifest: character types, objectives, terrain kinds),
-  messages for the editor to ask the game to validate, list the pictures and characters a map uses, or migrate an old
-  map. Until then those live in the editor's plan (plan 017 section 10) and each game's own code.
+- `PREVIEWER_PROTOCOL_VERSION` rises only when a message changes in a way an older side cannot ignore. Adding a field,
+  a command or a message type is not such a change: an older game answers a new message with `bad_message`.
+- Not yet: a manifest field for character types, objectives and terrain kinds. Until then those live in the editor's
+  plan (plan 017 section 10) and each game's own code.
+
+## 9. The manifest
+
+A game may serve `vortex-manifest.json` at its own address (next to the previewer). It is plain data, never code, and
+it saves the editor's owner from typing in what the game already knows. The editor reads it when a game is added.
+
+```json
+{
+  "contract": 1,
+  "id": "my-game",
+  "name": "My Game",
+  "version": "1.2.0",
+  "previewer": { "page": "previewer.html", "messages": ["validate", "references", "migrate"] },
+  "content": [{ "module": "map", "type": "map", "title": "Map", "schemaVersion": 3, "editor": "json" }]
+}
+```
+
+- `contract` is the manifest's own version (`MANIFEST_CONTRACT`, 1). An editor that meets a higher one uses what it
+  understands and says the game is newer than it. It never refuses a game for that.
+- `id` is a lowercase slug (letters, digits, dashes; up to 40). The editor files the game's content under it.
+- `previewer.messages` lists only the optional messages the game answers; leave it out if there are none.
+- `content` says which kinds of content the game owns and the `schemaVersion` it writes today. `editor` is a
+  suggestion, a name the editor knows; an editor that does not know it uses its plain JSON editor.
+- Unknown fields are ignored. The kit gives `readManifest(json)` to check one and `manifestUrl(gameUrl)` for the
+  address. The game does not need either: it just serves the file with CORS allowing the editor (`Access-Control-Allow-Origin`).
