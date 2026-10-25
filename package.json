@@ -16,7 +16,8 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "npm run typecheck && npm run test && npm run build"
+    "check": "npm run typecheck && npm run test && npm run build",
+    "release": "git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && exit 1); npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
