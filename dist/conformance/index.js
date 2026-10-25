@@ -1,6 +1,7 @@
 import { ERROR, SIGNAL, SIGNAL_IGNORED, SIGNAL_RECEIVED, STARTED } from '../protocol/messages.js';
 import { PROTOCOL_VERSION } from '../protocol/version.js';
 import { checkDeclaration } from '../protocol/validate.js';
+import { PREVIEWER_PROTOCOL_VERSION } from '../protocol/previewer.js';
 export { checkDeclaration };
 function fail(message) {
     throw new Error(`Conformance: ${message}`);
@@ -111,6 +112,109 @@ export function handshakeCases(subject) {
                 const version = started?.protocolVersion;
                 if (version !== PROTOCOL_VERSION)
                     fail(`${STARTED} reported protocolVersion ${String(version)}, expected ${PROTOCOL_VERSION}`);
+            },
+        },
+    ];
+}
+const V = PREVIEWER_PROTOCOL_VERSION;
+const codes = (replies) => replies.map((r) => (r.type === 'error' ? `error:${r.code}` : r.type));
+/**
+ * The rules for a game's previewer page (docs/PREVIEWER-STANDARD.md, section 3): what it answers to good, bad and
+ * unknown messages. Origins and framing headers are outside these cases; check them by hand once, as the standard
+ * says. Use it like the other suites:
+ *
+ *   for (const c of previewerCases(subject)) it(c.name, c.run);
+ */
+export function previewerCases(subject) {
+    const load = (document, assets = {}) => ({
+        protocol: V,
+        type: 'load',
+        document,
+        assets,
+    });
+    return [
+        {
+            name: 'a playable map is loaded and reported with a list of warnings',
+            async run() {
+                const { send, playableMap } = await subject.create();
+                const replies = await send(load(playableMap));
+                const loaded = replies.find((r) => r.type === 'loaded');
+                if (!loaded || loaded.type !== 'loaded')
+                    fail(`a playable map was answered with ${codes(replies).join(', ') || 'nothing'}`);
+                if (!Array.isArray(loaded.warnings))
+                    fail('"loaded" must carry a list of warnings');
+            },
+        },
+        {
+            name: 'a map the game cannot play is reported as invalid_map with a message',
+            async run() {
+                const { send, unplayableMap } = await subject.create();
+                const replies = await send(load(unplayableMap));
+                const error = replies.find((r) => r.type === 'error');
+                if (!error || error.type !== 'error' || error.code !== 'invalid_map')
+                    fail(`an unplayable map was answered with ${codes(replies).join(', ') || 'nothing'}, not invalid_map`);
+                if (!error.message)
+                    fail('an "error" must carry a message');
+                if (replies.some((r) => r.type === 'loaded'))
+                    fail('an unplayable map was also reported as loaded');
+            },
+        },
+        {
+            name: 'a message from another protocol version is refused as bad_message',
+            async run() {
+                const { send, playableMap } = await subject.create();
+                const replies = await send({ ...load(playableMap), protocol: V + 1000 });
+                if (!codes(replies).includes('error:bad_message') || codes(replies).includes('loaded'))
+                    fail(`another protocol version was answered with ${codes(replies).join(', ') || 'nothing'}`);
+            },
+        },
+        {
+            name: 'an unknown message type is refused as bad_message',
+            async run() {
+                const { send } = await subject.create();
+                const replies = await send({ protocol: V, type: 'vgk-conformance-unknown' });
+                if (!codes(replies).includes('error:bad_message'))
+                    fail(`an unknown message was answered with ${codes(replies).join(', ') || 'nothing'}`);
+            },
+        },
+        {
+            name: 'a picture address that is not a web address is refused as bad_message',
+            async run() {
+                const { send, playableMap } = await subject.create();
+                const replies = await send(load(playableMap, { x: 'javascript:alert(1)' }));
+                if (!codes(replies).includes('error:bad_message') || codes(replies).includes('loaded'))
+                    fail(`an unsafe picture address was answered with ${codes(replies).join(', ') || 'nothing'}`);
+            },
+        },
+        {
+            name: 'an unknown command is refused as bad_message',
+            async run() {
+                const { send } = await subject.create();
+                const replies = await send({ protocol: V, type: 'command', name: 'vgk-conformance-unknown' });
+                if (!codes(replies).includes('error:bad_message'))
+                    fail(`an unknown command was answered with ${codes(replies).join(', ') || 'nothing'}`);
+            },
+        },
+        {
+            name: 'restart, pause and resume are accepted after a load, never an error',
+            async run() {
+                const { send, playableMap } = await subject.create();
+                await send(load(playableMap));
+                for (const name of ['pause', 'resume', 'restart']) {
+                    const replies = await send({ protocol: V, type: 'command', name });
+                    if (replies.some((r) => r.type === 'error'))
+                        fail(`the command "${name}" produced an error`);
+                }
+            },
+        },
+        {
+            name: 'a refused map does not stop the next one from loading',
+            async run() {
+                const { send, playableMap, unplayableMap } = await subject.create();
+                await send(load(unplayableMap));
+                const replies = await send(load(playableMap));
+                if (!replies.some((r) => r.type === 'loaded'))
+                    fail(`a playable map after a refused one was answered with ${codes(replies).join(', ') || 'nothing'}`);
             },
         },
     ];

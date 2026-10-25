@@ -1,5 +1,6 @@
 import { checkDeclaration } from '../protocol/validate.js';
 import type { HandoverGame } from '../protocol/types.js';
+import type { PreviewerOutgoing } from '../protocol/previewer.js';
 export { checkDeclaration };
 /** What the suite needs from a game: a running session it can talk to like a host. */
 export interface ConformanceSubject {
@@ -31,3 +32,23 @@ export declare function declarationCase(game: HandoverGame): ConformanceCase;
 export declare function signalCases(subject: ConformanceSubject): ConformanceCase[];
 /** The handshake: the game says which protocol version it was built against. */
 export declare function handshakeCases(subject: ConformanceSubject): ConformanceCase[];
+/** What the suite needs from a game's previewer: a way to send it a message as the editor would. */
+export interface PreviewerSubject {
+    /** Makes a fresh previewer, ready for messages. Called once per case. */
+    create(): Promise<{
+        /** Delivers one message and resolves with every reply the previewer sent for it. */
+        send(message: unknown): Promise<PreviewerOutgoing[]>;
+        /** A `document` the game can play. */
+        playableMap: unknown;
+        /** A `document` that is well formed but that the game refuses to play. */
+        unplayableMap: unknown;
+    }>;
+}
+/**
+ * The rules for a game's previewer page (docs/PREVIEWER-STANDARD.md, section 3): what it answers to good, bad and
+ * unknown messages. Origins and framing headers are outside these cases; check them by hand once, as the standard
+ * says. Use it like the other suites:
+ *
+ *   for (const c of previewerCases(subject)) it(c.name, c.run);
+ */
+export declare function previewerCases(subject: PreviewerSubject): ConformanceCase[];
