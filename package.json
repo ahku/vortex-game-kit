@@ -1,6 +1,6 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Shared standard, protocol and conformance tests for connecting games to Vortex Studio stories and editors.",
   "type": "module",
   "license": "MIT",
