@@ -1,15 +1,27 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "Shared standard, protocol and conformance tests for connecting games to Vortex Studio stories and editors.",
   "type": "module",
   "license": "MIT",
   "repository": "github:ahku/vortex-game-kit",
-  "engines": { "node": ">=20" },
-  "files": ["dist", "docs", "AGENTS.md"],
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "AGENTS.md"
+  ],
   "exports": {
-    "./protocol": { "types": "./dist/protocol/index.d.ts", "default": "./dist/protocol/index.js" },
-    "./conformance": { "types": "./dist/conformance/index.d.ts", "default": "./dist/conformance/index.js" },
+    "./protocol": {
+      "types": "./dist/protocol/index.d.ts",
+      "default": "./dist/protocol/index.js"
+    },
+    "./conformance": {
+      "types": "./dist/conformance/index.d.ts",
+      "default": "./dist/conformance/index.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {

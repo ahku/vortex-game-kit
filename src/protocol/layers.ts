@@ -48,11 +48,32 @@ export interface LayerField {
   default?: number | string | boolean;
 }
 
+/** Geometry limits declared by the game, in stage/world units. Grid is a suggested snap step, never mandatory. */
+export interface ShapeEditorConstraints {
+  minPoints: number;
+  maxPoints: number;
+  convex: true;
+  withinStage: boolean;
+  grid: number;
+  /** Hard minimum; omit when short edges are advice only. */
+  minEdge?: number;
+  maxShapes: number;
+}
+
+/** Standard terrain rows are { id, kind, points: [{ x, y }] }; other fields belong to the game. */
+export interface TerrainEditorDescriptor {
+  path: FieldPath;
+  kinds: { value: string; label: string }[];
+  constraints: ShapeEditorConstraints;
+}
+
 export interface LayerEditorDescriptor {
   version: typeof LAYER_EDITOR_VERSION;
   stage: { width: FieldPath; height: FieldPath; backdrop?: FieldPath };
   /** The list of pictures. */
   pictures: FieldPath;
+  /** Optional terrain authoring; absence keeps pictures-only editing. */
+  terrain?: TerrainEditorDescriptor;
   bands: LayerBand[];
   /**
    * The band a picture is in when it has no `layer`. The editor leaves `layer` out when a picture goes into this band.
@@ -106,12 +127,74 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
   if (isPath(data.pictures)) pictures = data.pictures;
   else errors.push('"pictures" must be a path: a list of keys.');
 
+  let terrain: TerrainEditorDescriptor | undefined;
+  if (data.terrain !== undefined) {
+    const raw = data.terrain;
+    if (!isObject(raw) || !isPath(raw.path)) errors.push('"terrain.path" must be a path.');
+    else {
+      const kinds = raw.kinds;
+      const c = raw.constraints;
+      if (
+        !Array.isArray(kinds) ||
+        kinds.length < 1 ||
+        kinds.length > 100 ||
+        !kinds.every(
+          (k) =>
+            isObject(k) &&
+            typeof k.value === 'string' &&
+            k.value.length > 0 &&
+            k.value.length <= 64 &&
+            typeof k.label === 'string' &&
+            k.label.trim().length > 0 &&
+            k.label.length <= 80,
+        ) ||
+        new Set(kinds.map((k) => (k as { value: string }).value)).size !== kinds.length
+      )
+        errors.push('"terrain.kinds" must be 1 to 100 different { value, label } pairs.');
+      const positive = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0;
+      const integer = (v: unknown): v is number => positive(v) && Number.isSafeInteger(v);
+      if (
+        !isObject(c) ||
+        !integer(c.minPoints) ||
+        c.minPoints < 3 ||
+        !integer(c.maxPoints) ||
+        c.maxPoints < c.minPoints ||
+        c.maxPoints > 100 ||
+        c.convex !== true ||
+        typeof c.withinStage !== 'boolean' ||
+        !positive(c.grid) ||
+        !integer(c.maxShapes) ||
+        (c.minEdge !== undefined && !positive(c.minEdge))
+      )
+        errors.push('"terrain.constraints" needs convex geometry limits, a positive grid and a shape count.');
+      // Keep only declared fields, as with the picture descriptor.
+      if (!errors.length && isObject(c))
+        terrain = {
+          path: [...raw.path],
+          kinds: (kinds as { value: string; label: string }[]).map((k) => ({
+            value: k.value,
+            label: k.label.trim(),
+          })),
+          constraints: {
+            minPoints: c.minPoints as number,
+            maxPoints: c.maxPoints as number,
+            convex: true,
+            withinStage: c.withinStage as boolean,
+            grid: c.grid as number,
+            maxShapes: c.maxShapes as number,
+            ...(c.minEdge !== undefined ? { minEdge: c.minEdge as number } : {}),
+          },
+        };
+    }
+  }
+
   // A path inside another path would make an edit overwrite the other thing.
   const named: [string, FieldPath | undefined][] = [
     ['stage.width', width],
     ['stage.height', height],
     ['stage.backdrop', backdrop],
     ['pictures', pictures],
+    ['terrain.path', terrain?.path],
   ];
   const present = named.filter((n): n is [string, FieldPath] => !!n[1] && n[1].length > 0);
   for (const [nameA, a] of present)
@@ -217,6 +300,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       version: LAYER_EDITOR_VERSION,
       stage: { width, height, ...(backdrop ? { backdrop } : {}) },
       pictures,
+      ...(terrain ? { terrain } : {}),
       bands,
       ...(defaultBand ? { defaultBand } : {}),
       ...(pictureFields ? { pictureFields } : {}),

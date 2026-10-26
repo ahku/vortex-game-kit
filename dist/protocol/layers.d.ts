@@ -34,6 +34,26 @@ export interface LayerField {
     }[];
     default?: number | string | boolean;
 }
+/** Geometry limits declared by the game, in stage/world units. Grid is a suggested snap step, never mandatory. */
+export interface ShapeEditorConstraints {
+    minPoints: number;
+    maxPoints: number;
+    convex: true;
+    withinStage: boolean;
+    grid: number;
+    /** Hard minimum; omit when short edges are advice only. */
+    minEdge?: number;
+    maxShapes: number;
+}
+/** Standard terrain rows are { id, kind, points: [{ x, y }] }; other fields belong to the game. */
+export interface TerrainEditorDescriptor {
+    path: FieldPath;
+    kinds: {
+        value: string;
+        label: string;
+    }[];
+    constraints: ShapeEditorConstraints;
+}
 export interface LayerEditorDescriptor {
     version: typeof LAYER_EDITOR_VERSION;
     stage: {
@@ -43,6 +63,8 @@ export interface LayerEditorDescriptor {
     };
     /** The list of pictures. */
     pictures: FieldPath;
+    /** Optional terrain authoring; absence keeps pictures-only editing. */
+    terrain?: TerrainEditorDescriptor;
     bands: LayerBand[];
     /**
      * The band a picture is in when it has no `layer`. The editor leaves `layer` out when a picture goes into this band.

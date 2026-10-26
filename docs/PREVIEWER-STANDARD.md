@@ -230,3 +230,17 @@ controls only for those). The game says only where things live and what is speci
 - A broken or newer `layers` is left out by `readManifest` with a warning; the game is still added.
 - Test it: run `checkLayerEditorAgainst(descriptor, map)` over every shipped map in the game's own tests; it returns
   sentences about what does not fit, or nothing.
+
+### Optional terrain shapes (phase 4 foundation)
+
+A layer descriptor may add `terrain: { path, kinds, constraints }`. `path` is the map's terrain-list path and must
+not overlap the stage or pictures paths. `kinds` is the game's list of `{ value, label }` choices. A terrain row has
+`id`, `kind` and ordered `points: [{ x, y }]` in stage/world units; either winding is accepted. Other row and map
+fields must survive edits unchanged. An absent list means no terrain; a malformed list must never be replaced silently.
+
+`constraints` declares `minPoints`, `maxPoints`, `convex: true`, `withinStage` (boolean), `grid` (positive snap step),
+`maxShapes`, and optional hard `minEdge`. Grid is an editor snap preference, not a validity requirement. Games whose
+short edges are advice omit `minEdge`; game validation remains authoritative for advice and gameplay. Terrain areas
+may overlap. An absent terrain descriptor leaves existing picture-only editing unchanged. Older v1 readers ignore
+this optional addition; no protocol or map-schema version changes. Collision-wall declarations are a later slice
+and will reuse the geometry tools rather than reinterpret terrain kinds.
