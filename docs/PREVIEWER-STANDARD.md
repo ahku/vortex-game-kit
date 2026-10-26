@@ -276,3 +276,34 @@ when edited. Other properties survive edits. Editors render/edit these as rectan
 conversion for a rectangle-only family. Labels, grouping, presets, field defaults and limits come from the game;
 placement relationships and gameplay validation remain the game's responsibility. Older readers ignore this
 optional addition; protocol and layer-description versions remain unchanged.
+
+
+### Optional backdrop fit path
+
+`layers.stage.backdropFit` is an optional safe map path, disjoint from every other declared path. It requires a
+`stage.backdrop` path. Values use standard image fitting semantics: `stretch` fills the stage (the absent-field
+default), `contain` preserves aspect ratio with empty space, and `cover` preserves aspect ratio while cropping.
+The game declares this path only when it supports these semantics. Older readers ignore the optional path;
+protocol, layer-description and map-schema versions remain unchanged. Editor-only dimming/visibility belongs to
+editor preferences or envelope metadata and must not be written to this gameplay path.
+
+
+### Optional shape icons
+
+Terrain, collision and rectangle-list declarations may include a family `icon`. Each terrain kind and each
+collision/rectangle preset can override it with its own `icon`. Editors prefer the type icon, then the family icon,
+then a generic fallback. Icons are presentation metadata only, never fields in a saved map.
+
+An icon is `{ path, viewBox?, fillRule? }`: a monochrome SVG path, an optional four-number view box (default
+`[0, 0, 24, 24]`), and optional `nonzero` or `evenodd` fill rule (default `nonzero`). View-box width and height must
+be positive and all four finite coordinates must have absolute values at most 1,000,000. The path accepts SVG
+commands/numbers only, at most 8,192 characters. The editor applies its UI color and preserves aspect ratio. No SVG
+markup, URLs or event attributes are accepted. These optional presentation fields do not change gameplay contracts.
+A game may maintain its own reusable icon library and copy selected definitions into the static manifest; Studio
+needs no knowledge of library names or game-specific types.
+
+### Optional type descriptions
+
+Terrain kinds and collision/rectangle presets can include `shortDesc`, separate from the short `label`.
+It is optional plain text (1–240 characters, trimmed), shown as muted supporting information in type pickers and
+inspectors (palette explanations use 50% opacity). `description` is accepted as a legacy input alias, but readers return `shortDesc`. Put explanations here rather than parenthesized suffixes in labels. It is presentation metadata only.

@@ -45,21 +45,34 @@ export interface ShapeEditorConstraints {
     minEdge?: number;
     maxShapes: number;
 }
+/** Safe monochrome SVG presentation data, independent of gameplay and saved map data. */
+export interface LayerIcon {
+    path: string;
+    /** Defaults to [0, 0, 24, 24]. */
+    viewBox?: [number, number, number, number];
+    fillRule?: 'nonzero' | 'evenodd';
+}
 /** Standard terrain rows are { id, kind, points: [{ x, y }] }; other fields belong to the game. */
 export interface TerrainEditorDescriptor {
+    icon?: LayerIcon;
     path: FieldPath;
     kinds: {
         value: string;
         label: string;
+        shortDesc?: string;
+        icon?: LayerIcon;
     }[];
     constraints: ShapeEditorConstraints;
 }
 /** Game-owned presets for rows without a kind field. Null removes a property when applying a preset. */
 export interface CollisionEditorDescriptor {
+    icon?: LayerIcon;
     path: FieldPath;
     presets: {
         value: string;
         label: string;
+        shortDesc?: string;
+        icon?: LayerIcon;
         values: Record<string, string | number | boolean | null>;
     }[];
     constraints: ShapeEditorConstraints;
@@ -83,6 +96,7 @@ export interface LayerEditorDescriptor {
         width: FieldPath;
         height: FieldPath;
         backdrop?: FieldPath;
+        backdropFit?: FieldPath;
     };
     /** The list of pictures. */
     pictures: FieldPath;

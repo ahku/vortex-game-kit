@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Optional type/preset `shortDesc` keeps short labels separate from explanatory text.
+
+- Per-type/preset SVG icon overrides, optional finite view boxes and evenodd fill rules, with family fallback.
+
+- Optional game-declared monochrome SVG path icons for terrain, collision and rectangle families.
+
+- Optional stage backdrop-fit path with standard stretch/contain/cover semantics and safe-path validation.
+
 - Optional rectangle-list declarations with mapped coordinate keys, game-owned groups/presets, fields and limits.
 
 - Optional collision shape declarations: game-owned presets, safe scalar properties and shared convex geometry constraints. Older picture/terrain descriptions remain valid.

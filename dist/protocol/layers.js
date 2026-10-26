@@ -62,12 +62,40 @@ export function readLayerEditor(data) {
             errors: ['The layer editor description must be an object.'],
         };
     const errors = [];
+    const iconOf = (value) => {
+        if (value === undefined)
+            return {};
+        if (!isObject(value) || typeof value.path !== 'string' || !value.path.trim() || value.path.length > 8192 || !/^[MmZzLlHhVvCcSsQqTtAaEe0-9.,+\s-]+$/.test(value.path)) {
+            errors.push('A layer icon must contain a safe SVG path.');
+            return {};
+        }
+        const box = value.viewBox;
+        if (box !== undefined && (!Array.isArray(box) || box.length !== 4 || !box.every(n => typeof n === 'number' && Number.isFinite(n) && Math.abs(n) <= 1e6) || box[2] <= 0 || box[3] <= 0)) {
+            errors.push('An icon viewBox must contain four finite numbers with positive width and height.');
+            return {};
+        }
+        if (value.fillRule !== undefined && value.fillRule !== 'nonzero' && value.fillRule !== 'evenodd') {
+            errors.push('An icon fillRule must be nonzero or evenodd.');
+            return {};
+        }
+        return { icon: { path: value.path, ...(box ? { viewBox: [...box] } : {}), ...(value.fillRule ? { fillRule: value.fillRule } : {}) } };
+    };
+    const shortDescOf = (value) => {
+        if (value === undefined)
+            return {};
+        if (typeof value !== 'string' || !value.trim() || value.length > 240) {
+            errors.push('A type shortDesc must be nonempty text of up to 240 characters.');
+            return {};
+        }
+        return { shortDesc: value.trim() };
+    };
     if (data.version !== LAYER_EDITOR_VERSION)
         errors.push(`"version" must be ${LAYER_EDITOR_VERSION}.`);
     const stage = data.stage;
     let width = [];
     let height = [];
     let backdrop;
+    let backdropFit;
     if (!isObject(stage))
         errors.push('"stage" must be an object.');
     else {
@@ -84,6 +112,14 @@ export function readLayerEditor(data) {
                 backdrop = stage.backdrop;
             else
                 errors.push('"stage.backdrop" must be a path: a list of keys.');
+        }
+        if (stage.backdropFit !== undefined) {
+            if (isPath(stage.backdropFit))
+                backdropFit = stage.backdropFit;
+            else
+                errors.push('"stage.backdropFit" must be a path: a list of keys.');
+            if (stage.backdrop === undefined)
+                errors.push('"stage.backdropFit" needs a backdrop path.');
         }
     }
     let pictures = [];
@@ -120,8 +156,11 @@ export function readLayerEditor(data) {
                     kinds: kinds.map((k) => ({
                         value: k.value,
                         label: k.label.trim(),
+                        ...iconOf(k.icon),
+                        ...shortDescOf(k.shortDesc !== undefined ? k.shortDesc : k.description),
                     })),
                     constraints: shapeConstraintsOf(c),
+                    ...iconOf(raw.icon),
                 };
         }
     }
@@ -158,7 +197,8 @@ export function readLayerEditor(data) {
                 collisions = {
                     path: [...raw.path],
                     constraints,
-                    presets: presets.map((p) => ({ value: p.value, label: p.label.trim(), values: { ...p.values } })),
+                    ...iconOf(raw.icon),
+                    presets: presets.map((p) => ({ value: p.value, label: p.label.trim(), values: { ...p.values }, ...iconOf(p.icon), ...shortDescOf(p.shortDesc !== undefined ? p.shortDesc : p.description) })),
                 };
         }
     }
@@ -178,7 +218,7 @@ export function readLayerEditor(data) {
                 }
                 // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
                 const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined,
-                    collisions: { path: raw.path, presets: raw.presets, constraints: raw.constraints }, fields: raw.fields });
+                    collisions: { path: raw.path, presets: raw.presets, constraints: raw.constraints, icon: raw.icon }, fields: raw.fields });
                 if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
                     checked.descriptor.collisions.constraints.maxPoints !== 4) {
                     errors.push(`Invalid rectangular collection "${raw.id}".`);
@@ -200,6 +240,7 @@ export function readLayerEditor(data) {
         ['stage.width', width],
         ['stage.height', height],
         ['stage.backdrop', backdrop],
+        ['stage.backdropFit', backdropFit],
         ['pictures', pictures],
         ['terrain.path', terrain?.path],
         ['collisions.path', collisions?.path],
@@ -304,7 +345,7 @@ export function readLayerEditor(data) {
         ok: true,
         descriptor: {
             version: LAYER_EDITOR_VERSION,
-            stage: { width, height, ...(backdrop ? { backdrop } : {}) },
+            stage: { width, height, ...(backdrop ? { backdrop } : {}), ...(backdropFit ? { backdropFit } : {}) },
             pictures,
             ...(terrain ? { terrain } : {}),
             ...(collisions ? { collisions } : {}),
@@ -343,6 +384,11 @@ export function checkLayerEditorAgainst(descriptor, map) {
         const b = valueAt(map, descriptor.stage.backdrop);
         if (b !== undefined && typeof b !== 'string')
             problems.push('The backdrop is not a text.');
+    }
+    if (descriptor.stage.backdropFit) {
+        const fit = valueAt(map, descriptor.stage.backdropFit);
+        if (fit !== undefined && (typeof fit !== 'string' || !['stretch', 'contain', 'cover'].includes(fit)))
+            problems.push('The backdrop fit is not stretch, contain or cover.');
     }
     const list = valueAt(map, descriptor.pictures) ?? [];
     if (!Array.isArray(list))
