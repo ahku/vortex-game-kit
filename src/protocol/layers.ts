@@ -67,6 +67,22 @@ export interface TerrainEditorDescriptor {
   constraints: ShapeEditorConstraints;
 }
 
+/** Game-owned presets for rows without a kind field. Null removes a property when applying a preset. */
+export interface CollisionEditorDescriptor {
+  path: FieldPath;
+  presets: { value: string; label: string; values: Record<string, string | number | boolean | null> }[];
+  constraints: ShapeEditorConstraints;
+}
+
+/** Rectangular map collections (for example raised areas), edited through the same shape tools. */
+export interface RectangleEditorDescriptor extends CollisionEditorDescriptor {
+  id: string;
+  label: string;
+  group: string;
+  rectangle: { x: string; y: string; width: string; height: string };
+  fields?: LayerField[];
+}
+
 export interface LayerEditorDescriptor {
   version: typeof LAYER_EDITOR_VERSION;
   stage: { width: FieldPath; height: FieldPath; backdrop?: FieldPath };
@@ -74,6 +90,8 @@ export interface LayerEditorDescriptor {
   pictures: FieldPath;
   /** Optional terrain authoring; absence keeps pictures-only editing. */
   terrain?: TerrainEditorDescriptor;
+  collisions?: CollisionEditorDescriptor;
+  rectangles?: RectangleEditorDescriptor[];
   bands: LayerBand[];
   /**
    * The band a picture is in when it has no `layer`. The editor leaves `layer` out when a picture goes into this band.
@@ -97,6 +115,34 @@ const isKey = (value: unknown): value is string =>
 const isPath = (value: unknown): value is FieldPath =>
   Array.isArray(value) && value.length > 0 && value.length <= 12 && value.every(isKey);
 const startsWith = (a: string[], b: string[]) => a.length <= b.length && a.every((k, i) => k === b[i]);
+
+function shapeConstraintsOf(value: unknown): ShapeEditorConstraints | undefined {
+  if (!isObject(value)) return;
+  const positive = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0;
+  const integer = (v: unknown): v is number => positive(v) && Number.isSafeInteger(v);
+  if (
+    !integer(value.minPoints) ||
+    value.minPoints < 3 ||
+    !integer(value.maxPoints) ||
+    value.maxPoints < value.minPoints ||
+    value.maxPoints > 100 ||
+    value.convex !== true ||
+    typeof value.withinStage !== 'boolean' ||
+    !positive(value.grid) ||
+    !integer(value.maxShapes) ||
+    (value.minEdge !== undefined && !positive(value.minEdge))
+  )
+    return;
+  return {
+    minPoints: value.minPoints,
+    maxPoints: value.maxPoints,
+    convex: true,
+    withinStage: value.withinStage,
+    grid: value.grid,
+    maxShapes: value.maxShapes,
+    ...(value.minEdge !== undefined ? { minEdge: value.minEdge as number } : {}),
+  };
+}
 
 /** Reads the parsed JSON of a descriptor. Unknown fields are ignored; anything wrong is listed. */
 export function readLayerEditor(data: unknown): LayerEditorReadResult {
@@ -151,21 +197,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
         new Set(kinds.map((k) => (k as { value: string }).value)).size !== kinds.length
       )
         errors.push('"terrain.kinds" must be 1 to 100 different { value, label } pairs.');
-      const positive = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v) && v > 0;
-      const integer = (v: unknown): v is number => positive(v) && Number.isSafeInteger(v);
-      if (
-        !isObject(c) ||
-        !integer(c.minPoints) ||
-        c.minPoints < 3 ||
-        !integer(c.maxPoints) ||
-        c.maxPoints < c.minPoints ||
-        c.maxPoints > 100 ||
-        c.convex !== true ||
-        typeof c.withinStage !== 'boolean' ||
-        !positive(c.grid) ||
-        !integer(c.maxShapes) ||
-        (c.minEdge !== undefined && !positive(c.minEdge))
-      )
+      if (!shapeConstraintsOf(c))
         errors.push('"terrain.constraints" needs convex geometry limits, a positive grid and a shape count.');
       // Keep only declared fields, as with the picture descriptor.
       if (!errors.length && isObject(c))
@@ -175,16 +207,82 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
             value: k.value,
             label: k.label.trim(),
           })),
-          constraints: {
-            minPoints: c.minPoints as number,
-            maxPoints: c.maxPoints as number,
-            convex: true,
-            withinStage: c.withinStage as boolean,
-            grid: c.grid as number,
-            maxShapes: c.maxShapes as number,
-            ...(c.minEdge !== undefined ? { minEdge: c.minEdge as number } : {}),
-          },
+          constraints: shapeConstraintsOf(c)!,
         };
+    }
+  }
+
+  let collisions: CollisionEditorDescriptor | undefined;
+  if (data.collisions !== undefined) {
+    const raw = data.collisions;
+    if (!isObject(raw) || !isPath(raw.path)) errors.push('"collisions.path" must be a path.');
+    else {
+      const presets = raw.presets;
+      const constraints = shapeConstraintsOf(raw.constraints);
+      const scalar = (v: unknown) =>
+        v === null ||
+        typeof v === 'boolean' ||
+        (typeof v === 'string' && v.length <= 1000) ||
+        (typeof v === 'number' && Number.isFinite(v));
+      if (!constraints) errors.push('"collisions.constraints" needs convex geometry limits.');
+      if (
+        !Array.isArray(presets) ||
+        !presets.length ||
+        presets.length > 100 ||
+        !presets.every(
+          (p) =>
+            isObject(p) &&
+            typeof p.value === 'string' &&
+            p.value.length > 0 &&
+            p.value.length <= 64 &&
+            typeof p.label === 'string' &&
+            !!p.label.trim() &&
+            p.label.length <= 80 &&
+            isObject(p.values) &&
+            Object.keys(p.values).length <= 20 &&
+            Object.entries(p.values).every(
+              ([key, value]) => isKey(key) && !['id', 'points', 'kind'].includes(key) && scalar(value),
+            ),
+        ) ||
+        new Set(presets.map((p) => p.value)).size !== presets.length
+      )
+        errors.push('"collisions.presets" must be different named presets with safe scalar properties.');
+      else if (constraints)
+        collisions = {
+          path: [...raw.path],
+          constraints,
+          presets: presets.map((p) => ({ value: p.value, label: p.label.trim(), values: { ...p.values } })),
+        };
+    }
+  }
+
+  const rectangles: RectangleEditorDescriptor[] = [];
+  if (data.rectangles !== undefined) {
+    if (!Array.isArray(data.rectangles) || data.rectangles.length > 16) errors.push('"rectangles" must be up to 16 collections.');
+    else for (const raw of data.rectangles) {
+      if (!isObject(raw) || !isKey(raw.id) || typeof raw.label !== 'string' || !raw.label.trim() || raw.label.length > 80 ||
+          typeof raw.group !== 'string' || !raw.group.trim() || raw.group.length > 80 || !isObject(raw.rectangle) ||
+          !['x','y','width','height'].every(key => isKey((raw.rectangle as Record<string, unknown>)[key])) ||
+          new Set(Object.values(raw.rectangle)).size !== 4 || Object.values(raw.rectangle).some(key => ['id','points','kind'].includes(key as string)) ||
+          rectangles.some(r => r.id === raw.id)) {
+        errors.push('Each rectangular collection needs a unique id, labels and four safe coordinate fields.'); continue;
+      }
+      // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
+      const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined,
+        collisions: {path:raw.path,presets:raw.presets,constraints:raw.constraints}, fields:raw.fields });
+      if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
+          checked.descriptor.collisions.constraints.maxPoints !== 4) {
+        errors.push(`Invalid rectangular collection "${raw.id}".`); continue;
+      }
+      const coordinateKeys = Object.values(raw.rectangle);
+      if ((checked.descriptor.fields ?? []).some(field => coordinateKeys.includes(field.key)) ||
+          checked.descriptor.collisions.presets.some(p => Object.keys(p.values).some(key => coordinateKeys.includes(key)))) {
+        errors.push('Rectangle properties cannot overwrite coordinates.'); continue;
+      }
+      rectangles.push({ ...checked.descriptor.collisions, id:raw.id, label:raw.label.trim(), group:raw.group.trim(),
+        rectangle:{x:raw.rectangle.x as string,y:raw.rectangle.y as string,width:raw.rectangle.width as string,height:raw.rectangle.height as string},
+        ...(checked.descriptor.fields ? {fields:checked.descriptor.fields} : {}),
+      });
     }
   }
 
@@ -195,6 +293,8 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     ['stage.backdrop', backdrop],
     ['pictures', pictures],
     ['terrain.path', terrain?.path],
+    ['collisions.path', collisions?.path],
+    ...rectangles.map((r): [string, FieldPath] => [`rectangles.${r.id}.path`,r.path]),
   ];
   const present = named.filter((n): n is [string, FieldPath] => !!n[1] && n[1].length > 0);
   for (const [nameA, a] of present)
@@ -301,6 +401,8 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       stage: { width, height, ...(backdrop ? { backdrop } : {}) },
       pictures,
       ...(terrain ? { terrain } : {}),
+      ...(collisions ? { collisions } : {}),
+      ...(rectangles.length ? {rectangles} : {}),
       bands,
       ...(defaultBand ? { defaultBand } : {}),
       ...(pictureFields ? { pictureFields } : {}),

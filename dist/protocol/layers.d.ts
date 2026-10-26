@@ -54,6 +54,29 @@ export interface TerrainEditorDescriptor {
     }[];
     constraints: ShapeEditorConstraints;
 }
+/** Game-owned presets for rows without a kind field. Null removes a property when applying a preset. */
+export interface CollisionEditorDescriptor {
+    path: FieldPath;
+    presets: {
+        value: string;
+        label: string;
+        values: Record<string, string | number | boolean | null>;
+    }[];
+    constraints: ShapeEditorConstraints;
+}
+/** Rectangular map collections (for example raised areas), edited through the same shape tools. */
+export interface RectangleEditorDescriptor extends CollisionEditorDescriptor {
+    id: string;
+    label: string;
+    group: string;
+    rectangle: {
+        x: string;
+        y: string;
+        width: string;
+        height: string;
+    };
+    fields?: LayerField[];
+}
 export interface LayerEditorDescriptor {
     version: typeof LAYER_EDITOR_VERSION;
     stage: {
@@ -65,6 +88,8 @@ export interface LayerEditorDescriptor {
     pictures: FieldPath;
     /** Optional terrain authoring; absence keeps pictures-only editing. */
     terrain?: TerrainEditorDescriptor;
+    collisions?: CollisionEditorDescriptor;
+    rectangles?: RectangleEditorDescriptor[];
     bands: LayerBand[];
     /**
      * The band a picture is in when it has no `layer`. The editor leaves `layer` out when a picture goes into this band.

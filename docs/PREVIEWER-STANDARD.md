@@ -242,5 +242,37 @@ fields must survive edits unchanged. An absent list means no terrain; a malforme
 `maxShapes`, and optional hard `minEdge`. Grid is an editor snap preference, not a validity requirement. Games whose
 short edges are advice omit `minEdge`; game validation remains authoritative for advice and gameplay. Terrain areas
 may overlap. An absent terrain descriptor leaves existing picture-only editing unchanged. Older v1 readers ignore
-this optional addition; no protocol or map-schema version changes. Collision-wall declarations are a later slice
-and will reuse the geometry tools rather than reinterpret terrain kinds.
+this optional addition; no protocol or map-schema version changes. Collision-wall declarations reuse the geometry tools through a separate optional declaration below.
+
+
+### Optional collision shapes
+
+`layers.collisions` declares `{ path, presets, constraints }` for convex collision rows (`id`, `points`, plus
+opaque game properties). Paths must not overlap terrain, stage or picture paths. Constraints have the same meaning
+as terrain constraints; grid and short-edge advice are not hard validity rules.
+
+Each preset has `value`, `label` and `values`: safe property names mapped to strings, finite numbers, booleans or
+null. Null removes that property and restores the game's absent-field default. Applying a preset removes the union
+of properties declared by the presets before writing its non-null values; every undeclared map/row/corner field
+survives. `id`, `points`, `kind` and prototype keys cannot be preset properties. Presets do not write a terrain
+`kind` into a collision row. To display a row, prefer the matching preset with the most non-null values, then a
+fallback preset with no non-null values. The game declares the meaning of every property.
+
+The optional addition does not change protocol, layer-description or map-schema versions. Older readers ignore
+it. Editors can display terrain and collision rows together but must keep their source paths, counts and per-kind
+limits separate; ids in different lists may be identical.
+
+
+### Optional rectangle lists
+
+`layers.rectangles` declares up to 16 rectangle families. Each entry supplies `id`, `label`, `group`, `path`,
+`rectangle: { x, y, width, height }` (the game's coordinate property names), `presets`, `constraints`, and optional
+`fields` using the existing game-field types. Constraints use the shape rules with both point counts set to four.
+Preset values follow collision semantics; neither presets nor fields may overwrite ids or mapped coordinates.
+All list paths must be disjoint from stage, pictures, terrain, collision and other rectangle paths.
+
+Rows use the mapped coordinate properties and optional stable `id`; legacy rows without ids may be given an id
+when edited. Other properties survive edits. Editors render/edit these as rectangles and must not offer polygon
+conversion for a rectangle-only family. Labels, grouping, presets, field defaults and limits come from the game;
+placement relationships and gameplay validation remain the game's responsibility. Older readers ignore this
+optional addition; protocol and layer-description versions remain unchanged.

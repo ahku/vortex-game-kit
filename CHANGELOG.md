@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Optional rectangle-list declarations with mapped coordinate keys, game-owned groups/presets, fields and limits.
+
+- Optional collision shape declarations: game-owned presets, safe scalar properties and shared convex geometry constraints. Older picture/terrain descriptions remain valid.
+
 ## 0.4.1
 
 - Layer editor description: `layer` is now an optional picture field, and a descriptor may give `defaultBand`, the band
