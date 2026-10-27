@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- Optional layer `enablement` capability for game-owned enabled/disabled items and an independent backdrop flag.
+  Disabled authoring records are retained; games apply enablement before preview and play.
+- Validate safe, non-overlapping backdrop enablement paths. Existing descriptors stay valid; protocol and manifest
+  versions are unchanged. Studio can also filter its own editor-disabled items without requiring this capability.
+
 ## 0.7.0
 
 - Add optional `regions`, `events` and `battle` declarations to the layer editor descriptor. Games declare their

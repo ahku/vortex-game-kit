@@ -340,3 +340,18 @@ absent/default option, with no synthetic value written to the map. It cannot be 
 A reference field's `emptyLabel` explains how to add missing targets. Optional multi-value fields can declare
 `emptyIsDefault: true` when clearing the control must remove the field; without it, explicit `[]` is preserved.
 These are presentation/editing contracts, not gameplay semantics.
+
+### Optional gameplay enablement (0.8.0)
+
+A layer descriptor may opt in with `enablement: {}`. This declares the standard optional `enabled` boolean on
+picture, terrain, collision, rectangle, region and event rows: missing/true means included; false means excluded
+from gameplay. `enablement.backdrop` may name an independent boolean path for the backdrop. Its path cannot overlap
+another declared path. Games without this capability get an unavailable power control in Studio, with an update
+explanation, and no writes. Older editors ignore the optional descriptor addition.
+
+The editor preserves disabled records and unknown fields, shows a struck-through name, and applies enablement as
+one normal undoable map edit. Disabled records stay editable and visible unless separately hidden with the eye.
+Editor visibility/locks are separate editor metadata and must never be interpreted as gameplay enablement.
+The game must filter the playable copy before spawn checks, simulation and rendering; Preview and normal game
+start must agree. Dependent-reference semantics and validation belong to the game. Ship runtime support before
+advertising the capability. Introduced in 0.8.0; earlier published tags remain unchanged.

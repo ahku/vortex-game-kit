@@ -99,6 +99,10 @@ export interface LayerEditorDescriptor {
         backdrop?: FieldPath;
         backdropFit?: FieldPath;
     };
+    /** Opt in to standard enabled?: boolean on every layer row. False excludes it from gameplay, never authoring. */
+    enablement?: {
+        backdrop?: FieldPath;
+    };
     /** The list of pictures. */
     pictures: FieldPath;
     /** Optional terrain authoring; absence keeps pictures-only editing. */

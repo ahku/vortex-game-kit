@@ -98,6 +98,8 @@ export interface RectangleEditorDescriptor extends CollisionEditorDescriptor {
 export interface LayerEditorDescriptor {
   version: typeof LAYER_EDITOR_VERSION;
   stage: { width: FieldPath; height: FieldPath; backdrop?: FieldPath; backdropFit?: FieldPath };
+  /** Opt in to standard enabled?: boolean on every layer row. False excludes it from gameplay, never authoring. */
+  enablement?: { backdrop?: FieldPath };
   /** The list of pictures. */
   pictures: FieldPath;
   /** Optional terrain authoring; absence keeps pictures-only editing. */
@@ -213,6 +215,16 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       if (isPath(stage.backdropFit)) backdropFit = stage.backdropFit;
       else errors.push('"stage.backdropFit" must be a path: a list of keys.');
       if (stage.backdrop === undefined) errors.push('"stage.backdropFit" needs a backdrop path.');
+    }
+  }
+  let enablement: LayerEditorDescriptor['enablement'];
+  if (data.enablement !== undefined) {
+    const raw = data.enablement;
+    if (!isObject(raw) || (raw.backdrop !== undefined && !isPath(raw.backdrop)))
+      errors.push('"enablement" must be an object with an optional backdrop path.');
+    else {
+      enablement = raw.backdrop ? { backdrop: [...raw.backdrop as FieldPath] } : {};
+      if (raw.backdrop && !backdrop) errors.push('"enablement.backdrop" needs a stage backdrop.');
     }
   }
   let pictures: FieldPath = [];
@@ -352,6 +364,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     ['stage.height', height],
     ['stage.backdrop', backdrop],
     ['stage.backdropFit', backdropFit],
+    ['enablement.backdrop', enablement?.backdrop],
     ['pictures', pictures],
     ['terrain.path', terrain?.path],
     ['collisions.path', collisions?.path],
@@ -464,6 +477,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       version: LAYER_EDITOR_VERSION,
       stage: { width, height, ...(backdrop ? { backdrop } : {}), ...(backdropFit ? { backdropFit } : {}) },
       pictures,
+      ...(enablement ? { enablement } : {}),
       ...(terrain ? { terrain } : {}),
       ...(collisions ? { collisions } : {}),
       ...(regions ? { regions } : {}),

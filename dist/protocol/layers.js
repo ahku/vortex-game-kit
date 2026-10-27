@@ -123,6 +123,17 @@ export function readLayerEditor(data) {
                 errors.push('"stage.backdropFit" needs a backdrop path.');
         }
     }
+    let enablement;
+    if (data.enablement !== undefined) {
+        const raw = data.enablement;
+        if (!isObject(raw) || (raw.backdrop !== undefined && !isPath(raw.backdrop)))
+            errors.push('"enablement" must be an object with an optional backdrop path.');
+        else {
+            enablement = raw.backdrop ? { backdrop: [...raw.backdrop] } : {};
+            if (raw.backdrop && !backdrop)
+                errors.push('"enablement.backdrop" needs a stage backdrop.');
+        }
+    }
     let pictures = [];
     if (isPath(data.pictures))
         pictures = data.pictures;
@@ -256,6 +267,7 @@ export function readLayerEditor(data) {
         ['stage.height', height],
         ['stage.backdrop', backdrop],
         ['stage.backdropFit', backdropFit],
+        ['enablement.backdrop', enablement?.backdrop],
         ['pictures', pictures],
         ['terrain.path', terrain?.path],
         ['collisions.path', collisions?.path],
@@ -365,6 +377,7 @@ export function readLayerEditor(data) {
             version: LAYER_EDITOR_VERSION,
             stage: { width, height, ...(backdrop ? { backdrop } : {}), ...(backdropFit ? { backdropFit } : {}) },
             pictures,
+            ...(enablement ? { enablement } : {}),
             ...(terrain ? { terrain } : {}),
             ...(collisions ? { collisions } : {}),
             ...(regions ? { regions } : {}),
