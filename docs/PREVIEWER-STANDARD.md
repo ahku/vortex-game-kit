@@ -200,7 +200,39 @@ the plain JSON editor, and a game of another kind (3D, say) gets an editor of it
 The editor owns the names of a picture's fields. The game's map must call them exactly this:
 `id`, `src`, `x`, `y`, `width` (always) and `layer`, `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
 `animation` (optional: the description lists which ones the game understands in `pictureFields`; the editor shows
-controls only for those). The game says only where things live and what is special about it:
+controls only for those).
+
+Games can declare presentation extras through `fields`, without extending `pictureFields`: for example `opacity`
+(number 0–1, default 1) and `blendMode` (choice, default `source-over`). Studio presents declared opacity as percent
+and composites declared blend modes on the stage; each game must implement and validate the modes it advertises.
+An editor may resolve linked asset appearance defaults into detached Preview data for declared fields. An absent
+instance field inherits; an explicit instance value wins, including 100% opacity and Normal blending. Editors must
+preserve these explicit values when writing map data, and must not persist resolved inheritance as an override.
+Map width/height and picture dimensions use the game's world/map units, independent of image pixels and editor
+snap-grid spacing. Source-grid margin/spacing and frame rectangles remain image pixels.
+
+A game declaring `animation` accepts a resolved uniform spritesheet definition on each picture:
+`{ columns, rows, margin, spacing, firstFrame, frameCount, fps, playback }`. Rows/columns are integers 1–256,
+with at most 4,096 cells. Margin/spacing are integer source pixels 0–4,096. Frames are zero-based, read left-to-right
+then top-to-bottom; firstFrame is nonnegative, frameCount is 1–4,096 and their sum must fit the grid. FPS is finite,
+0.1–120. Playback is `loop`, `once` (hold the last frame), or `ping-pong` (do not double the endpoints).
+Source dimensions minus outer margins/inter-cell spacing must leave at least one source pixel per cell axis.
+Exact divisibility is preferred. For resized sheets with fractional nominal cell dimensions, round each cell's
+start and end boundary independently to source pixels; shared boundaries must agree without gaps or overlaps.
+Display size/aspect ratio uses the nominal cell dimensions, so uneven pixel rounding never changes a sprite's
+screen size between frames. Editors may show a nonblocking warning for fractional cells.
+Picture width/implicit height and local coordinates refer to one cell, including its transparent padding, rather
+than the complete sheet. Explicit height, transforms, ground lines and depth behavior remain placement properties.
+The game validates animation data and draws/samples the current cell using its pause-aware presentation clock;
+reduced motion freezes on firstFrame. Absence means a static picture.
+
+An editor may resolve library animation into a detached Preview document at the picture path declared by the game;
+it must preserve authored transforms and opaque fields. Explicit per-picture animation wins over library defaults.
+Replacing or editing a library asset must refresh both its file URL and animation metadata. Games without the
+reserved `animation` capability do not receive inferred animation fields. This fills the existing optional field;
+the message envelope, descriptor version and kit runtime exports are unchanged.
+
+The game says where things live and what is special about it:
 
 ```json
 "layers": {
