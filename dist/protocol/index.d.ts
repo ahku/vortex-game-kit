@@ -8,3 +8,4 @@ export * from './previewerHost.js';
 export type { GameModule, GameSaveLike } from './module.js';
 export * from './manifest.js';
 export * from './layers.js';
+export * from './mapProperties.js';

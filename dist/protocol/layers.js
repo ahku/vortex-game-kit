@@ -1,3 +1,4 @@
+import { readMapProperties, readMapListEditor } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -217,7 +218,7 @@ export function readLayerEditor(data) {
                     continue;
                 }
                 // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
-                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined,
+                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, battle: undefined,
                     collisions: { path: raw.path, presets: raw.presets, constraints: raw.constraints, icon: raw.icon }, fields: raw.fields });
                 if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
                     checked.descriptor.collisions.constraints.maxPoints !== 4) {
@@ -235,6 +236,20 @@ export function readLayerEditor(data) {
                     ...(checked.descriptor.fields ? { fields: checked.descriptor.fields } : {}), });
             }
     }
+    let regions;
+    if (data.regions !== undefined) {
+        const checked = readLayerEditor({ version: data.version, stage: data.stage, pictures: data.pictures, bands: data.bands, defaultBand: data.defaultBand, collisions: data.regions });
+        if (!checked.ok || !checked.descriptor.collisions)
+            errors.push('Invalid regions descriptor.');
+        else
+            regions = checked.descriptor.collisions;
+    }
+    const events = data.events === undefined ? undefined : readMapListEditor(data.events);
+    const battle = data.battle === undefined ? undefined : readMapProperties(data.battle);
+    if (events === null)
+        errors.push('Invalid events descriptor.');
+    if (battle === null)
+        errors.push('Invalid battle descriptor.');
     // A path inside another path would make an edit overwrite the other thing.
     const named = [
         ['stage.width', width],
@@ -244,6 +259,9 @@ export function readLayerEditor(data) {
         ['pictures', pictures],
         ['terrain.path', terrain?.path],
         ['collisions.path', collisions?.path],
+        ['regions.path', regions?.path],
+        ['events.path', events?.path],
+        ...(battle?.fields.map((f) => [`battle.${f.path.join('.')}`, f.path]) ?? []),
         ...rectangles.map((r) => [`rectangles.${r.id}.path`, r.path]),
     ];
     const present = named.filter((n) => !!n[1] && n[1].length > 0);
@@ -349,6 +367,9 @@ export function readLayerEditor(data) {
             pictures,
             ...(terrain ? { terrain } : {}),
             ...(collisions ? { collisions } : {}),
+            ...(regions ? { regions } : {}),
+            ...(events ? { events } : {}),
+            ...(battle ? { battle } : {}),
             ...(rectangles.length ? { rectangles } : {}),
             bands,
             ...(defaultBand ? { defaultBand } : {}),

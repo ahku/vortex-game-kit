@@ -7,3 +7,4 @@ export * from './previewer.js';
 export * from './previewerHost.js';
 export * from './manifest.js';
 export * from './layers.js';
+export * from './mapProperties.js';

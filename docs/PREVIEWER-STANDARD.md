@@ -307,3 +307,36 @@ needs no knowledge of library names or game-specific types.
 Terrain kinds and collision/rectangle presets can include `shortDesc`, separate from the short `label`.
 It is optional plain text (1–240 characters, trimmed), shown as muted supporting information in type pickers and
 inspectors (palette explanations use 50% opacity). `description` is accepted as a legacy input alias, but readers return `shortDesc`. Put explanations here rather than parenthesized suffixes in labels. It is presentation metadata only.
+
+### Optional Events and Battle authoring
+
+The layer descriptor may also declare `regions`, `events` and `battle`. Older editors ignore these optional fields.
+They describe forms and data locations, never executable rules. Games still validate and interpret the map, and the
+normal previewer `load`/`validate` messages remain authoritative.
+
+- `regions` uses the collision descriptor's polygon path, presets and geometry limits for non-gameplay named areas.
+  Presets may have empty `values`. Saved region IDs stay stable; display names and shape forms use editor metadata.
+- `events` describes an ID-bearing row list: `path`, `maxItems`, scalar `defaults`, `fields`, optional `help`.
+  Every new row gets a fresh ID. Editors must refuse malformed lists rather than replace them.
+- `battle` describes root-relative `fields` and optional `help`.
+- Form fields use `path`, `label`, `type`, optional `help`/`required`/`default`; types are `text`, `number`, `boolean`,
+  `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
+  declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.
+  A field may constrain `min`, `max`, `integer`, `maxLength` and declare `when: {path,values}` relative to its form.
+- Defaults describe absent-field behavior; opening a form must not serialize them. Explicit `false` and `[]` differ
+  from absence. Reset removes a property. Changing a discriminator removes only declared inactive dependent fields,
+  retaining unknown siblings, and applies required dependent defaults. Missing references stay visible as errors.
+- All paths use the same safe-key rules as picture paths. Form write paths must not overlap; collection paths must
+  not overlap other layer data. Fields cannot edit an event row's ID. Each action joins the editor's save/lock and
+  undo history; continuous numeric scrubbing forms one entry.
+
+Unit reference controls initially list IDs already present in the document. Reusable character definitions, team-aware
+character-library pickers and pair authoring require the separate character contract. No game-specific team rules or
+fallback-party IDs belong in Studio.
+
+Form presentation may additionally declare `groups: [{id,label}]` and put a field in a `group`. Editors present these
+as optional disclosures; hiding a group never removes its values. A choice field's `unsetLabel` supplies an actual
+absent/default option, with no synthetic value written to the map. It cannot be required or have another default.
+A reference field's `emptyLabel` explains how to add missing targets. Optional multi-value fields can declare
+`emptyIsDefault: true` when clearing the control must remove the field; without it, explicit `[]` is preserved.
+These are presentation/editing contracts, not gameplay semantics.
