@@ -212,7 +212,7 @@ Map width/height and picture dimensions use the game's world/map units, independ
 snap-grid spacing. Source-grid margin/spacing and frame rectangles remain image pixels.
 
 A game declaring `animation` accepts a resolved uniform spritesheet definition on each picture:
-`{ columns, rows, margin, spacing, firstFrame, frameCount, fps, playback }`. Rows/columns are integers 1–256,
+`{ columns, rows, margin, spacing, firstFrame, frameCount, fps, playback, randomStart? }`. Rows/columns are integers 1–256,
 with at most 4,096 cells. Margin/spacing are integer source pixels 0–4,096. Frames are zero-based, read left-to-right
 then top-to-bottom; firstFrame is nonnegative, frameCount is 1–4,096 and their sum must fit the grid. FPS is finite,
 0.1–120. Playback is `loop`, `once` (hold the last frame), or `ping-pong` (do not double the endpoints).
@@ -225,6 +225,13 @@ Picture width/implicit height and local coordinates refer to one cell, including
 than the complete sheet. Explicit height, transforms, ground lines and depth behavior remain placement properties.
 The game validates animation data and draws/samples the current cell using its pause-aware presentation clock;
 reduced motion freezes on firstFrame. Absence means a static picture.
+
+`randomStart` is an optional boolean, default false. When enabled, each placed picture starts at a stable phase
+based on its `id`, without changing FPS or the authored frame range. Hash UTF-16 code units with FNV-1a: start at
+2166136261 and apply `Math.imul(hash ^ charCode, 16777619)` per code unit, then use `(hash >>> 0) % frameCount`
+as a frame-step offset before the usual loop/once/ping-pong calculation. With no instance id, use zero offset.
+Once starts partway through and still holds the final frame. Reduced motion and an editor's Animations Off show
+firstFrame without the offset. Library thumbnails and frame scrubbing retain their explicit frame selection.
 
 An editor may resolve library animation into a detached Preview document at the picture path declared by the game;
 it must preserve authored transforms and opaque fields. Explicit per-picture animation wins over library defaults.
