@@ -1,18 +1,39 @@
 # Changelog
 
-## Unreleased
+## 0.7.0
 
-- Optional type/preset `shortDesc` keeps short labels separate from explanatory text.
+- Add optional `regions`, `events` and `battle` declarations to the layer editor descriptor. Games declare their
+  own map paths, fields and limits; the kit introduces no gameplay rules.
+- Event regions reuse convex polygon geometry, presets and constraints. Trigger lists declare stable row IDs,
+  scalar defaults and a maximum item count.
+- Add shared map-property descriptors and readers for text, number, boolean, single/multiple choice and
+  single/multiple reference fields. References point to ID-bearing lists in the map, with optional display labels.
+- Support conditional fields, required values, numeric bounds, integer constraints, text lengths and typed defaults.
+  Optional groups, default-choice labels and empty-reference guidance describe how editors present the forms.
+- Preserve the distinction between absent values, explicit `false` and empty lists. Optional multi-value fields can
+  declare `emptyIsDefault` so clearing them restores the game's absent-field default.
+- Validate safe paths, overlapping write/collection paths, field groups, choices and defaults. Trigger fields cannot
+  overwrite row IDs. Export the new types, readers and safe-path helpers from `vortex-game-kit/protocol`.
+- Document editing/reset behavior, unknown-field preservation and character-reference boundaries. Existing layer
+  descriptions remain valid; protocol and manifest version numbers are unchanged.
 
-- Per-type/preset SVG icon overrides, optional finite view boxes and evenodd fill rules, with family fallback.
+## 0.6.0
 
-- Optional game-declared monochrome SVG path icons for terrain, collision and rectangle families.
+- Add optional collision shape declarations with game-owned presets, safe scalar properties and shared convex
+  geometry constraints.
+- Add optional rectangle-list declarations with mapped coordinate keys, game-owned groups, presets, fields and
+  limits.
+- Add an optional stage backdrop-fit path with standard stretch/contain/cover values and safe-path validation.
+- Support game-declared monochrome SVG path icons for terrain, collision and rectangle families, plus per-type and
+  per-preset overrides. Icons can declare finite view boxes and evenodd fill rules, with family-icon fallback.
+- Add optional `shortDesc` metadata to keep short type/preset labels separate from explanatory text. Accept
+  `description` as a legacy input alias and return `shortDesc`.
+- Existing picture and terrain descriptions remain valid.
 
-- Optional stage backdrop-fit path with standard stretch/contain/cover semantics and safe-path validation.
+## 0.5.0
 
-- Optional rectangle-list declarations with mapped coordinate keys, game-owned groups/presets, fields and limits.
-
-- Optional collision shape declarations: game-owned presets, safe scalar properties and shared convex geometry constraints. Older picture/terrain descriptions remain valid.
+- Add the optional terrain editor descriptor: a game declares its terrain collection path, terrain kinds and convex
+  polygon geometry constraints, allowing editors to author terrain without hard-coding game rules.
 
 ## 0.4.1
 
