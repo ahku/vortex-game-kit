@@ -40,3 +40,12 @@ it('only enables frame motion on slots with ordered sequences', () => {
  expect(readCharacterEditor({...descriptor,images:[{...image,frameMotion:'yes'}]})).toBeNull();
  expect(readCharacterEditor({...descriptor,images:[{...image,sequencePath:undefined}]})).toBeNull();
 });
+
+it('validates size guide paths against declared numeric properties', () => {
+ const sizing = {width:['art','size'],collisionRadius:['stats','radius'],movementRadius:['stats','move']};
+ const declaration = {...descriptor,sizing,properties:{fields:Object.values(sizing).map(path=>({path,label:'Size',type:'number'}))}};
+ expect(readCharacterEditor(declaration)?.sizing).toEqual(sizing);
+ expect(readCharacterEditor({...declaration,sizing:{...sizing,width:['__proto__','size']}})).toBeNull();
+ expect(readCharacterEditor({...declaration,sizing:{...sizing,width:['missing']}})).toBeNull();
+ expect(readCharacterEditor({...declaration,sizing:{width:['art','size']}})).toBeNull();
+});

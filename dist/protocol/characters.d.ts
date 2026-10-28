@@ -43,6 +43,12 @@ export interface CharacterEditorDescriptor {
     /** Where the document identifies its game preset/kit. */
     presetPath: string[];
     previewPath?: string[];
+    /** Optional game-owned size fields. Focus guides and proportional resizing are editor-only. */
+    sizing?: {
+        width: string[];
+        collisionRadius: string[];
+        movementRadius: string[];
+    };
     layeredDefaults?: Record<string, unknown>;
     /** Optional layered section; controls below this path stay hidden when absent. */
     layeredPath?: string[];

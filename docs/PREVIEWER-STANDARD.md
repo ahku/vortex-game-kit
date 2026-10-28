@@ -460,3 +460,9 @@ Frame poses may also set `mirror: boolean` (default false) to flip artwork left/
 pivot, after translation/rotation. It does not negate the authored offsets or rotation. Mirroring switches at
 frame boundaries, including during a tween; it never interpolates through zero scale. Resetting frame motion
 clears it along with other pose overrides. Blink artwork retains the underlying head pose's mirror flag.
+
+### Character size inspection
+
+A character editor may declare optional `sizing: {width, collisionRadius, movementRadius}`, each a safe path to a declared numeric property. Studio can highlight these fields in preview and offer a session-only proportional width/collision link. Both value edits share one history entry and honor declared radius bounds. These are editor capabilities, not simulation rules. Omission retains prior behavior.
+
+Field focus supplies the opaque transient game hint `measurement` at `previewPath`; Downbeat accepts `width`, `collisionRadius`, and `movementRadius`. This hint is sent on a cloned preview document and is never saved. The game owns units, fixed references, default radius resolution and framing. Restoring focus restores the user's preview settings.

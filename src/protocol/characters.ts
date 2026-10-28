@@ -34,6 +34,8 @@ export interface CharacterEditorDescriptor {
   /** Where the document identifies its game preset/kit. */
   presetPath: string[];
   previewPath?: string[];
+  /** Optional game-owned size fields. Focus guides and proportional resizing are editor-only. */
+  sizing?: { width: string[]; collisionRadius: string[]; movementRadius: string[] };
   layeredDefaults?: Record<string, unknown>;
   /** Optional layered section; controls below this path stay hidden when absent. */
   layeredPath?: string[];
@@ -52,7 +54,9 @@ export function readCharacterEditor(value: unknown): CharacterEditorDescriptor |
   if (!safeMapPath(presetPath) || (layeredPath !== undefined && !safeMapPath(layeredPath)) || !Array.isArray(inherit) || inherit.length > 50 || !inherit.every(safeMapPath)) return null;
   if (value.previewPath !== undefined && !safeMapPath(value.previewPath)) return null;
   if (value.layeredDefaults !== undefined && (!object(value.layeredDefaults) || JSON.stringify(value.layeredDefaults).length > 64000)) return null;
+  if (value.sizing !== undefined && (!object(value.sizing) || !['width','collisionRadius','movementRadius'].every(key => safeMapPath((value.sizing as Record<string,unknown>)[key])))) return null;
   const properties = readMapProperties(value.properties);
+  if (object(value.sizing) && (!properties || !Object.values(value.sizing).every(path => properties.fields.some(field => field.type === 'number' && field.path.join('.') === (path as string[]).join('.'))))) return null;
   if (!properties || typeof previewPage !== 'string' || !/^[a-zA-Z0-9_/-]+\.html$/.test(previewPage) || previewPage.startsWith('/') || previewPage.split('/').includes('..')) return null;
   if (!Array.isArray(presets) || !presets.length || presets.length > 50 || !Array.isArray(images) || images.length > 64) return null;
   const ids = new Set<string>();
@@ -80,5 +84,5 @@ export function readCharacterEditor(value: unknown): CharacterEditorDescriptor |
     if (image.properties !== undefined && !readMapProperties(image.properties)) return null;
     if (image.preview !== undefined && (!object(image.preview) || Object.keys(image.preview).length > 16 || !Object.values(image.preview).every(v => typeof v === 'string' || typeof v === 'boolean' || (typeof v === 'number' && Number.isFinite(v))))) return null;
   }
-  return JSON.parse(JSON.stringify({ version: 1, previewPage, presetPath, ...(value.previewPath ? { previewPath:value.previewPath } : {}), ...(value.layeredDefaults ? { layeredDefaults:value.layeredDefaults } : {}), ...(layeredPath ? { layeredPath } : {}), inherit, properties, presets, images })) as CharacterEditorDescriptor;
+  return JSON.parse(JSON.stringify({ version: 1, previewPage, presetPath, ...(value.sizing ? { sizing:value.sizing } : {}), ...(value.previewPath ? { previewPath:value.previewPath } : {}), ...(value.layeredDefaults ? { layeredDefaults:value.layeredDefaults } : {}), ...(layeredPath ? { layeredPath } : {}), inherit, properties, presets, images })) as CharacterEditorDescriptor;
 }

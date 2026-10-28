@@ -11,7 +11,11 @@ export function readCharacterEditor(value) {
         return null;
     if (value.layeredDefaults !== undefined && (!object(value.layeredDefaults) || JSON.stringify(value.layeredDefaults).length > 64000))
         return null;
+    if (value.sizing !== undefined && (!object(value.sizing) || !['width', 'collisionRadius', 'movementRadius'].every(key => safeMapPath(value.sizing[key]))))
+        return null;
     const properties = readMapProperties(value.properties);
+    if (object(value.sizing) && (!properties || !Object.values(value.sizing).every(path => properties.fields.some(field => field.type === 'number' && field.path.join('.') === path.join('.')))))
+        return null;
     if (!properties || typeof previewPage !== 'string' || !/^[a-zA-Z0-9_/-]+\.html$/.test(previewPage) || previewPage.startsWith('/') || previewPage.split('/').includes('..'))
         return null;
     if (!Array.isArray(presets) || !presets.length || presets.length > 50 || !Array.isArray(images) || images.length > 64)
@@ -60,5 +64,5 @@ export function readCharacterEditor(value) {
         if (image.preview !== undefined && (!object(image.preview) || Object.keys(image.preview).length > 16 || !Object.values(image.preview).every(v => typeof v === 'string' || typeof v === 'boolean' || (typeof v === 'number' && Number.isFinite(v)))))
             return null;
     }
-    return JSON.parse(JSON.stringify({ version: 1, previewPage, presetPath, ...(value.previewPath ? { previewPath: value.previewPath } : {}), ...(value.layeredDefaults ? { layeredDefaults: value.layeredDefaults } : {}), ...(layeredPath ? { layeredPath } : {}), inherit, properties, presets, images }));
+    return JSON.parse(JSON.stringify({ version: 1, previewPage, presetPath, ...(value.sizing ? { sizing: value.sizing } : {}), ...(value.previewPath ? { previewPath: value.previewPath } : {}), ...(value.layeredDefaults ? { layeredDefaults: value.layeredDefaults } : {}), ...(layeredPath ? { layeredPath } : {}), inherit, properties, presets, images }));
 }
