@@ -33,6 +33,8 @@ export function readCharacterEditor(value) {
             return null;
         if (image.blinkPath !== undefined && (!safeMapPath(image.blinkPath) || !object(image.state) || image.state.idle !== true || image.state.part !== 'head-down' || !object(image.sheet)))
             return null;
+        if (image.frameMotion !== undefined && (typeof image.frameMotion !== 'boolean' || (image.frameMotion && image.sequencePath === undefined)))
+            return null;
         if (image.sequencePath !== undefined && !safeMapPath(image.sequencePath))
             return null;
         if (image.animationPath !== undefined && !safeMapPath(image.animationPath))

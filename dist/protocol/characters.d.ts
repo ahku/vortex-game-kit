@@ -30,6 +30,8 @@ export interface CharacterGraphicSlot {
     animationPath?: string[];
     /** Optional ordered image-frame sequence, independent of the base still/spritesheet. */
     sequencePath?: string[];
+    /** Per-frame local transforms, duration (ms) and outgoing hold/linear/smooth transition. */
+    frameMotion?: boolean;
     /** Optional random one-shot sheet frames on this idle part: {frames,fps,minInterval,maxInterval}. */
     blinkPath?: string[];
     /** Opaque, game-owned inspection hints; never persisted into the character. */

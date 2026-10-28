@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.9.0
+
+- Add optional game-declared character editing: presets, base properties, layered body/front/rear artwork,
+  state grouping, setup steps, independent Idle inheritance, safe sheet layouts and inspection hints.
+- Describe ordered image-frame sequences and optional Idle/front blinking without introducing gameplay logic.
+- Add the optional frame-motion capability for local position, scale, rotation, timing, tweening and mirroring.
+- Validate capability declarations and safe authoring paths; preserve other content when a character declaration
+  is unsupported. Export the character descriptor types and reader through the pure protocol entry point.
+- Document shared graphic animation/appearance defaults and stable randomized sprite starting frames.
+- Existing games and published stories remain compatible; protocol and manifest versions are unchanged.
+
 ## 0.8.0
 
 - Optional layer `enablement` capability for game-owned enabled/disabled items and an independent backdrop flag.

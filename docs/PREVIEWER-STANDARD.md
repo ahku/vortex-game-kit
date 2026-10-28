@@ -445,3 +445,18 @@ not a looping animation. The game cancels it outside Idle/front-facing and never
 other states. Source, padding, scale and pivot come from the base part; no new asset references are introduced.
 Preview uses the same game-owned scheduler. A transient `blink` counter requests one immediate blink without
 saving that trigger or affecting gameplay. Older documents without the field retain their existing playback.
+
+Slots with `sequencePath` may opt into `frameMotion: true`. Frames then additionally allow `rotation` in degrees
+(default 0), `duration` in milliseconds (1–60000, absent means 1000/fps), and `transition: 'hold' | 'linear' | 'smooth'`
+(default hold). Local x/y/scale keep their existing defaults. A transition interpolates transforms toward the next
+pose, retaining the current source cell until the next frame boundary; smooth uses t*t*(3-2*t). Rotation follows
+the shortest arc. Loop includes the last-to-first transition; Once holds its final pose; Ping-pong reverses the
+pose path without duplicating end frames and uses the same transition on each edge in reverse. Each visited
+frame owns its duration. Base part alignment composes outside the animated pose; game facing composes outside
+both. Uniform FPS remains the default for frames without explicit duration. These are presentation transforms,
+never gameplay movement/collision data. No image packing or pixel morphing occurs.
+
+Frame poses may also set `mirror: boolean` (default false) to flip artwork left/right about the frame's local
+pivot, after translation/rotation. It does not negate the authored offsets or rotation. Mirroring switches at
+frame boundaries, including during a tween; it never interpolates through zero scale. Resetting frame motion
+clears it along with other pose overrides. Blink artwork retains the underlying head pose's mirror flag.

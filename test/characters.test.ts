@@ -33,3 +33,10 @@ it('limits blinking to an explicitly declared idle forward head with safe paths'
  expect(readCharacterEditor({...descriptor,images:[image]})?.images[0]?.blinkPath).toEqual(image.blinkPath);
  for(const bad of [{blinkPath:['__proto__','x']},{state:{...image.state,idle:false}},{state:{...image.state,part:'head-up'}},{sheet:undefined}]) expect(readCharacterEditor({...descriptor,images:[{...image,...bad}]})).toBeNull();
 });
+
+it('only enables frame motion on slots with ordered sequences', () => {
+ const image = {path:['art','src'],label:'Body',sequencePath:['art','sequence'],frameMotion:true};
+ expect(readCharacterEditor({...descriptor,images:[image]})?.images[0]?.frameMotion).toBe(true);
+ expect(readCharacterEditor({...descriptor,images:[{...image,frameMotion:'yes'}]})).toBeNull();
+ expect(readCharacterEditor({...descriptor,images:[{...image,sequencePath:undefined}]})).toBeNull();
+});

@@ -21,6 +21,8 @@ export interface CharacterGraphicSlot {
   animationPath?: string[];
   /** Optional ordered image-frame sequence, independent of the base still/spritesheet. */
   sequencePath?: string[];
+  /** Per-frame local transforms, duration (ms) and outgoing hold/linear/smooth transition. */
+  frameMotion?: boolean;
   /** Optional random one-shot sheet frames on this idle part: {frames,fps,minInterval,maxInterval}. */
   blinkPath?: string[];
   /** Opaque, game-owned inspection hints; never persisted into the character. */
@@ -64,6 +66,7 @@ export function readCharacterEditor(value: unknown): CharacterEditorDescriptor |
     if (image.fallback !== undefined && !safeMapPath(image.fallback)) return null;
     if (image.state !== undefined && (!object(image.state) || typeof image.state.id !== 'string' || !/^[a-zA-Z0-9_-]{1,40}$/.test(image.state.id) || typeof image.state.label !== 'string' || !image.state.label.trim() || image.state.label.length > 100 || !['body','head-down','head-up'].includes(String(image.state.part)) || (image.state.idle !== undefined && typeof image.state.idle !== 'boolean'))) return null;
     if (image.blinkPath !== undefined && (!safeMapPath(image.blinkPath) || !object(image.state) || image.state.idle !== true || image.state.part !== 'head-down' || !object(image.sheet))) return null;
+    if (image.frameMotion !== undefined && (typeof image.frameMotion !== 'boolean' || (image.frameMotion && image.sequencePath === undefined))) return null;
     if (image.sequencePath !== undefined && !safeMapPath(image.sequencePath)) return null;
     if (image.animationPath !== undefined && !safeMapPath(image.animationPath)) return null;
     if (image.help !== undefined && (typeof image.help !== 'string' || image.help.length > 1000)) return null;
