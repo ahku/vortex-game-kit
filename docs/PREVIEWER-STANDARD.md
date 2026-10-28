@@ -212,7 +212,7 @@ Map width/height and picture dimensions use the game's world/map units, independ
 snap-grid spacing. Source-grid margin/spacing and frame rectangles remain image pixels.
 
 A game declaring `animation` accepts a resolved uniform spritesheet definition on each picture:
-`{ columns, rows, margin, spacing, firstFrame, frameCount, fps, playback, randomStart? }`. Rows/columns are integers 1–256,
+`{ columns, rows, margin, spacing, firstFrame, frameCount, fps, playback, randomStart?, animated? }`. Rows/columns are integers 1–256,
 with at most 4,096 cells. Margin/spacing are integer source pixels 0–4,096. Frames are zero-based, read left-to-right
 then top-to-bottom; firstFrame is nonnegative, frameCount is 1–4,096 and their sum must fit the grid. FPS is finite,
 0.1–120. Playback is `loop`, `once` (hold the last frame), or `ping-pong` (do not double the endpoints).
@@ -225,6 +225,10 @@ Picture width/implicit height and local coordinates refer to one cell, including
 than the complete sheet. Explicit height, transforms, ground lines and depth behavior remain placement properties.
 The game validates animation data and draws/samples the current cell using its pause-aware presentation clock;
 reduced motion freezes on firstFrame. Absence means a static picture.
+
+`animated` is an optional boolean, default true for existing sheets. When false, retain the grid and all playback
+settings but always draw firstFrame, ignoring elapsed time and randomStart. New library sheets start with animation
+disabled; layout fields remain editable and playback controls appear only when animation is enabled.
 
 `randomStart` is an optional boolean, default false. When enabled, each placed picture starts at a stable phase
 based on its `id`, without changing FPS or the authored frame range. Hash UTF-16 code units with FNV-1a: start at
