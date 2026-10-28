@@ -1,3 +1,4 @@
+import { readCharacterEditor, type CharacterEditorDescriptor } from './characters.js';
 import { LAYER_EDITOR_VERSION, readLayerEditor } from './layers.js';
 import type { LayerEditorDescriptor } from './layers.js';
 
@@ -31,6 +32,7 @@ export interface ManifestContent {
   editor?: string;
   /** For a 2D map made of pictures on a stage: where things are, so a layer editor can open it (section 10). */
   layers?: LayerEditorDescriptor;
+  characters?: CharacterEditorDescriptor;
 }
 
 export interface GameManifest {
@@ -112,6 +114,8 @@ export function readManifest(data: unknown): ManifestReadResult {
           errors.push(`${at}.schemaVersion must be a whole number.`);
         if (editor !== undefined && (typeof editor !== 'string' || !SLUG.test(editor)))
           errors.push(`${at}.editor must be a slug.`);
+        const characters = entry.characters === undefined ? null : readCharacterEditor(entry.characters);
+        if (entry.characters !== undefined && !characters) warnings.push(`${at}.characters was left out: invalid or unsupported character editor.`);
         let layers: LayerEditorDescriptor | undefined;
         if (entry.layers !== undefined) {
           const rawLayers = entry.layers;
@@ -132,6 +136,7 @@ export function readManifest(data: unknown): ManifestReadResult {
             schemaVersion: schemaVersion as number,
             ...(typeof editor === 'string' ? { editor } : {}),
             ...(layers ? { layers } : {}),
+            ...(characters ? { characters } : {}),
           });
       });
   }

@@ -1,3 +1,4 @@
+import { readCharacterEditor } from './characters.js';
 import { LAYER_EDITOR_VERSION, readLayerEditor } from './layers.js';
 /**
  * The manifest: a small JSON file a game serves at `<game address>/vortex-manifest.json` so an editor can learn what the
@@ -67,6 +68,9 @@ export function readManifest(data) {
                     errors.push(`${at}.schemaVersion must be a whole number.`);
                 if (editor !== undefined && (typeof editor !== 'string' || !SLUG.test(editor)))
                     errors.push(`${at}.editor must be a slug.`);
+                const characters = entry.characters === undefined ? null : readCharacterEditor(entry.characters);
+                if (entry.characters !== undefined && !characters)
+                    warnings.push(`${at}.characters was left out: invalid or unsupported character editor.`);
                 let layers;
                 if (entry.layers !== undefined) {
                     const rawLayers = entry.layers;
@@ -89,6 +93,7 @@ export function readManifest(data) {
                         schemaVersion: schemaVersion,
                         ...(typeof editor === 'string' ? { editor } : {}),
                         ...(layers ? { layers } : {}),
+                        ...(characters ? { characters } : {}),
                     });
             });
     }

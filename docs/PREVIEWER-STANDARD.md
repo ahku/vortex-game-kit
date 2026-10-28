@@ -394,3 +394,54 @@ Editor visibility/locks are separate editor metadata and must never be interpret
 The game must filter the playable copy before spawn checks, simulation and rendering; Preview and normal game
 start must agree. Dependent-reference semantics and validation belong to the game. Ship runtime support before
 advertising the capability. Introduced in 0.8.0; earlier published tags remain unchanged.
+
+## Character authoring capability (version 1)
+
+A content entry may declare `module: "character"`, `type: "character"`, `editor: "characters"` and a `characters`
+descriptor read by `readCharacterEditor`. This is an optional additive manifest capability; old map integrations
+remain unchanged and unknown/future character descriptors are ignored with a warning.
+
+The descriptor supplies `version: 1`, a safe relative `previewPage`, `presetPath` (the kit/preset identifier in the
+game document), `presets` (`id`, `label`, opaque seed `data`), `properties` (the existing safe declarative form field
+contract), `images` (`path`, `label` for `asset:<id>` image assignments), and `inherit` (paths whose reset restores
+game defaults). Optional `layeredPath` marks a graphics subtree that only has controls while present. Paths are
+validated against prototype pollution. The Studio must not infer combat mechanics from player/enemy labels.
+
+Character data uses the same versioned content envelope, signed-asset preview messages and game-owned semantic
+validation as maps. The editor preserves unknown game data. The game resolves absent overrides from its supported
+kit, and its preview renders/plays the resolved definition. Draft persistence may permit incomplete documents;
+preview rejection must identify problems. Publishing/placement resolution and action clip schemas are not defined
+by this first capability.
+
+Character graphic entries may additionally declare a setup `role` (`head-down`, `head-up`, `idle-body`, `portrait`,
+`animation`) and `setupStep` 1–3, grouping/help, kit restrictions, initial part defaults, per-slot declarative
+properties, source `sheet` paths (columns/rows/frame and optional margin/spacing), and an `animationPath`. Up to 64
+slots are supported. The Studio must render the selected cell, preserving transparent padding and its pivot.
+
+Optional root `layeredDefaults` initializes an empty layered character. `previewPath` identifies a transient hint
+object in the document sent to the game. Each slot may supply plain scalar `preview` values: these are game-owned
+context hints, never persisted by the editor. Frame inspection may add a source frame number to that transient
+object. The game must validate/limit all hints, keep physical rules independent, and distinguish inspection of
+authored artwork from actual gameplay playback. A character inspection page may accept incomplete artwork while
+a real battle page applies stricter playability checks.
+
+Slots may declare `state: {id,label,part,idle?}` to group body/head-down/head-up artwork in a state-first workbench.
+`fallback` names another image slot's path used when this slot is unassigned. Editors display inherited artwork
+without copying it into the document. Customizing starts a detached copy; Use Idle removes only that override.
+Idle is the foundation; other states and animation are optional. Games must implement the same fallback resolution.
+
+A slot may declare `sequencePath` for optional ordered image-frame authoring: `{frames,fps,playback}`. Each frame
+contains `src`, `columns`, `rows`, `frame`, optional `margin`/`spacing`, and local `x`,`y`,`scale`. Sources may differ
+per frame; source cropping lets existing spritesheets be converted without image processing. A sequence takes
+precedence over the legacy uniform-sheet animation; removing it restores the part's base still. Frames are bounded
+at 256; FPS/playback use the existing animation limits/modes. Frame offsets compose with the part alignment. Changes
+use normal save/history; deleting a frame removes only its reference, never the uploaded asset. The game validates,
+preloads and renders this optional data. Absent sequences preserve legacy documents.
+
+An Idle `head-down` slot with a sheet may opt into `blinkPath`: `{frames:number[],fps,minInterval,maxInterval}`.
+Frames are zero-based cells from the part's base sheet (1–256 ordered/repeated entries); FPS is 0.1–120 and
+intervals are seconds, 0.1–120 with min <= max. This is a random one-shot overlay on normal Idle playback,
+not a looping animation. The game cancels it outside Idle/front-facing and never inherits its behavior into
+other states. Source, padding, scale and pivot come from the base part; no new asset references are introduced.
+Preview uses the same game-owned scheduler. A transient `blink` counter requests one immediate blink without
+saving that trigger or affecting gameplay. Older documents without the field retain their existing playback.

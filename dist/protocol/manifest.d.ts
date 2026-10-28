@@ -1,3 +1,4 @@
+import { type CharacterEditorDescriptor } from './characters.js';
 import type { LayerEditorDescriptor } from './layers.js';
 /**
  * The manifest: a small JSON file a game serves at `<game address>/vortex-manifest.json` so an editor can learn what the
@@ -25,6 +26,7 @@ export interface ManifestContent {
     editor?: string;
     /** For a 2D map made of pictures on a stage: where things are, so a layer editor can open it (section 10). */
     layers?: LayerEditorDescriptor;
+    characters?: CharacterEditorDescriptor;
 }
 export interface GameManifest {
     contract: number;
