@@ -368,6 +368,13 @@ normal previewer `load`/`validate` messages remain authoritative.
 - `events` describes an ID-bearing row list: `path`, `maxItems`, scalar `defaults`, `fields`, optional `help`.
   Every new row gets a fresh ID. Editors must refuse malformed lists rather than replace them.
 - `battle` describes root-relative `fields` and optional `help`.
+- `units` (optional) describes characters placed on the map. It is an ID-bearing row list like `events` (`path`,
+  `maxItems`, scalar `defaults`, `fields`, optional `help`/`groups`) plus `kit` (the row field holding the game kit the
+  row is based on), `position` (the row field holding an `{x, y}` point) and optional `character` (the row field linking
+  a row to an authored character). `kit`, `position`, `character` and `id` must not overlap each other or any form
+  field. The `fields` are the game's optional per-row settings; use `when` and nested paths such as
+  `["waitUntil","kind"]` for conditional controls, and `reference` fields into the `units` list itself for targets.
+  The kit values offered come from the character editor's presets. Games still validate placements.
 - Form fields use `path`, `label`, `type`, optional `help`/`required`/`default`; types are `text`, `number`, `boolean`,
   `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.

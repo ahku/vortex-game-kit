@@ -8,7 +8,7 @@ any game can run.
   [docs/GAME-INTEGRATION-STANDARD.md](docs/GAME-INTEGRATION-STANDARD.md) (stories) and
   [docs/PREVIEWER-STANDARD.md](docs/PREVIEWER-STANDARD.md) (map previews).
 - Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`.
-- Install: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.10.0.tar.gz`
+- Install: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.11.0.tar.gz`
 
 ```
 npm install

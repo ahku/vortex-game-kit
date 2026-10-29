@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+- Add optional `units` to the layer descriptor: a row list of placed characters with game-declared per-row settings,
+  the `kit`, `position` and optional `character` locations. Editors can offer a character library and a per-unit
+  inspector without knowing combat rules. Existing games and editors are unaffected; protocol and manifest versions
+  are unchanged. Like the other editor descriptors it is experimental and was written from one game.
+
 ## 0.10.0
 
 - Add optional `sizing` to the character editor descriptor: `width`, `collisionRadius` and `movementRadius`, each a safe

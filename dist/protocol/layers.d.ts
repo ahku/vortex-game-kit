@@ -1,4 +1,4 @@
-import type { MapPropertiesDescriptor, MapListEditorDescriptor } from './mapProperties.js';
+import type { MapPropertiesDescriptor, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -112,6 +112,8 @@ export interface LayerEditorDescriptor {
     /** Non-gameplay polygon areas used by events and objectives. */
     regions?: CollisionEditorDescriptor;
     events?: MapListEditorDescriptor;
+    /** Characters placed on the map, based on game kits and optionally authored Studio characters. */
+    units?: MapUnitsDescriptor;
     battle?: MapPropertiesDescriptor;
     bands: LayerBand[];
     /**

@@ -1,5 +1,5 @@
-import { readMapProperties, readMapListEditor } from './mapProperties.js';
-import type { MapPropertiesDescriptor, MapListEditorDescriptor } from './mapProperties.js';
+import { readMapProperties, readMapListEditor, readMapUnits } from './mapProperties.js';
+import type { MapPropertiesDescriptor, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -109,6 +109,8 @@ export interface LayerEditorDescriptor {
   /** Non-gameplay polygon areas used by events and objectives. */
   regions?: CollisionEditorDescriptor;
   events?: MapListEditorDescriptor;
+  /** Characters placed on the map, based on game kits and optionally authored Studio characters. */
+  units?: MapUnitsDescriptor;
   battle?: MapPropertiesDescriptor;
   bands: LayerBand[];
   /**
@@ -330,7 +332,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
         errors.push('Each rectangular collection needs a unique id, labels and four safe coordinate fields.'); continue;
       }
       // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
-      const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, battle: undefined,
+      const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, units: undefined, battle: undefined,
         collisions: {path:raw.path,presets:raw.presets,constraints:raw.constraints,icon:raw.icon}, fields:raw.fields });
       if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
           checked.descriptor.collisions.constraints.maxPoints !== 4) {
@@ -355,8 +357,10 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     else regions=checked.descriptor.collisions;
   }
   const events=data.events === undefined ? undefined : readMapListEditor(data.events);
+  const units=data.units === undefined ? undefined : readMapUnits(data.units);
   const battle=data.battle === undefined ? undefined : readMapProperties(data.battle);
   if (events === null) errors.push('Invalid events descriptor.');
+  if (units === null) errors.push('Invalid units descriptor.');
   if (battle === null) errors.push('Invalid battle descriptor.');
   // A path inside another path would make an edit overwrite the other thing.
   const named: [string, FieldPath | undefined][] = [
@@ -370,6 +374,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     ['collisions.path', collisions?.path],
     ['regions.path', regions?.path],
     ['events.path', events?.path],
+    ['units.path', units?.path],
     ...(battle?.fields.map((f): [string, FieldPath] => [`battle.${f.path.join('.')}`,f.path]) ?? []),
     ...rectangles.map((r): [string, FieldPath] => [`rectangles.${r.id}.path`,r.path]),
   ];
@@ -482,6 +487,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       ...(collisions ? { collisions } : {}),
       ...(regions ? { regions } : {}),
       ...(events ? { events } : {}),
+      ...(units ? { units } : {}),
       ...(battle ? { battle } : {}),
       ...(rectangles.length ? {rectangles} : {}),
       bands,

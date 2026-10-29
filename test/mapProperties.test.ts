@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   readMapProperties,
   readMapListEditor,
+  readMapUnits,
   readLayerEditor,
 } from "../src/protocol/index";
 const battle = {
@@ -134,4 +135,72 @@ it("retains optional grouping and default/empty-target copy without inventing sa
       fields: [{ path: ["x"], label: "X", type: "text", emptyLabel: "None" }],
     }),
   ).toBeNull();
+});
+
+describe("placed characters", () => {
+  const units = {
+    path: ["units"],
+    maxItems: 40,
+    defaults: {},
+    kit: ["type"],
+    position: ["pos"],
+    character: ["character"],
+    help: "Characters on the map.",
+    fields: [
+      {
+        path: ["avoidsOwnSide"],
+        label: "Avoids hitting its own side",
+        type: "boolean",
+      },
+      {
+        path: ["behaviour"],
+        label: "Behaviour",
+        type: "choice",
+        unsetLabel: "Default",
+        choices: [{ value: "attack", label: "Attack" }],
+      },
+      {
+        path: ["goesFor"],
+        label: "Goes for",
+        type: "reference",
+        reference: { path: ["units"], id: "id" },
+        when: { path: ["behaviour"], values: ["attack"] },
+      },
+      {
+        path: ["waitUntil", "kind"],
+        label: "Waits until",
+        type: "choice",
+        unsetLabel: "Never waits",
+        choices: [{ value: "signal", label: "Story signal" }],
+      },
+      {
+        path: ["waitUntil", "signal"],
+        label: "Signal",
+        type: "text",
+        when: { path: ["waitUntil", "kind"], values: ["signal"] },
+      },
+    ],
+  };
+  it("accepts a units descriptor and keeps its locations", () => {
+    expect(readMapUnits(units)).toEqual(units);
+    expect(readMapUnits({ ...units, character: undefined })?.character).toBeUndefined();
+  });
+  it("rejects missing, unsafe or overlapping locations", () => {
+    expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
+    expect(readMapUnits({ ...units, position: ["__proto__"] })).toBeNull();
+    expect(readMapUnits({ ...units, kit: ["pos"] })).toBeNull();
+    expect(readMapUnits({ ...units, kit: ["id"] })).toBeNull();
+    expect(
+      readMapUnits({
+        ...units,
+        fields: [{ path: ["type"], label: "Type", type: "text" }],
+      }),
+    ).toBeNull();
+  });
+  it("is part of the layer descriptor and may not sit inside another path", () => {
+    const ok = readLayerEditor({ ...base, units });
+    expect(ok.ok && ok.descriptor.units?.kit).toEqual(["type"]);
+    expect(readLayerEditor({ ...base, units: { ...units, kit: ["nope"], position: [] } }).ok).toBe(false);
+    expect(readLayerEditor({ ...base, units: { ...units, path: ["arena", "sprites"] } }).ok).toBe(false);
+  });
 });

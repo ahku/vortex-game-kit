@@ -263,3 +263,40 @@ export function readMapListEditor(
     defaults: { ...value.defaults } as MapListEditorDescriptor["defaults"],
   };
 }
+
+/**
+ * Placed characters. Rows are ID-bearing like events. `kit` names the field holding the game kit a row is based on,
+ * `position` the `{x, y}` point and `character` the optional field linking a row to an authored Studio character.
+ * The form `fields` describe the game's optional per-row settings; they never include these three paths or `id`.
+ */
+export interface MapUnitsDescriptor extends MapListEditorDescriptor {
+  kit: string[];
+  position: string[];
+  character?: string[];
+}
+export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
+  const list = readMapListEditor(value);
+  if (!list || !object(value)) return null;
+  const kit = value.kit;
+  const position = value.position;
+  const character = value.character;
+  if (!safeMapPath(kit) || !safeMapPath(position)) return null;
+  if (character !== undefined && !safeMapPath(character)) return null;
+  const own = [list.path, kit, position, ...(character ? [character] : [])];
+  const inside = (a: string[], b: string[]) => {
+    const n = Math.min(a.length, b.length);
+    return a.slice(0, n).every((k, i) => k === b[i]);
+  };
+  // The kit, position and character locations must not overlap each other, the id or any form field.
+  const row = own.slice(1).concat([["id"]]);
+  for (let i = 0; i < row.length; i += 1) {
+    for (let j = i + 1; j < row.length; j += 1) if (inside(row[i]!, row[j]!)) return null;
+    if (list.fields.some((f) => inside(f.path, row[i]!))) return null;
+  }
+  return {
+    ...list,
+    kit: [...kit],
+    position: [...position],
+    ...(character ? { character: [...character] } : {}),
+  };
+}

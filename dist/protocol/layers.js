@@ -1,4 +1,4 @@
-import { readMapProperties, readMapListEditor } from './mapProperties.js';
+import { readMapProperties, readMapListEditor, readMapUnits } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -229,7 +229,7 @@ export function readLayerEditor(data) {
                     continue;
                 }
                 // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
-                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, battle: undefined,
+                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, units: undefined, battle: undefined,
                     collisions: { path: raw.path, presets: raw.presets, constraints: raw.constraints, icon: raw.icon }, fields: raw.fields });
                 if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
                     checked.descriptor.collisions.constraints.maxPoints !== 4) {
@@ -256,9 +256,12 @@ export function readLayerEditor(data) {
             regions = checked.descriptor.collisions;
     }
     const events = data.events === undefined ? undefined : readMapListEditor(data.events);
+    const units = data.units === undefined ? undefined : readMapUnits(data.units);
     const battle = data.battle === undefined ? undefined : readMapProperties(data.battle);
     if (events === null)
         errors.push('Invalid events descriptor.');
+    if (units === null)
+        errors.push('Invalid units descriptor.');
     if (battle === null)
         errors.push('Invalid battle descriptor.');
     // A path inside another path would make an edit overwrite the other thing.
@@ -273,6 +276,7 @@ export function readLayerEditor(data) {
         ['collisions.path', collisions?.path],
         ['regions.path', regions?.path],
         ['events.path', events?.path],
+        ['units.path', units?.path],
         ...(battle?.fields.map((f) => [`battle.${f.path.join('.')}`, f.path]) ?? []),
         ...rectangles.map((r) => [`rectangles.${r.id}.path`, r.path]),
     ];
@@ -382,6 +386,7 @@ export function readLayerEditor(data) {
             ...(collisions ? { collisions } : {}),
             ...(regions ? { regions } : {}),
             ...(events ? { events } : {}),
+            ...(units ? { units } : {}),
             ...(battle ? { battle } : {}),
             ...(rectangles.length ? { rectangles } : {}),
             bands,

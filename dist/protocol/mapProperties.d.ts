@@ -49,3 +49,14 @@ export declare const safeMapKey: (v: unknown) => v is string;
 export declare const safeMapPath: (v: unknown) => v is string[];
 export declare function readMapProperties(value: unknown): MapPropertiesDescriptor | null;
 export declare function readMapListEditor(value: unknown): MapListEditorDescriptor | null;
+/**
+ * Placed characters. Rows are ID-bearing like events. `kit` names the field holding the game kit a row is based on,
+ * `position` the `{x, y}` point and `character` the optional field linking a row to an authored Studio character.
+ * The form `fields` describe the game's optional per-row settings; they never include these three paths or `id`.
+ */
+export interface MapUnitsDescriptor extends MapListEditorDescriptor {
+    kit: string[];
+    position: string[];
+    character?: string[];
+}
+export declare function readMapUnits(value: unknown): MapUnitsDescriptor | null;
