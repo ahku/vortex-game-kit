@@ -408,6 +408,9 @@ normal previewer `load`/`validate` messages remain authoritative.
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.
   A reference between rows of the same list may set `excludeSelf: true` so a row cannot be offered itself.
   A group may set `open: true` so an editor shows it unfolded when the form opens (groups start folded otherwise).
+  On a `units` field that overrides something of the character (hit points, movement), `base` is the path to that value in the
+  character's data, as for a range's `stat`: an editor shows it as what the field is when left empty and marks an override.
+  A text field with `base` overrides the character's name.
   A field may constrain `min`, `max`, `integer`, `maxLength`, give a number a short `unit` (such as `%`) to show after it, and declare `when: {path,values}` relative to its form.
 - Defaults describe absent-field behavior; opening a form must not serialize them. Explicit `false` and `[]` differ
   from absence. Reset removes a property. Changing a discriminator removes only declared inactive dependent fields,

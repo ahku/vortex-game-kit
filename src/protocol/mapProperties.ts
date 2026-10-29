@@ -29,6 +29,12 @@ export interface MapPropertyField {
   emptyIsDefault?: boolean;
   /** A short unit an editor shows after a number, such as `%`. Presentation only: the saved value stays a plain number. */
   unit?: string;
+  /**
+   * On a `units` field that overrides a character's own value (hit points, say): the path to that value in the
+   * character's data, as for a range's `stat`. An editor shows it as what the field is when left empty, and lets the
+   * author go back to it. A text field with `base` overrides the character's name. Presentation only.
+   */
+  base?: string[];
 }
 export interface MapPropertyGroup {
   id: string;
@@ -160,6 +166,10 @@ export function readMapProperties(
     if (raw.unit !== undefined) {
       if (field.type !== "number" || !text(raw.unit, 8)) return null;
       field.unit = raw.unit;
+    }
+    if (raw.base !== undefined) {
+      if ((field.type !== "number" && field.type !== "text") || !safeMapPath(raw.base)) return null;
+      field.base = [...(raw.base as string[])];
     }
     for (const key of ["integer", "required", "emptyIsDefault"] as const)
       if (raw[key] !== undefined) {

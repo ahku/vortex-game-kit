@@ -1,6 +1,6 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "Shared standard, protocol and conformance tests for connecting games to Vortex Studio stories and editors.",
   "type": "module",
   "license": "MIT",
@@ -29,7 +29,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm run test && npm run build",
-    "release": "git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && exit 1); npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version"
+    "release": "(git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && false)) && npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version"
   },
   "devDependencies": {
     "typescript": "^5.9.3",

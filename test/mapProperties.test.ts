@@ -292,6 +292,21 @@ describe("placed characters", () => {
       }),
     ).toBeNull();
   });
+  it("keeps the base a field overrides, on a number or a text only", () => {
+    const withBase = {
+      ...units,
+      fields: [
+        ...units.fields,
+        { path: ["hp"], label: "HP", type: "number", base: ["stats", "hp"] },
+        { path: ["name"], label: "Name", type: "text", base: ["name"] },
+      ],
+    };
+    expect(readMapUnits(withBase)).toEqual(withBase);
+    const bad = (field: unknown) => readMapUnits({ ...units, fields: [...units.fields, field] });
+    expect(bad({ path: ["hp"], label: "HP", type: "number", base: [] })).toBeNull();
+    expect(bad({ path: ["hp"], label: "HP", type: "number", base: ["__proto__"] })).toBeNull();
+    expect(bad({ path: ["on"], label: "On", type: "boolean", base: ["stats", "hp"] })).toBeNull();
+  });
   it("keeps a range that adds another, and a reference that leaves out its own row", () => {
     const added = {
       ...units,

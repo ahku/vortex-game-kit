@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.16.0
+
+- A field on the `units` descriptor may declare a `base`: the path to the value it overrides in the character's own
+  data (hit points, movement, reach). An editor shows that value as what the field is when left empty, marks a field
+  that overrides it and lets the author go back to it. Existing games and editors are unaffected; protocol and
+  manifest versions are unchanged.
+
 ## 0.15.0
 
 - A range on the `units` descriptor may name another range in `plus` and add its radius to its own, so an editor can

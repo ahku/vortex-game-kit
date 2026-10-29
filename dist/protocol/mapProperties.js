@@ -95,6 +95,11 @@ export function readMapProperties(value) {
                 return null;
             field.unit = raw.unit;
         }
+        if (raw.base !== undefined) {
+            if ((field.type !== "number" && field.type !== "text") || !safeMapPath(raw.base))
+                return null;
+            field.base = [...raw.base];
+        }
         for (const key of ["integer", "required", "emptyIsDefault"])
             if (raw[key] !== undefined) {
                 if (typeof raw[key] !== "boolean")
