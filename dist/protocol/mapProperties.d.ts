@@ -18,6 +18,7 @@ export interface MapPropertyField {
         path: string[];
         id: string;
         label?: string;
+        excludeSelf?: boolean;
     };
     when?: {
         path: string[];
@@ -73,6 +74,8 @@ export interface MapUnitRange {
         share: number;
         shareField?: string[];
     };
+    /** Adds the radius of another range to this one: a distance reached by moving first and then acting. */
+    plus?: string;
 }
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {
     kit: string[];

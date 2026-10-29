@@ -292,6 +292,38 @@ describe("placed characters", () => {
       }),
     ).toBeNull();
   });
+  it("keeps a range that adds another, and a reference that leaves out its own row", () => {
+    const added = {
+      ...units,
+      ranges: [
+        { id: "move", label: "Movement", stat: ["stats", "moveRadius"] },
+        { id: "reach", label: "Reach", stat: ["stats", "reach"], plus: "move" },
+      ],
+    };
+    expect(readMapUnits(added)).toEqual(added);
+    const bad = (plus: unknown) =>
+      readMapUnits({
+        ...added,
+        ranges: [added.ranges[0], { ...added.ranges[1], plus }],
+      });
+    expect(bad("nowhere")).toBeNull();
+    expect(bad("reach")).toBeNull();
+    expect(bad("__proto__")).toBeNull();
+    const withReference = (excludeSelf: unknown) =>
+      readMapProperties({
+        fields: [
+          {
+            path: ["next"],
+            label: "Next",
+            type: "reference",
+            reference: { path: ["rows"], id: "id", excludeSelf },
+          },
+        ],
+      });
+    expect(withReference(true)?.fields[0]?.reference?.excludeSelf).toBe(true);
+    expect(withReference(undefined)?.fields[0]?.reference).not.toHaveProperty("excludeSelf");
+    expect(withReference("yes")).toBeNull();
+  });
   it("rejects missing, unsafe or overlapping locations", () => {
     expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
     expect(readMapUnits({ ...units, position: ["__proto__"] })).toBeNull();

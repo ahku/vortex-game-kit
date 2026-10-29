@@ -397,7 +397,8 @@ normal previewer `load`/`validate` messages remain authoritative.
   selected character: each has an `id`, a `label` and where its number comes from, in this order: `field` (a form
   field of the row, set by the author), `stat` (a path in the character's own data, from its kit preset or authored
   definition), then `fallback` (`{of, share, shareField?}`: a share of another range, where `share` is 1 for all of it and the optional
-  `shareField` is a number field of the row, in percent, that wins over it). The editor lets the author switch each on
+  `shareField` is a number field of the row, in percent, that wins over it). A range may also name another range in `plus` and adds that radius to its own (a
+  distance reached by moving first and then acting). The editor lets the author switch each on
   or off; it draws circles of that radius in map units and knows nothing about what they mean.
 - A game may send `shortcut` (`name: "toggle-preview"`) when the person presses the editor's preview shortcut
   (Alt/Option+Enter) while the game page has the keyboard, so the editor can close the preview. Editors ignore names
@@ -405,6 +406,7 @@ normal previewer `load`/`validate` messages remain authoritative.
 - Form fields use `path`, `label`, `type`, optional `help`/`required`/`default`; types are `text`, `number`, `boolean`,
   `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.
+  A reference between rows of the same list may set `excludeSelf: true` so a row cannot be offered itself.
   A field may constrain `min`, `max`, `integer`, `maxLength`, give a number a short `unit` (such as `%`) to show after it, and declare `when: {path,values}` relative to its form.
 - Defaults describe absent-field behavior; opening a form must not serialize them. Explicit `false` and `[]` differ
   from absence. Reset removes a property. Changing a discriminator removes only declared inactive dependent fields,

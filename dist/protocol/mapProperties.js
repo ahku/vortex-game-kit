@@ -118,10 +118,13 @@ export function readMapProperties(value) {
                 !safeMapKey(r.id) ||
                 (r.label !== undefined && !safeMapKey(r.label)))
                 return null;
+            if (r.excludeSelf !== undefined && typeof r.excludeSelf !== "boolean")
+                return null;
             field.reference = {
                 path: [...r.path],
                 id: r.id,
                 ...(r.label ? { label: r.label } : {}),
+                ...(r.excludeSelf ? { excludeSelf: true } : {}),
             };
         }
         if (raw.when !== undefined) {
@@ -274,7 +277,8 @@ export function readMapUnits(value) {
                     raw.field === undefined &&
                     raw.fallback === undefined) ||
                 (raw.stat !== undefined && !safeMapPath(raw.stat)) ||
-                (raw.field !== undefined && !isField(raw.field)))
+                (raw.field !== undefined && !isField(raw.field)) ||
+                (raw.plus !== undefined && !safeMapKey(raw.plus)))
                 return null;
             let fallback;
             if (raw.fallback !== undefined) {
@@ -299,10 +303,12 @@ export function readMapUnits(value) {
                 ...(raw.stat ? { stat: [...raw.stat] } : {}),
                 ...(raw.field ? { field: [...raw.field] } : {}),
                 ...(fallback ? { fallback } : {}),
+                ...(raw.plus ? { plus: raw.plus } : {}),
             });
         }
         const ids = new Set(ranges.map((r) => r.id));
-        if (ranges.some((r) => r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id)))
+        if (ranges.some((r) => (r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id)) ||
+            (r.plus !== undefined && (!ids.has(r.plus) || r.plus === r.id))))
             return null;
     }
     return {

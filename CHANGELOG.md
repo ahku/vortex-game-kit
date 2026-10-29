@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.0
+
+- A range on the `units` descriptor may name another range in `plus` and add its radius to its own, so an editor can
+  draw how far a character threatens (moving, then reaching) as one circle.
+- A reference field may set `excludeSelf` so a row is never offered itself (a section that goes on to another one).
+  Existing games and editors are unaffected; protocol and manifest versions are unchanged.
+
 ## 0.14.0
 
 - Optional `translations` in the manifest: the game's own texts in other languages, keyed by the text as written, with

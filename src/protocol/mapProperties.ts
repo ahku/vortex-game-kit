@@ -18,7 +18,7 @@ export interface MapPropertyField {
   group?: string;
   default?: string | number | boolean | string[];
   choices?: { value: string; label: string }[];
-  reference?: { path: string[]; id: string; label?: string };
+  reference?: { path: string[]; id: string; label?: string; excludeSelf?: boolean };
   when?: { path: string[]; values: string[] };
   min?: number;
   max?: number;
@@ -189,10 +189,13 @@ export function readMapProperties(
         (r.label !== undefined && !safeMapKey(r.label))
       )
         return null;
+      if (r.excludeSelf !== undefined && typeof r.excludeSelf !== "boolean")
+        return null;
       field.reference = {
         path: [...r.path],
         id: r.id,
         ...(r.label ? { label: r.label as string } : {}),
+        ...(r.excludeSelf ? { excludeSelf: true } : {}),
       };
     }
     if (raw.when !== undefined) {
@@ -288,6 +291,8 @@ export interface MapUnitRange {
    * `shareField` is the path of a number field on the row, in percent (100 is all of it), that wins over `share`.
    */
   fallback?: { of: string; share: number; shareField?: string[] };
+  /** Adds the radius of another range to this one: a distance reached by moving first and then acting. */
+  plus?: string;
 }
 
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {
@@ -388,7 +393,8 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
           raw.field === undefined &&
           raw.fallback === undefined) ||
         (raw.stat !== undefined && !safeMapPath(raw.stat)) ||
-        (raw.field !== undefined && !isField(raw.field))
+        (raw.field !== undefined && !isField(raw.field)) ||
+        (raw.plus !== undefined && !safeMapKey(raw.plus))
       )
         return null;
       let fallback: MapUnitRange["fallback"];
@@ -415,13 +421,15 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
         ...(raw.stat ? { stat: [...(raw.stat as string[])] } : {}),
         ...(raw.field ? { field: [...(raw.field as string[])] } : {}),
         ...(fallback ? { fallback } : {}),
+        ...(raw.plus ? { plus: raw.plus as string } : {}),
       });
     }
     const ids = new Set(ranges.map((r) => r.id));
     if (
       ranges.some(
         (r) =>
-          r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id),
+          (r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id)) ||
+          (r.plus !== undefined && (!ids.has(r.plus) || r.plus === r.id)),
       )
     )
       return null;
