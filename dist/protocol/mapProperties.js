@@ -85,6 +85,11 @@ export function readMapProperties(value) {
                     field.maxLength < 1 ||
                     field.maxLength > 10000)))
             return null;
+        if (raw.unit !== undefined) {
+            if (field.type !== "number" || !text(raw.unit, 8))
+                return null;
+            field.unit = raw.unit;
+        }
         for (const key of ["integer", "required", "emptyIsDefault"])
             if (raw[key] !== undefined) {
                 if (typeof raw[key] !== "boolean")
@@ -280,7 +285,13 @@ export function readMapUnits(value) {
                     !(f.share > 0) ||
                     f.share > 10)
                     return null;
-                fallback = { of: f.of, share: f.share };
+                if (f.shareField !== undefined && !isField(f.shareField))
+                    return null;
+                fallback = {
+                    of: f.of,
+                    share: f.share,
+                    ...(f.shareField ? { shareField: [...f.shareField] } : {}),
+                };
             }
             ranges.push({
                 id: raw.id,

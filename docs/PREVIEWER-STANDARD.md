@@ -189,6 +189,11 @@ it saves the editor's owner from typing in what the game already knows. The edit
 - `previewer.messages` lists only the optional messages the game answers; leave it out if there are none.
 - `content` says which kinds of content the game owns and the `schemaVersion` it writes today. `editor` is a
   suggestion, a name the editor knows; an editor that does not know it uses its plain JSON editor.
+- Optional `translations` is the game's own texts in other languages: `{ "zh": { "Wake range": "唤醒范围" } }`, each
+  table keyed by the text as written in `content`. An editor shows the table of its current language (`zh-CN` falls
+  back to `zh`) and the written text where a table has no entry. Only the texts people read are translated: `label`,
+  `help`, `title`, `shortDesc`, `emptyLabel` and `unsetLabel`, never paths, ids or values. The kit gives
+  `translationsFor(translations, locale)` and `translateTexts(content, table)`.
 - Unknown fields are ignored. The kit gives `readManifest(json)` to check one and `manifestUrl(gameUrl)` for the
   address. The game does not need either: it just serves the file with CORS allowing the editor (`Access-Control-Allow-Origin`).
 
@@ -391,7 +396,8 @@ normal previewer `load`/`validate` messages remain authoritative.
   character's name, on its marker and in its layer row. Optional `ranges` are distances the editor may draw around the
   selected character: each has an `id`, a `label` and where its number comes from, in this order: `field` (a form
   field of the row, set by the author), `stat` (a path in the character's own data, from its kit preset or authored
-  definition), then `fallback` (`{of, share}`: a share of another range). The editor lets the author switch each on
+  definition), then `fallback` (`{of, share, shareField?}`: a share of another range, where `share` is 1 for all of it and the optional
+  `shareField` is a number field of the row, in percent, that wins over it). The editor lets the author switch each on
   or off; it draws circles of that radius in map units and knows nothing about what they mean.
 - A game may send `shortcut` (`name: "toggle-preview"`) when the person presses the editor's preview shortcut
   (Alt/Option+Enter) while the game page has the keyboard, so the editor can close the preview. Editors ignore names
@@ -399,7 +405,7 @@ normal previewer `load`/`validate` messages remain authoritative.
 - Form fields use `path`, `label`, `type`, optional `help`/`required`/`default`; types are `text`, `number`, `boolean`,
   `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.
-  A field may constrain `min`, `max`, `integer`, `maxLength` and declare `when: {path,values}` relative to its form.
+  A field may constrain `min`, `max`, `integer`, `maxLength`, give a number a short `unit` (such as `%`) to show after it, and declare `when: {path,values}` relative to its form.
 - Defaults describe absent-field behavior; opening a form must not serialize them. Explicit `false` and `[]` differ
   from absence. Reset removes a property. Changing a discriminator removes only declared inactive dependent fields,
   retaining unknown siblings, and applies required dependent defaults. Missing references stay visible as errors.

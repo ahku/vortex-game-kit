@@ -27,6 +27,8 @@ export interface MapPropertyField {
   required?: boolean;
   /** Clearing this multi-value control restores absence/the game default. */
   emptyIsDefault?: boolean;
+  /** A short unit an editor shows after a number, such as `%`. Presentation only: the saved value stays a plain number. */
+  unit?: string;
 }
 export interface MapPropertyGroup {
   id: string;
@@ -148,6 +150,10 @@ export function readMapProperties(
           field.maxLength > 10000))
     )
       return null;
+    if (raw.unit !== undefined) {
+      if (field.type !== "number" || !text(raw.unit, 8)) return null;
+      field.unit = raw.unit;
+    }
     for (const key of ["integer", "required", "emptyIsDefault"] as const)
       if (raw[key] !== undefined) {
         if (typeof raw[key] !== "boolean") return null;
@@ -277,8 +283,11 @@ export interface MapUnitRange {
   stat?: string[];
   /** A number the author may set on the placed row; it wins over `stat`. Must be one of the row's form fields. */
   field?: string[];
-  /** Used when neither of the above gives a number: this share of another range. */
-  fallback?: { of: string; share: number };
+  /**
+   * Used when neither of the above gives a number: a share of another range. `share` is the share (1 is all of it).
+   * `shareField` is the path of a number field on the row, in percent (100 is all of it), that wins over `share`.
+   */
+  fallback?: { of: string; share: number; shareField?: string[] };
 }
 
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {
@@ -393,7 +402,12 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
           f.share > 10
         )
           return null;
-        fallback = { of: f.of, share: f.share };
+        if (f.shareField !== undefined && !isField(f.shareField)) return null;
+        fallback = {
+          of: f.of,
+          share: f.share,
+          ...(f.shareField ? { shareField: [...(f.shareField as string[])] } : {}),
+        };
       }
       ranges.push({
         id: raw.id,

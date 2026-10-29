@@ -258,6 +258,40 @@ describe("placed characters", () => {
       }),
     ).toBeNull();
   });
+  it("keeps a percentage share field on a range and a unit on a number", () => {
+    const withShare = {
+      ...units,
+      fields: [
+        ...units.fields,
+        { path: ["wakePercent"], label: "Wake", type: "number", unit: "%" },
+      ],
+      ranges: [
+        { id: "move", label: "Movement", stat: ["stats", "moveRadius"] },
+        {
+          id: "wake",
+          label: "Wake",
+          fallback: { of: "move", share: 0.5, shareField: ["wakePercent"] },
+        },
+      ],
+    };
+    expect(readMapUnits(withShare)).toEqual(withShare);
+    const bad = (ranges: unknown) => readMapUnits({ ...withShare, ranges });
+    expect(
+      bad([
+        withShare.ranges[0],
+        { id: "w", label: "W", fallback: { of: "move", share: 1, shareField: ["zz"] } },
+      ]),
+    ).toBeNull();
+    expect(
+      readMapUnits({
+        ...withShare,
+        fields: [
+          ...units.fields,
+          { path: ["wakePercent"], label: "Wake", type: "text", unit: "%" },
+        ],
+      }),
+    ).toBeNull();
+  });
   it("rejects missing, unsafe or overlapping locations", () => {
     expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
     expect(readMapUnits({ ...units, position: ["__proto__"] })).toBeNull();

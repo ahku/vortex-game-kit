@@ -30,6 +30,8 @@ export interface MapPropertyField {
     required?: boolean;
     /** Clearing this multi-value control restores absence/the game default. */
     emptyIsDefault?: boolean;
+    /** A short unit an editor shows after a number, such as `%`. Presentation only: the saved value stays a plain number. */
+    unit?: string;
 }
 export interface MapPropertyGroup {
     id: string;
@@ -62,10 +64,14 @@ export interface MapUnitRange {
     stat?: string[];
     /** A number the author may set on the placed row; it wins over `stat`. Must be one of the row's form fields. */
     field?: string[];
-    /** Used when neither of the above gives a number: this share of another range. */
+    /**
+     * Used when neither of the above gives a number: a share of another range. `share` is the share (1 is all of it).
+     * `shareField` is the path of a number field on the row, in percent (100 is all of it), that wins over `share`.
+     */
     fallback?: {
         of: string;
         share: number;
+        shareField?: string[];
     };
 }
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {

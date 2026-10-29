@@ -40,7 +40,23 @@ export interface GameManifest {
         messages: ManifestMessage[];
     };
     content: ManifestContent[];
+    /**
+     * The game's own texts in other languages, as `{ [locale]: { [text as written in content]: translated text } }`.
+     * An editor shows the table of its current language, or the same language without the region, and falls back to
+     * the written text. See `translateTexts`.
+     */
+    translations?: ManifestTranslations;
 }
+/** `{ [locale]: { [text as written in the manifest]: the text in that language } }`. */
+export type ManifestTranslations = Record<string, Record<string, string>>;
+/** The table for a language such as `zh` or `zh-CN`: an exact match first, then the language alone. */
+export declare function translationsFor(translations: ManifestTranslations | undefined, locale: string): Record<string, string> | undefined;
+/**
+ * A copy of a descriptor (the `content` of a manifest, or a part of it) with every text people read (`label`, `help`,
+ * `title`, `shortDesc`, `emptyLabel`, `unsetLabel`) replaced by its entry in `table`, when it has one. Everything else
+ * is copied unchanged. Pure.
+ */
+export declare function translateTexts<T>(value: T, table: Record<string, string> | undefined): T;
 export type ManifestReadResult = {
     ok: true;
     manifest: GameManifest;

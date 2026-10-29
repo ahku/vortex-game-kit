@@ -10,6 +10,34 @@ export const MANIFEST_CONTRACT = 1;
 /** Where the manifest lives, relative to the game's address. */
 export const MANIFEST_PATH = 'vortex-manifest.json';
 export const MANIFEST_MESSAGES = ['validate', 'references', 'migrate'];
+/** The keys of a descriptor whose text people read. Other strings (paths, ids, values, icons) are never translated. */
+const TRANSLATED_KEYS = new Set(['title', 'label', 'help', 'shortDesc', 'emptyLabel', 'unsetLabel']);
+/** The table for a language such as `zh` or `zh-CN`: an exact match first, then the language alone. */
+export function translationsFor(translations, locale) {
+    if (!translations)
+        return undefined;
+    const table = (key) => Object.prototype.hasOwnProperty.call(translations, key) ? translations[key] : undefined;
+    return table(locale) ?? table(locale.split(/[-_]/)[0] ?? locale);
+}
+/**
+ * A copy of a descriptor (the `content` of a manifest, or a part of it) with every text people read (`label`, `help`,
+ * `title`, `shortDesc`, `emptyLabel`, `unsetLabel`) replaced by its entry in `table`, when it has one. Everything else
+ * is copied unchanged. Pure.
+ */
+export function translateTexts(value, table) {
+    if (!table)
+        return value;
+    const walk = (node, key) => {
+        if (typeof node === 'string')
+            return key && TRANSLATED_KEYS.has(key) && Object.prototype.hasOwnProperty.call(table, node) ? table[node] : node;
+        if (Array.isArray(node))
+            return node.map((item) => walk(item, key));
+        if (isObject(node))
+            return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, walk(v, k)]));
+        return node;
+    };
+    return walk(value);
+}
 const SLUG = /^[a-z0-9][a-z0-9-]{0,39}$/;
 const isObject = (value) => !!value && typeof value === 'object' && !Array.isArray(value);
 /**
@@ -97,6 +125,29 @@ export function readManifest(data) {
                     });
             });
     }
+    let translations;
+    if (data.translations !== undefined) {
+        const raw = data.translations;
+        if (!isObject(raw))
+            warnings.push('"translations" was left out: it must be an object.');
+        else {
+            const read = {};
+            let size = 0;
+            for (const [locale, table] of Object.entries(raw)) {
+                if (!/^[A-Za-z]{2,3}([-_][A-Za-z0-9]{2,8})?$/.test(locale) || !isObject(table))
+                    continue;
+                const entries = {};
+                for (const [from, to] of Object.entries(table)) {
+                    if (from.length > 1000 || typeof to !== 'string' || !to.trim() || to.length > 1000 || ++size > 5000)
+                        continue;
+                    entries[from] = to;
+                }
+                read[locale] = entries;
+            }
+            if (Object.keys(read).length)
+                translations = read;
+        }
+    }
     // A newer contract may add rules this kit does not know, so only what is plainly wrong is refused.
     if (errors.length > 0)
         return { ok: false, errors };
@@ -111,6 +162,7 @@ export function readManifest(data) {
             ...(typeof data.version === 'string' ? { version: data.version } : {}),
             ...(previewer ? { previewer } : {}),
             content,
+            ...(translations ? { translations } : {}),
         },
     };
 }

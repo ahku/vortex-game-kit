@@ -4,6 +4,8 @@ import {
   MANIFEST_PATH,
   manifestUrl,
   readManifest,
+  translateTexts,
+  translationsFor,
 } from '../src/protocol/index.js';
 
 const good = {
@@ -73,5 +75,45 @@ describe('manifestUrl', () => {
     expect(manifestUrl('https://game.example')).toBe('https://game.example/vortex-manifest.json');
     expect(manifestUrl('https://example.com/game?x=1')).toBe('https://example.com/game/vortex-manifest.json');
     expect(manifestUrl('javascript:1')).toBeNull();
+  });
+});
+
+describe('translations', () => {
+  const translations = { zh: { Behaviour: '行为', 'Pick one.': '请选择。' }, 'pt-BR': { Behaviour: 'Comportamento' } };
+
+  it('reads valid tables and drops broken ones', () => {
+    const r = readManifest({
+      ...good,
+      translations: { ...translations, 'not a locale!': { a: 'b' }, fr: 'nope', de: { x: '', y: 3, Behaviour: 'Verhalten' } },
+    });
+    expect(r.ok && r.manifest.translations).toEqual({ ...translations, de: { Behaviour: 'Verhalten' } });
+    const none = readManifest({ ...good, translations: [] });
+    expect(none.ok && none.manifest.translations).toBeUndefined();
+    expect(none.ok && none.warnings?.length).toBe(1);
+  });
+
+  it('finds the table of a language, with or without its region', () => {
+    expect(translationsFor(translations, 'zh')).toBe(translations.zh);
+    expect(translationsFor(translations, 'zh-CN')).toBe(translations.zh);
+    expect(translationsFor(translations, 'pt-BR')).toBe(translations['pt-BR']);
+    expect(translationsFor(translations, 'en')).toBeUndefined();
+    expect(translationsFor(undefined, 'zh')).toBeUndefined();
+    expect(translationsFor(translations, '__proto__')).toBeUndefined();
+  });
+
+  it('translates only the texts people read', () => {
+    const layers = {
+      fields: [{ path: ['Behaviour'], label: 'Behaviour', help: 'Pick one.', type: 'Behaviour', choices: [{ value: 'Behaviour', label: 'Behaviour' }] }],
+    };
+    const out = translateTexts(layers, translations.zh);
+    expect(out.fields[0]).toEqual({
+      path: ['Behaviour'],
+      label: '行为',
+      help: '请选择。',
+      type: 'Behaviour',
+      choices: [{ value: 'Behaviour', label: '行为' }],
+    });
+    expect(layers.fields[0]!.label).toBe('Behaviour');
+    expect(translateTexts(layers, undefined)).toBe(layers);
   });
 });

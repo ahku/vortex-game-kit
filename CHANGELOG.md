@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.14.0
+
+- Optional `translations` in the manifest: the game's own texts in other languages, keyed by the text as written, with
+  `translationsFor` and `translateTexts` to apply them to the labels, help and titles of a descriptor. Games no longer
+  show English-only forms in an editor set to another language. Existing games are unaffected.
+- A number field may declare a `unit` (such as `%`) that an editor shows after it, and a range's `fallback` may name a
+  `shareField`: a number on the row, in percent, that sets how much of another range it covers (a wake range as a
+  percentage of the movement radius). Existing games and editors are unaffected; protocol and manifest versions are
+  unchanged.
+
 ## 0.13.0
 
 - Optional `sections` on the layer descriptor: named convex areas of a long battle, drawn with the same polygon tools
