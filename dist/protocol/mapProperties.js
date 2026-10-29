@@ -22,9 +22,14 @@ export function readMapProperties(value) {
             if (!object(raw) ||
                 !safeMapKey(raw.id) ||
                 !text(raw.label, 80) ||
-                groups.some((g) => g.id === raw.id))
+                groups.some((g) => g.id === raw.id) ||
+                (raw.open !== undefined && typeof raw.open !== "boolean"))
                 return null;
-            groups.push({ id: raw.id, label: raw.label });
+            groups.push({
+                id: raw.id,
+                label: raw.label,
+                ...(raw.open ? { open: true } : {}),
+            });
         }
     }
     const fields = [];

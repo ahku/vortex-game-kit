@@ -324,6 +324,16 @@ describe("placed characters", () => {
     expect(withReference(undefined)?.fields[0]?.reference).not.toHaveProperty("excludeSelf");
     expect(withReference("yes")).toBeNull();
   });
+  it("keeps a group that starts unfolded", () => {
+    const form = (open: unknown) =>
+      readMapProperties({
+        groups: [{ id: "more", label: "More", open }],
+        fields: [{ path: ["a"], label: "A", type: "text", group: "more" }],
+      });
+    expect(form(true)?.groups).toEqual([{ id: "more", label: "More", open: true }]);
+    expect(form(undefined)?.groups).toEqual([{ id: "more", label: "More" }]);
+    expect(form("yes")).toBeNull();
+  });
   it("rejects missing, unsafe or overlapping locations", () => {
     expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
     expect(readMapUnits({ ...units, position: ["__proto__"] })).toBeNull();

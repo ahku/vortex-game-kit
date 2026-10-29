@@ -37,6 +37,8 @@ export interface MapPropertyField {
 export interface MapPropertyGroup {
     id: string;
     label: string;
+    /** An editor shows the group unfolded when the form opens. Without it the group starts folded. */
+    open?: boolean;
 }
 export interface MapPropertiesDescriptor {
     help?: string;

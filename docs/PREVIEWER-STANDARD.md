@@ -407,6 +407,7 @@ normal previewer `load`/`validate` messages remain authoritative.
   `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.
   A reference between rows of the same list may set `excludeSelf: true` so a row cannot be offered itself.
+  A group may set `open: true` so an editor shows it unfolded when the form opens (groups start folded otherwise).
   A field may constrain `min`, `max`, `integer`, `maxLength`, give a number a short `unit` (such as `%`) to show after it, and declare `when: {path,values}` relative to its form.
 - Defaults describe absent-field behavior; opening a form must not serialize them. Explicit `false` and `[]` differ
   from absence. Reset removes a property. Changing a discriminator removes only declared inactive dependent fields,
