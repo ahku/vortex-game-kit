@@ -229,7 +229,7 @@ export function readLayerEditor(data) {
                     continue;
                 }
                 // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
-                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, units: undefined, battle: undefined,
+                const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, sections: undefined, events: undefined, units: undefined, battle: undefined,
                     collisions: { path: raw.path, presets: raw.presets, constraints: raw.constraints, icon: raw.icon }, fields: raw.fields });
                 if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
                     checked.descriptor.collisions.constraints.maxPoints !== 4) {
@@ -255,6 +255,23 @@ export function readLayerEditor(data) {
         else
             regions = checked.descriptor.collisions;
     }
+    let sections;
+    if (data.sections !== undefined) {
+        const raw = data.sections;
+        const checked = readLayerEditor({ version: data.version, stage: data.stage, pictures: data.pictures, bands: data.bands, defaultBand: data.defaultBand, collisions: raw });
+        const fields = isObject(raw) ? readMapProperties({ fields: raw.fields }) : null;
+        const previewStart = isObject(raw) ? raw.previewStart : undefined;
+        const help = isObject(raw) ? raw.help : undefined;
+        if (!checked.ok || !checked.descriptor.collisions || !fields)
+            errors.push('Invalid sections descriptor.');
+        else if (previewStart !== undefined && !isPath(previewStart))
+            errors.push('"sections.previewStart" must be a safe path.');
+        else if (help !== undefined && (typeof help !== 'string' || !help.trim() || help.length > 1000))
+            errors.push('"sections.help" must be nonempty text of up to 1000 characters.');
+        else
+            sections = { ...checked.descriptor.collisions, fields: fields.fields,
+                ...(previewStart ? { previewStart: previewStart } : {}), ...(help ? { help: help } : {}) };
+    }
     const events = data.events === undefined ? undefined : readMapListEditor(data.events);
     const units = data.units === undefined ? undefined : readMapUnits(data.units);
     const battle = data.battle === undefined ? undefined : readMapProperties(data.battle);
@@ -275,6 +292,8 @@ export function readLayerEditor(data) {
         ['terrain.path', terrain?.path],
         ['collisions.path', collisions?.path],
         ['regions.path', regions?.path],
+        ['sections.path', sections?.path],
+        ['sections.previewStart', sections?.previewStart],
         ['events.path', events?.path],
         ['units.path', units?.path],
         ['units.definitions', units?.definitions],
@@ -386,6 +405,7 @@ export function readLayerEditor(data) {
             ...(terrain ? { terrain } : {}),
             ...(collisions ? { collisions } : {}),
             ...(regions ? { regions } : {}),
+            ...(sections ? { sections } : {}),
             ...(events ? { events } : {}),
             ...(units ? { units } : {}),
             ...(battle ? { battle } : {}),

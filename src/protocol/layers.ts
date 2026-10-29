@@ -1,5 +1,5 @@
 import { readMapProperties, readMapListEditor, readMapUnits } from './mapProperties.js';
-import type { MapPropertiesDescriptor, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
+import type { MapPropertiesDescriptor, MapPropertyField, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -95,6 +95,22 @@ export interface RectangleEditorDescriptor extends CollisionEditorDescriptor {
   fields?: LayerField[];
 }
 
+/**
+ * Sections of a long battle: named convex areas the party moves through one after the other. An editor draws them like
+ * regions (same polygon tools and limits) and shows `fields` in the inspector for what else a section has: its title,
+ * where the party starts, which section follows and so on. The game owns what the fields mean.
+ */
+export interface SectionEditorDescriptor extends CollisionEditorDescriptor {
+  /** Per-section settings, paths inside one row. A `reference` field may point at the sections' own path. */
+  fields: MapPropertyField[];
+  /**
+   * A place in the map where an editor writes the id of the section a preview should start in. It is written into the
+   * copy sent to the game only and never saved.
+   */
+  previewStart?: FieldPath;
+  help?: string;
+}
+
 export interface LayerEditorDescriptor {
   version: typeof LAYER_EDITOR_VERSION;
   stage: { width: FieldPath; height: FieldPath; backdrop?: FieldPath; backdropFit?: FieldPath };
@@ -108,6 +124,8 @@ export interface LayerEditorDescriptor {
   rectangles?: RectangleEditorDescriptor[];
   /** Non-gameplay polygon areas used by events and objectives. */
   regions?: CollisionEditorDescriptor;
+  /** Sections of a long battle, drawn like regions with extra per-row fields. */
+  sections?: SectionEditorDescriptor;
   events?: MapListEditorDescriptor;
   /** Characters placed on the map, based on game kits and optionally authored Studio characters. */
   units?: MapUnitsDescriptor;
@@ -332,7 +350,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
         errors.push('Each rectangular collection needs a unique id, labels and four safe coordinate fields.'); continue;
       }
       // Reuse the full preset, constraint and field validator. The recursive call has no rectangle collections.
-      const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, events: undefined, units: undefined, battle: undefined,
+      const checked = readLayerEditor({ ...data, rectangles: undefined, terrain: undefined, regions: undefined, sections: undefined, events: undefined, units: undefined, battle: undefined,
         collisions: {path:raw.path,presets:raw.presets,constraints:raw.constraints,icon:raw.icon}, fields:raw.fields });
       if (!checked.ok || !checked.descriptor.collisions || checked.descriptor.collisions.constraints.minPoints !== 4 ||
           checked.descriptor.collisions.constraints.maxPoints !== 4) {
@@ -356,6 +374,19 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     if (!checked.ok || !checked.descriptor.collisions) errors.push('Invalid regions descriptor.');
     else regions=checked.descriptor.collisions;
   }
+  let sections: SectionEditorDescriptor | undefined;
+  if (data.sections !== undefined) {
+    const raw = data.sections;
+    const checked = readLayerEditor({version:data.version, stage:data.stage, pictures:data.pictures, bands:data.bands, defaultBand:data.defaultBand, collisions:raw});
+    const fields = isObject(raw) ? readMapProperties({ fields: raw.fields }) : null;
+    const previewStart = isObject(raw) ? raw.previewStart : undefined;
+    const help = isObject(raw) ? raw.help : undefined;
+    if (!checked.ok || !checked.descriptor.collisions || !fields) errors.push('Invalid sections descriptor.');
+    else if (previewStart !== undefined && !isPath(previewStart)) errors.push('"sections.previewStart" must be a safe path.');
+    else if (help !== undefined && (typeof help !== 'string' || !help.trim() || help.length > 1000)) errors.push('"sections.help" must be nonempty text of up to 1000 characters.');
+    else sections = { ...checked.descriptor.collisions, fields: fields.fields,
+      ...(previewStart ? { previewStart: previewStart as FieldPath } : {}), ...(help ? { help: help as string } : {}) };
+  }
   const events=data.events === undefined ? undefined : readMapListEditor(data.events);
   const units=data.units === undefined ? undefined : readMapUnits(data.units);
   const battle=data.battle === undefined ? undefined : readMapProperties(data.battle);
@@ -373,6 +404,8 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     ['terrain.path', terrain?.path],
     ['collisions.path', collisions?.path],
     ['regions.path', regions?.path],
+    ['sections.path', sections?.path],
+    ['sections.previewStart', sections?.previewStart],
     ['events.path', events?.path],
     ['units.path', units?.path],
     ['units.definitions', units?.definitions],
@@ -487,6 +520,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
       ...(terrain ? { terrain } : {}),
       ...(collisions ? { collisions } : {}),
       ...(regions ? { regions } : {}),
+      ...(sections ? { sections } : {}),
       ...(events ? { events } : {}),
       ...(units ? { units } : {}),
       ...(battle ? { battle } : {}),

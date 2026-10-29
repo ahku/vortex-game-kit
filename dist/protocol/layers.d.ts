@@ -1,4 +1,4 @@
-import type { MapPropertiesDescriptor, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
+import type { MapPropertiesDescriptor, MapPropertyField, MapListEditorDescriptor, MapUnitsDescriptor } from './mapProperties.js';
 /**
  * The layer editor descriptor: what a game tells an editor so it can move the game's pictures around on a stage
  * (docs/PREVIEWER-STANDARD.md, section 10). The editor owns the names of a picture's fields (`x`, `y`, `width`...); the
@@ -91,6 +91,21 @@ export interface RectangleEditorDescriptor extends CollisionEditorDescriptor {
     };
     fields?: LayerField[];
 }
+/**
+ * Sections of a long battle: named convex areas the party moves through one after the other. An editor draws them like
+ * regions (same polygon tools and limits) and shows `fields` in the inspector for what else a section has: its title,
+ * where the party starts, which section follows and so on. The game owns what the fields mean.
+ */
+export interface SectionEditorDescriptor extends CollisionEditorDescriptor {
+    /** Per-section settings, paths inside one row. A `reference` field may point at the sections' own path. */
+    fields: MapPropertyField[];
+    /**
+     * A place in the map where an editor writes the id of the section a preview should start in. It is written into the
+     * copy sent to the game only and never saved.
+     */
+    previewStart?: FieldPath;
+    help?: string;
+}
 export interface LayerEditorDescriptor {
     version: typeof LAYER_EDITOR_VERSION;
     stage: {
@@ -111,6 +126,8 @@ export interface LayerEditorDescriptor {
     rectangles?: RectangleEditorDescriptor[];
     /** Non-gameplay polygon areas used by events and objectives. */
     regions?: CollisionEditorDescriptor;
+    /** Sections of a long battle, drawn like regions with extra per-row fields. */
+    sections?: SectionEditorDescriptor;
     events?: MapListEditorDescriptor;
     /** Characters placed on the map, based on game kits and optionally authored Studio characters. */
     units?: MapUnitsDescriptor;

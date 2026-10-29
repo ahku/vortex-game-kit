@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.13.0
+
+- Optional `sections` on the layer descriptor: named convex areas of a long battle, drawn with the same polygon tools
+  and limits as `regions`, plus game-declared per-section `fields` (title, start point, next section, healing) and an
+  optional `previewStart` path where an editor writes the section a preview should begin in, in the copy sent to the
+  game only. Editors can author sections without knowing how a game moves between them. Existing games and editors
+  are unaffected; protocol and manifest versions are unchanged. Like the other editor descriptors it is experimental.
+
 ## 0.12.0
 
 - Optional `libraryGroups` and `definitions` on the `units` layer descriptor: how the character library sorts kits, and

@@ -120,3 +120,46 @@ describe('manifest layers', () => {
     }
   });
 });
+
+describe('sections descriptor', () => {
+  const sections = {
+    path: ['arena', 'sections'],
+    presets: [{ value: 'section', label: 'Section', values: {} }],
+    constraints: { minPoints: 3, maxPoints: 8, convex: true, withinStage: true, grid: 0.125, maxShapes: 12 },
+    help: 'Parts of a long battle.',
+    previewStart: ['previewSection'],
+    fields: [
+      { path: ['title'], label: 'Title', type: 'text', maxLength: 60 },
+      { path: ['start', 'x'], label: 'Start x', type: 'number' },
+      { path: ['start', 'y'], label: 'Start y', type: 'number' },
+      { path: ['next'], label: 'Next', type: 'reference', reference: { path: ['arena', 'sections'], id: 'id' } },
+    ],
+  };
+  it('reads sections with their fields and preview path', () => {
+    const r = readLayerEditor({ ...good, sections });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.descriptor.sections?.path).toEqual(['arena', 'sections']);
+      expect(r.descriptor.sections?.fields.map((f) => f.label)).toEqual(['Title', 'Start x', 'Start y', 'Next']);
+      expect(r.descriptor.sections?.previewStart).toEqual(['previewSection']);
+    }
+  });
+  it('leaves them out when absent', () => {
+    const r = readLayerEditor(good);
+    expect(r.ok && r.descriptor.sections).toBeFalsy();
+  });
+  it('refuses broken sections', () => {
+    const bad = (patch: object) => readLayerEditor({ ...good, sections: { ...sections, ...patch } });
+    expect(bad({ fields: [] }).ok).toBe(false);
+    expect(bad({ fields: undefined }).ok).toBe(false);
+    expect(bad({ previewStart: ['__proto__'] }).ok).toBe(false);
+    expect(bad({ constraints: { ...sections.constraints, convex: false } }).ok).toBe(false);
+    expect(bad({ help: '' }).ok).toBe(false);
+  });
+  it('keeps their places apart from the other collections', () => {
+    const regions = { ...sections, fields: undefined, previewStart: undefined, help: undefined };
+    expect(readLayerEditor({ ...good, regions, sections }).ok).toBe(false);
+    expect(readLayerEditor({ ...good, regions: { ...regions, path: ['arena', 'regions'] }, sections }).ok).toBe(true);
+    expect(readLayerEditor({ ...good, sections: { ...sections, previewStart: ['arena', 'sections', 'x'] } }).ok).toBe(false);
+  });
+});

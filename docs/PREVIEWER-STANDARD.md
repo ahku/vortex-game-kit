@@ -360,12 +360,18 @@ inspectors (palette explanations use 50% opacity). `description` is accepted as 
 
 ### Optional Events and Battle authoring
 
-The layer descriptor may also declare `regions`, `events` and `battle`. Older editors ignore these optional fields.
+The layer descriptor may also declare `regions`, `sections`, `events` and `battle`. Older editors ignore these optional fields.
 They describe forms and data locations, never executable rules. Games still validate and interpret the map, and the
 normal previewer `load`/`validate` messages remain authoritative.
 
 - `regions` uses the collision descriptor's polygon path, presets and geometry limits for non-gameplay named areas.
   Presets may have empty `values`. Saved region IDs stay stable; display names and shape forms use editor metadata.
+- `sections` (optional) describes the parts of a long battle. It has everything `regions` has (`path`, `presets`,
+  `constraints`, `icon`) plus `fields`, a list of per-row settings in the same form as `battle` fields (paths are
+  inside one row; a `reference` field may point at the sections' own path, for example the section that comes next),
+  an optional `help`, and an optional `previewStart`: a path in the map where an editor writes the id of the section
+  a preview should start in. The editor writes it only into the copy it sends in `load` and `validate`, never into the
+  saved map. The game decides what a section is and how the party moves between them.
 - `events` describes an ID-bearing row list: `path`, `maxItems`, scalar `defaults`, `fields`, optional `help`.
   Every new row gets a fresh ID. Editors must refuse malformed lists rather than replace them.
 - `battle` describes root-relative `fields` and optional `help`.
