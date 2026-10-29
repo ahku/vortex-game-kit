@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.16.1
+
+- Same as 0.16.0, released again under a new tag so projects that cached the first 0.16.0 download pick it up.
+
 ## 0.16.0
 
 - A field on the `units` descriptor may declare a `base`: the path to the value it overrides in the character's own
