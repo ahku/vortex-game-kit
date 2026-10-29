@@ -54,6 +54,20 @@ export declare function readMapListEditor(value: unknown): MapListEditorDescript
  * `position` the `{x, y}` point and `character` the optional field linking a row to an authored Studio character.
  * The form `fields` describe the game's optional per-row settings; they never include these three paths or `id`.
  */
+/** A distance an editor can draw around a selected character, such as how far it moves. */
+export interface MapUnitRange {
+    id: string;
+    label: string;
+    /** A number in the character's own data (a kit preset or an authored character), in map units. */
+    stat?: string[];
+    /** A number the author may set on the placed row; it wins over `stat`. Must be one of the row's form fields. */
+    field?: string[];
+    /** Used when neither of the above gives a number: this share of another range. */
+    fallback?: {
+        of: string;
+        share: number;
+    };
+}
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {
     kit: string[];
     position: string[];
@@ -69,5 +83,9 @@ export interface MapUnitsDescriptor extends MapListEditorDescriptor {
         label: string;
         kits: string[];
     }[];
+    /** A short label of a row (such as a group tag) that an editor shows beside its name. Must be one of the form fields. */
+    tag?: string[];
+    /** Distances an editor may draw around the selected character. */
+    ranges?: MapUnitRange[];
 }
 export declare function readMapUnits(value: unknown): MapUnitsDescriptor | null;

@@ -269,6 +269,18 @@ export function readMapListEditor(
  * `position` the `{x, y}` point and `character` the optional field linking a row to an authored Studio character.
  * The form `fields` describe the game's optional per-row settings; they never include these three paths or `id`.
  */
+/** A distance an editor can draw around a selected character, such as how far it moves. */
+export interface MapUnitRange {
+  id: string;
+  label: string;
+  /** A number in the character's own data (a kit preset or an authored character), in map units. */
+  stat?: string[];
+  /** A number the author may set on the placed row; it wins over `stat`. Must be one of the row's form fields. */
+  field?: string[];
+  /** Used when neither of the above gives a number: this share of another range. */
+  fallback?: { of: string; share: number };
+}
+
 export interface MapUnitsDescriptor extends MapListEditorDescriptor {
   kit: string[];
   position: string[];
@@ -280,6 +292,10 @@ export interface MapUnitsDescriptor extends MapListEditorDescriptor {
   definitions?: string[];
   /** How the library sorts game kits (and, through their kit, authored characters), such as players and enemies. */
   libraryGroups?: { id: string; label: string; kits: string[] }[];
+  /** A short label of a row (such as a group tag) that an editor shows beside its name. Must be one of the form fields. */
+  tag?: string[];
+  /** Distances an editor may draw around the selected character. */
+  ranges?: MapUnitRange[];
 }
 export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
   const list = readMapListEditor(value);
@@ -307,13 +323,15 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
   if (definitions && inside(list.path, definitions)) return null;
   const row = [kit, position, ...(character ? [character] : []), ["id"]];
   for (let i = 0; i < row.length; i += 1) {
-    for (let j = i + 1; j < row.length; j += 1) if (inside(row[i]!, row[j]!)) return null;
+    for (let j = i + 1; j < row.length; j += 1)
+      if (inside(row[i]!, row[j]!)) return null;
     if (list.fields.some((f) => inside(f.path, row[i]!))) return null;
   }
   let libraryGroups: MapUnitsDescriptor["libraryGroups"];
   if (value.libraryGroups !== undefined) {
     const groups = value.libraryGroups;
-    if (!Array.isArray(groups) || !groups.length || groups.length > 12) return null;
+    if (!Array.isArray(groups) || !groups.length || groups.length > 12)
+      return null;
     const seenKits = new Set<string>();
     libraryGroups = [];
     for (const raw of groups) {
@@ -328,7 +346,8 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
       )
         return null;
       for (const k of raw.kits) {
-        if (typeof k !== "string" || !k || k.length > 64 || seenKits.has(k)) return null;
+        if (typeof k !== "string" || !k || k.length > 64 || seenKits.has(k))
+          return null;
         seenKits.add(k);
       }
       libraryGroups.push({
@@ -338,6 +357,61 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
       });
     }
   }
+  const sameAs = (a: string[], b: string[]) =>
+    a.length === b.length && a.every((k, i) => k === b[i]);
+  const isField = (path: unknown) =>
+    safeMapPath(path) &&
+    list.fields.some((f) => sameAs(f.path, path as string[]));
+  const tag = value.tag;
+  if (tag !== undefined && !isField(tag)) return null;
+  let ranges: MapUnitRange[] | undefined;
+  if (value.ranges !== undefined) {
+    const raws = value.ranges;
+    if (!Array.isArray(raws) || !raws.length || raws.length > 8) return null;
+    ranges = [];
+    for (const raw of raws) {
+      if (
+        !object(raw) ||
+        !safeMapKey(raw.id) ||
+        !text(raw.label, 80) ||
+        ranges.some((r) => r.id === raw.id) ||
+        (raw.stat === undefined &&
+          raw.field === undefined &&
+          raw.fallback === undefined) ||
+        (raw.stat !== undefined && !safeMapPath(raw.stat)) ||
+        (raw.field !== undefined && !isField(raw.field))
+      )
+        return null;
+      let fallback: MapUnitRange["fallback"];
+      if (raw.fallback !== undefined) {
+        const f = raw.fallback;
+        if (
+          !object(f) ||
+          !safeMapKey(f.of) ||
+          typeof f.share !== "number" ||
+          !(f.share > 0) ||
+          f.share > 10
+        )
+          return null;
+        fallback = { of: f.of, share: f.share };
+      }
+      ranges.push({
+        id: raw.id,
+        label: raw.label,
+        ...(raw.stat ? { stat: [...(raw.stat as string[])] } : {}),
+        ...(raw.field ? { field: [...(raw.field as string[])] } : {}),
+        ...(fallback ? { fallback } : {}),
+      });
+    }
+    const ids = new Set(ranges.map((r) => r.id));
+    if (
+      ranges.some(
+        (r) =>
+          r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id),
+      )
+    )
+      return null;
+  }
   return {
     ...list,
     kit: [...kit],
@@ -345,5 +419,7 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
     ...(character ? { character: [...character] } : {}),
     ...(definitions ? { definitions: [...definitions] } : {}),
     ...(libraryGroups ? { libraryGroups } : {}),
+    ...(tag ? { tag: [...(tag as string[])] } : {}),
+    ...(ranges ? { ranges } : {}),
   };
 }

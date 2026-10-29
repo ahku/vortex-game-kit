@@ -183,14 +183,20 @@ describe("placed characters", () => {
   };
   it("accepts a units descriptor and keeps its locations", () => {
     expect(readMapUnits(units)).toEqual(units);
-    expect(readMapUnits({ ...units, character: undefined })?.character).toBeUndefined();
+    expect(
+      readMapUnits({ ...units, character: undefined })?.character,
+    ).toBeUndefined();
   });
   it("keeps library groups and the definitions path, and rejects bad ones", () => {
     const groups = [
       { id: "players", label: "Players", kits: ["khang", "cinnoa"] },
       { id: "enemies", label: "Enemies", kits: ["grunt"] },
     ];
-    const full = { ...units, definitions: ["characters"], libraryGroups: groups };
+    const full = {
+      ...units,
+      definitions: ["characters"],
+      libraryGroups: groups,
+    };
     expect(readMapUnits(full)).toEqual(full);
     expect(
       readMapUnits({
@@ -201,6 +207,56 @@ describe("placed characters", () => {
     expect(readMapUnits({ ...units, libraryGroups: [] })).toBeNull();
     expect(readMapUnits({ ...units, definitions: ["units"] })).toBeNull();
     expect(readMapUnits({ ...units, definitions: ["__proto__"] })).toBeNull();
+  });
+  it("keeps a tag and drawable ranges, and rejects bad ones", () => {
+    const withFields = {
+      ...units,
+      fields: [
+        ...units.fields,
+        { path: ["group"], label: "Group tag", type: "text" },
+        { path: ["wakeRange"], label: "Wake range", type: "number" },
+      ],
+    };
+    const full = {
+      ...withFields,
+      tag: ["group"],
+      ranges: [
+        { id: "move", label: "Movement", stat: ["stats", "moveRadius"] },
+        {
+          id: "wake",
+          label: "Wake range",
+          field: ["wakeRange"],
+          fallback: { of: "move", share: 0.5 },
+        },
+      ],
+    };
+    expect(readMapUnits(full)).toEqual(full);
+    expect(readMapUnits({ ...withFields, tag: ["nowhere"] })).toBeNull();
+    expect(readMapUnits({ ...full, ranges: [] })).toBeNull();
+    expect(
+      readMapUnits({ ...full, ranges: [{ id: "x", label: "X" }] }),
+    ).toBeNull();
+    expect(
+      readMapUnits({ ...full, ranges: [full.ranges[0], full.ranges[0]] }),
+    ).toBeNull();
+    expect(
+      readMapUnits({
+        ...full,
+        ranges: [{ id: "a", label: "A", fallback: { of: "zz", share: 1 } }],
+      }),
+    ).toBeNull();
+    expect(
+      readMapUnits({
+        ...full,
+        ranges: [{ id: "a", label: "A", field: ["notAField"] }],
+      }),
+    ).toBeNull();
+    expect(
+      readMapUnits({
+        ...full,
+        ranges: [{ id: "a", label: "A", stat: ["__proto__"] }],
+      }),
+    ).toBeNull();
   });
   it("rejects missing, unsafe or overlapping locations", () => {
     expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
@@ -217,7 +273,17 @@ describe("placed characters", () => {
   it("is part of the layer descriptor and may not sit inside another path", () => {
     const ok = readLayerEditor({ ...base, units });
     expect(ok.ok && ok.descriptor.units?.kit).toEqual(["type"]);
-    expect(readLayerEditor({ ...base, units: { ...units, kit: ["nope"], position: [] } }).ok).toBe(false);
-    expect(readLayerEditor({ ...base, units: { ...units, path: ["arena", "sprites"] } }).ok).toBe(false);
+    expect(
+      readLayerEditor({
+        ...base,
+        units: { ...units, kit: ["nope"], position: [] },
+      }).ok,
+    ).toBe(false);
+    expect(
+      readLayerEditor({
+        ...base,
+        units: { ...units, path: ["arena", "sprites"] },
+      }).ok,
+    ).toBe(false);
   });
 });

@@ -7,6 +7,8 @@
   optional `previewStart` path where an editor writes the section a preview should begin in, in the copy sent to the
   game only. Editors can author sections without knowing how a game moves between them. Existing games and editors
   are unaffected; protocol and manifest versions are unchanged. Like the other editor descriptors it is experimental.
+- Optional `tag` and `ranges` on the `units` descriptor: the form field an editor shows beside a character's name (a
+  group tag), and distances (movement, waking) it can draw as circles around the selected character.
 
 ## 0.12.0
 

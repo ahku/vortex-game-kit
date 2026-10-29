@@ -248,6 +248,52 @@ export function readMapUnits(value) {
             });
         }
     }
+    const sameAs = (a, b) => a.length === b.length && a.every((k, i) => k === b[i]);
+    const isField = (path) => safeMapPath(path) &&
+        list.fields.some((f) => sameAs(f.path, path));
+    const tag = value.tag;
+    if (tag !== undefined && !isField(tag))
+        return null;
+    let ranges;
+    if (value.ranges !== undefined) {
+        const raws = value.ranges;
+        if (!Array.isArray(raws) || !raws.length || raws.length > 8)
+            return null;
+        ranges = [];
+        for (const raw of raws) {
+            if (!object(raw) ||
+                !safeMapKey(raw.id) ||
+                !text(raw.label, 80) ||
+                ranges.some((r) => r.id === raw.id) ||
+                (raw.stat === undefined &&
+                    raw.field === undefined &&
+                    raw.fallback === undefined) ||
+                (raw.stat !== undefined && !safeMapPath(raw.stat)) ||
+                (raw.field !== undefined && !isField(raw.field)))
+                return null;
+            let fallback;
+            if (raw.fallback !== undefined) {
+                const f = raw.fallback;
+                if (!object(f) ||
+                    !safeMapKey(f.of) ||
+                    typeof f.share !== "number" ||
+                    !(f.share > 0) ||
+                    f.share > 10)
+                    return null;
+                fallback = { of: f.of, share: f.share };
+            }
+            ranges.push({
+                id: raw.id,
+                label: raw.label,
+                ...(raw.stat ? { stat: [...raw.stat] } : {}),
+                ...(raw.field ? { field: [...raw.field] } : {}),
+                ...(fallback ? { fallback } : {}),
+            });
+        }
+        const ids = new Set(ranges.map((r) => r.id));
+        if (ranges.some((r) => r.fallback && (!ids.has(r.fallback.of) || r.fallback.of === r.id)))
+            return null;
+    }
     return {
         ...list,
         kit: [...kit],
@@ -255,5 +301,7 @@ export function readMapUnits(value) {
         ...(character ? { character: [...character] } : {}),
         ...(definitions ? { definitions: [...definitions] } : {}),
         ...(libraryGroups ? { libraryGroups } : {}),
+        ...(tag ? { tag: [...tag] } : {}),
+        ...(ranges ? { ranges } : {}),
     };
 }

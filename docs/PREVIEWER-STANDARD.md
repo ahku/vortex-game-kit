@@ -387,6 +387,12 @@ normal previewer `load`/`validate` messages remain authoritative.
   is a root path where the editor puts the authored characters a map uses, as `{ [characterId]: definition }`, in the
   copy it sends to the game for a preview or release. It is never saved in the map. A row's `character` field names
   the entry; the game resolves it against its own character rules and validates it.
+  Optional `tag` is the path of one of the row's form fields (such as a group tag) that the editor shows beside the
+  character's name, on its marker and in its layer row. Optional `ranges` are distances the editor may draw around the
+  selected character: each has an `id`, a `label` and where its number comes from, in this order: `field` (a form
+  field of the row, set by the author), `stat` (a path in the character's own data, from its kit preset or authored
+  definition), then `fallback` (`{of, share}`: a share of another range). The editor lets the author switch each on
+  or off; it draws circles of that radius in map units and knows nothing about what they mean.
 - A game may send `shortcut` (`name: "toggle-preview"`) when the person presses the editor's preview shortcut
   (Alt/Option+Enter) while the game page has the keyboard, so the editor can close the preview. Editors ignore names
   they do not know.
