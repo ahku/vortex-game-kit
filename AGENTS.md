@@ -25,6 +25,8 @@ This file is for any agent working in or with this repository (Claude, Codex, an
   games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
 - **No game logic until two games need it.** Rendering, units and combat stay each game's own. Do not extract something
   from one game into the kit.
+- **Editor descriptors are experimental.** The layer and character editor descriptions (`layers`, `characters`) were
+  written from one game. Do not widen them for a single game; wait for a second game, then keep what both need.
 - **No dependencies** in `protocol` and `conformance`.
 - **`dist` is committed.** After changing `src`, run `npm run check` and commit the rebuilt `dist` in the same commit.
 - **Versions are tags.** A change that older code cannot ignore raises `PROTOCOL_VERSION` and the package's minor version.
@@ -34,9 +36,9 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 
 ## Installing and updating (for people who are new to Git)
 
-Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.4.1.tar.gz` (or `npm install` with the same URL).
-Update: change the version in that URL (`v0.4.1`) to the new one and run it again. The project's `package.json` keeps it.
-Use the URL form, not `github:ahku/vortex-game-kit#v0.4.1`: pnpm puts that one in a folder with a `#` in its name, which
+Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.9.0.tar.gz` (or `npm install` with the same URL).
+Update: change the version in that URL (`v0.9.0`) to the new one and run it again. The project's `package.json` keeps it.
+Use the URL form, not `github:ahku/vortex-game-kit#v0.9.0`: pnpm puts that one in a folder with a `#` in its name, which
 Vite and Vitest cannot read.
 
 Use it in a game's tests:

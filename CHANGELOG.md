@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Mark the layer and character editor descriptions experimental in the docs; fix the install line to the current tag.
+
 ## 0.9.0
 
 - Add optional game-declared character editing: presets, base properties, layered body/front/rear artwork,

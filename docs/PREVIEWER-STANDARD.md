@@ -197,6 +197,12 @@ A game whose map is pictures on a flat stage (a top-down or side-on 2D game) may
 the manifest. The layer editor then lets the owner drag, resize, flip and re-layer the pictures. A game without it keeps
 the plain JSON editor, and a game of another kind (3D, say) gets an editor of its own instead.
 
+> **Status: experimental.** The layer editor description, with the terrain, collision, rectangle, event, battle and
+> enablement parts below, was written from one game (Downbeat). The picture fields, depth bands and manifest wiring
+> are expected to suit other 2D stage games; the `battle` block and the terrain/collision split carry Downbeat's
+> encounter model. Until a second game uses them, treat the whole section as able to change, and do not add to it for
+> one game's sake.
+
 The editor owns the names of a picture's fields. The game's map must call them exactly this:
 `id`, `src`, `x`, `y`, `width` (always) and `layer`, `rotation`, `flipX`, `flipY`, `anchor`, `sortY`, `parallax`,
 `animation` (optional: the description lists which ones the game understands in `pictureFields`; the editor shows
@@ -404,6 +410,10 @@ advertising the capability. Introduced in 0.8.0; earlier published tags remain u
 A content entry may declare `module: "character"`, `type: "character"`, `editor: "characters"` and a `characters`
 descriptor read by `readCharacterEditor`. This is an optional additive manifest capability; old map integrations
 remain unchanged and unknown/future character descriptors are ignored with a warning.
+
+> **Status: experimental.** Written from one game (Downbeat, whose sprites are a body plus a head that looks down or
+> up). `head-down`, `head-up` and the blink rule describe that sprite, so this descriptor is for games with that kind
+> of character. A game with a different kind of character needs its own editor kind and descriptor, not this one.
 
 The descriptor supplies `version: 1`, a safe relative `previewPage`, `presetPath` (the kit/preset identifier in the
 game document), `presets` (`id`, `label`, opaque seed `data`), `properties` (the existing safe declarative form field
