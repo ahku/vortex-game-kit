@@ -1,8 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.10.0
 
-- Mark the layer and character editor descriptions experimental in the docs; fix the install line to the current tag.
+- Add optional `sizing` to the character editor descriptor: `width`, `collisionRadius` and `movementRadius`, each a safe
+  path to a numeric property the descriptor declares. Editors can highlight those fields in the preview and offer
+  proportional resizing. The game receives the field in focus as a transient hint at `previewPath`, never saved.
+- Document the optional `animated` field of a spritesheet definition (default true for existing sheets). When false the
+  grid and playback settings are kept but the sheet always draws its first frame.
+- Mark the layer and character editor descriptions experimental in the docs: they were written from one game. Fix the
+  install line in the README and AGENTS.md.
+- Existing games and published stories remain compatible; protocol and manifest versions are unchanged.
 
 ## 0.9.0
 
