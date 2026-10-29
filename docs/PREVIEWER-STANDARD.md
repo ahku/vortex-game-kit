@@ -421,7 +421,7 @@ character-library pickers and pair authoring require the separate character cont
 fallback-party IDs belong in Studio.
 
 Form presentation may additionally declare `groups: [{id,label}]` and put a field in a `group`. Editors present these
-as optional disclosures; hiding a group never removes its values. A choice field's `unsetLabel` supplies an actual
+as optional disclosures; hiding a group never removes its values. A choice or single reference field's `unsetLabel` supplies an actual
 absent/default option, with no synthetic value written to the map. It cannot be required or have another default.
 A reference field's `emptyLabel` explains how to add missing targets. Optional multi-value fields can declare
 `emptyIsDefault: true` when clearing the control must remove the field; without it, explicit `[]` is preserved.

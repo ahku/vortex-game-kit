@@ -323,6 +323,18 @@ describe("placed characters", () => {
     expect(withReference(true)?.fields[0]?.reference?.excludeSelf).toBe(true);
     expect(withReference(undefined)?.fields[0]?.reference).not.toHaveProperty("excludeSelf");
     expect(withReference("yes")).toBeNull();
+    const labelled = readMapProperties({
+      fields: [
+        {
+          path: ["next"],
+          label: "Next",
+          type: "reference",
+          unsetLabel: "Next in the list",
+          reference: { path: ["rows"], id: "id" },
+        },
+      ],
+    });
+    expect(labelled?.fields[0]?.unsetLabel).toBe("Next in the list");
   });
   it("keeps a group that starts unfolded", () => {
     const form = (open: unknown) =>

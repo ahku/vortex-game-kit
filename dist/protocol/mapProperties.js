@@ -71,7 +71,7 @@ export function readMapProperties(value) {
             field.group = raw.group;
         }
         if ((field.unsetLabel &&
-            (field.type !== "choice" ||
+            (!["choice", "reference"].includes(field.type) ||
                 raw.required === true ||
                 raw.default !== undefined)) ||
             (field.emptyLabel && !["reference", "references"].includes(field.type)))

@@ -135,7 +135,7 @@ export function readMapProperties(
     }
     if (
       (field.unsetLabel &&
-        (field.type !== "choice" ||
+        (!["choice", "reference"].includes(field.type) ||
           raw.required === true ||
           raw.default !== undefined)) ||
       (field.emptyLabel && !["reference", "references"].includes(field.type))
