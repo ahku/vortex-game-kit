@@ -185,6 +185,23 @@ describe("placed characters", () => {
     expect(readMapUnits(units)).toEqual(units);
     expect(readMapUnits({ ...units, character: undefined })?.character).toBeUndefined();
   });
+  it("keeps library groups and the definitions path, and rejects bad ones", () => {
+    const groups = [
+      { id: "players", label: "Players", kits: ["khang", "cinnoa"] },
+      { id: "enemies", label: "Enemies", kits: ["grunt"] },
+    ];
+    const full = { ...units, definitions: ["characters"], libraryGroups: groups };
+    expect(readMapUnits(full)).toEqual(full);
+    expect(
+      readMapUnits({
+        ...units,
+        libraryGroups: [groups[0], { id: "x", label: "X", kits: ["khang"] }],
+      }),
+    ).toBeNull();
+    expect(readMapUnits({ ...units, libraryGroups: [] })).toBeNull();
+    expect(readMapUnits({ ...units, definitions: ["units"] })).toBeNull();
+    expect(readMapUnits({ ...units, definitions: ["__proto__"] })).toBeNull();
+  });
   it("rejects missing, unsafe or overlapping locations", () => {
     expect(readMapUnits({ ...units, kit: undefined })).toBeNull();
     expect(readMapUnits({ ...units, position: ["__proto__"] })).toBeNull();

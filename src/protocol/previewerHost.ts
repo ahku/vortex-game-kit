@@ -124,6 +124,10 @@ export function readPreviewerReply(data: unknown): PreviewerOutgoing | null {
     if (!m.document || typeof m.document !== 'object' || Array.isArray(m.document)) return null;
     return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'migrated', ...id, schemaVersion: v, document: m.document };
   }
+  if (m.type === 'shortcut')
+    return m.name === 'toggle-preview'
+      ? { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'shortcut', name: m.name }
+      : null;
   if (m.type === 'ready') return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'ready' };
   if (m.type === 'loaded')
     return { protocol: PREVIEWER_PROTOCOL_VERSION, type: 'loaded', warnings: texts(m.warnings) };

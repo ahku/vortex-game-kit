@@ -58,5 +58,16 @@ export interface MapUnitsDescriptor extends MapListEditorDescriptor {
     kit: string[];
     position: string[];
     character?: string[];
+    /**
+     * Where an editor puts the authored characters the map uses, as `{ [characterId]: definition }`, in the copy it
+     * sends to the game (a preview or a release). Never saved in the map itself.
+     */
+    definitions?: string[];
+    /** How the library sorts game kits (and, through their kit, authored characters), such as players and enemies. */
+    libraryGroups?: {
+        id: string;
+        label: string;
+        kits: string[];
+    }[];
 }
 export declare function readMapUnits(value: unknown): MapUnitsDescriptor | null;

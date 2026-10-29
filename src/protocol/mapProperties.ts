@@ -273,6 +273,13 @@ export interface MapUnitsDescriptor extends MapListEditorDescriptor {
   kit: string[];
   position: string[];
   character?: string[];
+  /**
+   * Where an editor puts the authored characters the map uses, as `{ [characterId]: definition }`, in the copy it
+   * sends to the game (a preview or a release). Never saved in the map itself.
+   */
+  definitions?: string[];
+  /** How the library sorts game kits (and, through their kit, authored characters), such as players and enemies. */
+  libraryGroups?: { id: string; label: string; kits: string[] }[];
 }
 export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
   const list = readMapListEditor(value);
@@ -280,23 +287,63 @@ export function readMapUnits(value: unknown): MapUnitsDescriptor | null {
   const kit = value.kit;
   const position = value.position;
   const character = value.character;
+  const definitions = value.definitions;
   if (!safeMapPath(kit) || !safeMapPath(position)) return null;
   if (character !== undefined && !safeMapPath(character)) return null;
-  const own = [list.path, kit, position, ...(character ? [character] : [])];
+  if (definitions !== undefined && !safeMapPath(definitions)) return null;
+  const own = [
+    list.path,
+    kit,
+    position,
+    ...(character ? [character] : []),
+    ...(definitions ? [definitions] : []),
+  ];
   const inside = (a: string[], b: string[]) => {
     const n = Math.min(a.length, b.length);
     return a.slice(0, n).every((k, i) => k === b[i]);
   };
   // The kit, position and character locations must not overlap each other, the id or any form field.
-  const row = own.slice(1).concat([["id"]]);
+  // Definitions live at the map's root, so they must not sit inside the list or any other location either.
+  if (definitions && inside(list.path, definitions)) return null;
+  const row = [kit, position, ...(character ? [character] : []), ["id"]];
   for (let i = 0; i < row.length; i += 1) {
     for (let j = i + 1; j < row.length; j += 1) if (inside(row[i]!, row[j]!)) return null;
     if (list.fields.some((f) => inside(f.path, row[i]!))) return null;
+  }
+  let libraryGroups: MapUnitsDescriptor["libraryGroups"];
+  if (value.libraryGroups !== undefined) {
+    const groups = value.libraryGroups;
+    if (!Array.isArray(groups) || !groups.length || groups.length > 12) return null;
+    const seenKits = new Set<string>();
+    libraryGroups = [];
+    for (const raw of groups) {
+      if (
+        !object(raw) ||
+        !safeMapKey(raw.id) ||
+        !text(raw.label, 80) ||
+        !Array.isArray(raw.kits) ||
+        !raw.kits.length ||
+        raw.kits.length > 100 ||
+        libraryGroups.some((g) => g.id === raw.id)
+      )
+        return null;
+      for (const k of raw.kits) {
+        if (typeof k !== "string" || !k || k.length > 64 || seenKits.has(k)) return null;
+        seenKits.add(k);
+      }
+      libraryGroups.push({
+        id: raw.id,
+        label: raw.label,
+        kits: [...(raw.kits as string[])],
+      });
+    }
   }
   return {
     ...list,
     kit: [...kit],
     position: [...position],
     ...(character ? { character: [...character] } : {}),
+    ...(definitions ? { definitions: [...definitions] } : {}),
+    ...(libraryGroups ? { libraryGroups } : {}),
   };
 }

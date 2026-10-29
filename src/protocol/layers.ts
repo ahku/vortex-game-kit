@@ -375,6 +375,7 @@ export function readLayerEditor(data: unknown): LayerEditorReadResult {
     ['regions.path', regions?.path],
     ['events.path', events?.path],
     ['units.path', units?.path],
+    ['units.definitions', units?.definitions],
     ...(battle?.fields.map((f): [string, FieldPath] => [`battle.${f.path.join('.')}`,f.path]) ?? []),
     ...rectangles.map((r): [string, FieldPath] => [`rectangles.${r.id}.path`,r.path]),
   ];

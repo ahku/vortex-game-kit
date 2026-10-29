@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.0
+
+- Optional `libraryGroups` and `definitions` on the `units` layer descriptor: how the character library sorts kits, and
+  where an editor puts the authored characters a map uses when it sends the map to the game.
+- Optional `shortcut` message (game to editor, `toggle-preview`) so a game can pass the editor's preview shortcut on
+  while it has the keyboard. Existing games and editors are unaffected; protocol and manifest versions are unchanged.
+
 ## 0.11.0
 
 - Add optional `units` to the layer descriptor: a row list of placed characters with game-declared per-row settings,

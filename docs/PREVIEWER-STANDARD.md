@@ -62,6 +62,7 @@ Every message is an object with `protocol` (the version, 1) and `type`. Anything
 | `ready`  | none                                    | The page is listening. Sent once, after the listener is installed.   |
 | `loaded` | `warnings`: list of sentences           | The map is playing. Pictures that failed to load are warnings here.  |
 | `error`  | `code`, `message`, optional `details`   | Something was refused. Codes below.                                  |
+| `shortcut` | `name`: `toggle-preview`              | The person pressed the editor's preview shortcut inside the game. *(optional)* |
 | `validated`  | `problems`: list of sentences, `id`  | Answer to `validate`. An empty list means the map is fine.           |
 | `referenced` | `assets`: picture ids, `characters`: `{id, slot?}`, `id` | Answer to `references`. Picture ids are the part after `asset:`. |
 | `migrated`   | `schemaVersion`, `document`, `id`    | Answer to `migrate`: the map as the current version writes it.       |
@@ -375,6 +376,14 @@ normal previewer `load`/`validate` messages remain authoritative.
   field. The `fields` are the game's optional per-row settings; use `when` and nested paths such as
   `["waitUntil","kind"]` for conditional controls, and `reference` fields into the `units` list itself for targets.
   The kit values offered come from the character editor's presets. Games still validate placements.
+  Optional `libraryGroups` (`{id, label, kits}`, each kit in at most one group) tell the editor how to sort the kit
+  library, for example players and enemies; the editor draws no conclusions from the labels. Optional `definitions`
+  is a root path where the editor puts the authored characters a map uses, as `{ [characterId]: definition }`, in the
+  copy it sends to the game for a preview or release. It is never saved in the map. A row's `character` field names
+  the entry; the game resolves it against its own character rules and validates it.
+- A game may send `shortcut` (`name: "toggle-preview"`) when the person presses the editor's preview shortcut
+  (Alt/Option+Enter) while the game page has the keyboard, so the editor can close the preview. Editors ignore names
+  they do not know.
 - Form fields use `path`, `label`, `type`, optional `help`/`required`/`default`; types are `text`, `number`, `boolean`,
   `choice`, `choices` (multiple), `reference`, `references` (multiple). Choices are `{value,label}` pairs. References
   declare a root-document list `path`, row `id` key and optional `label` key; they do not import game unit definitions.

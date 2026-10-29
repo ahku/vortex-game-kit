@@ -62,6 +62,8 @@ export interface PreviewerCharacterRef {
     id: string;
     slot?: string;
 }
+/** Editor actions a game may forward when the person presses their shortcut inside the game page. */
+export type PreviewerShortcutName = 'toggle-preview';
 /** What went wrong. A game uses these three; an editor must cope with a code it does not know. */
 export type PreviewerErrorCode = 'bad_message' | 'invalid_map' | 'start_failed' | (string & {});
 /** Game to editor. `ready` is sent once the page is listening; the editor waits for it before it sends a map. */
@@ -91,6 +93,11 @@ export type PreviewerOutgoing = {
     id?: PreviewerRequestId;
     schemaVersion: number;
     document: unknown;
+} | {
+    protocol: typeof PREVIEWER_PROTOCOL_VERSION;
+    type: 'shortcut';
+    /** The editor action the person asked for while the game had the keyboard, such as closing the preview. */
+    name: PreviewerShortcutName;
 } | {
     protocol: typeof PREVIEWER_PROTOCOL_VERSION;
     type: 'error';
