@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.17.0
+
+- A `text` field of a `units` descriptor may declare `suggestFrom`: the path, in the other units, of the values it is
+  usually one of (the group tags the other units have). An editor offers them as a pick list and still lets the author
+  type a new one. Presentation only; nothing is checked. Existing games and editors are unaffected; protocol and
+  manifest versions are unchanged.
+
 ## 0.16.1
 
 - Same as 0.16.0, released again under a new tag so projects that cached the first 0.16.0 download pick it up.

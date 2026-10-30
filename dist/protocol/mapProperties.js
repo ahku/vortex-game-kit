@@ -100,6 +100,11 @@ export function readMapProperties(value) {
                 return null;
             field.base = [...raw.base];
         }
+        if (raw.suggestFrom !== undefined) {
+            if (field.type !== "text" || !safeMapPath(raw.suggestFrom))
+                return null;
+            field.suggestFrom = [...raw.suggestFrom];
+        }
         for (const key of ["integer", "required", "emptyIsDefault"])
             if (raw[key] !== undefined) {
                 if (typeof raw[key] !== "boolean")

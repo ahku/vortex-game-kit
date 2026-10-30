@@ -39,6 +39,12 @@ export interface MapPropertyField {
      * author go back to it. A text field with `base` overrides the character's name. Presentation only.
      */
     base?: string[];
+    /**
+     * On a `text` field of a list item (a unit): the path, in the items of the same list, of the values this field is
+     * usually one of (the group tags the other units already have). An editor offers them as a pick list and still lets
+     * the author type a new one. Presentation only: nothing here is checked.
+     */
+    suggestFrom?: string[];
 }
 export interface MapPropertyGroup {
     id: string;

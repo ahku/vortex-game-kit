@@ -71,6 +71,23 @@ describe("declarative map forms", () => {
       }),
     ).toBeNull();
   });
+  it("keeps a text field's suggestFrom and refuses it elsewhere or on an unsafe path", () => {
+    const field = { path: ["group"], label: "Group", type: "text" as const };
+    expect(
+      readMapProperties({ fields: [{ ...field, suggestFrom: ["group"] }] })
+        ?.fields[0]?.suggestFrom,
+    ).toEqual(["group"]);
+    expect(
+      readMapProperties({
+        fields: [{ ...field, suggestFrom: ["__proto__"] }],
+      }),
+    ).toBeNull();
+    expect(
+      readMapProperties({
+        fields: [{ ...field, type: "number", suggestFrom: ["group"] }],
+      }),
+    ).toBeNull();
+  });
   it("rejects collisions between authoring paths", () => {
     expect(
       readLayerEditor({
@@ -279,7 +296,11 @@ describe("placed characters", () => {
     expect(
       bad([
         withShare.ranges[0],
-        { id: "w", label: "W", fallback: { of: "move", share: 1, shareField: ["zz"] } },
+        {
+          id: "w",
+          label: "W",
+          fallback: { of: "move", share: 1, shareField: ["zz"] },
+        },
       ]),
     ).toBeNull();
     expect(
@@ -302,10 +323,22 @@ describe("placed characters", () => {
       ],
     };
     expect(readMapUnits(withBase)).toEqual(withBase);
-    const bad = (field: unknown) => readMapUnits({ ...units, fields: [...units.fields, field] });
-    expect(bad({ path: ["hp"], label: "HP", type: "number", base: [] })).toBeNull();
-    expect(bad({ path: ["hp"], label: "HP", type: "number", base: ["__proto__"] })).toBeNull();
-    expect(bad({ path: ["on"], label: "On", type: "boolean", base: ["stats", "hp"] })).toBeNull();
+    const bad = (field: unknown) =>
+      readMapUnits({ ...units, fields: [...units.fields, field] });
+    expect(
+      bad({ path: ["hp"], label: "HP", type: "number", base: [] }),
+    ).toBeNull();
+    expect(
+      bad({ path: ["hp"], label: "HP", type: "number", base: ["__proto__"] }),
+    ).toBeNull();
+    expect(
+      bad({
+        path: ["on"],
+        label: "On",
+        type: "boolean",
+        base: ["stats", "hp"],
+      }),
+    ).toBeNull();
   });
   it("keeps a range that adds another, and a reference that leaves out its own row", () => {
     const added = {
@@ -336,7 +369,9 @@ describe("placed characters", () => {
         ],
       });
     expect(withReference(true)?.fields[0]?.reference?.excludeSelf).toBe(true);
-    expect(withReference(undefined)?.fields[0]?.reference).not.toHaveProperty("excludeSelf");
+    expect(withReference(undefined)?.fields[0]?.reference).not.toHaveProperty(
+      "excludeSelf",
+    );
     expect(withReference("yes")).toBeNull();
     const labelled = readMapProperties({
       fields: [
@@ -357,7 +392,9 @@ describe("placed characters", () => {
         groups: [{ id: "more", label: "More", open }],
         fields: [{ path: ["a"], label: "A", type: "text", group: "more" }],
       });
-    expect(form(true)?.groups).toEqual([{ id: "more", label: "More", open: true }]);
+    expect(form(true)?.groups).toEqual([
+      { id: "more", label: "More", open: true },
+    ]);
     expect(form(undefined)?.groups).toEqual([{ id: "more", label: "More" }]);
     expect(form("yes")).toBeNull();
   });
