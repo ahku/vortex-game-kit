@@ -95,8 +95,17 @@ export function readMapProperties(value) {
                 return null;
             field.unit = raw.unit;
         }
+        if (raw.step !== undefined) {
+            if (field.type !== "number" ||
+                typeof raw.step !== "number" ||
+                !Number.isFinite(raw.step) ||
+                raw.step <= 0)
+                return null;
+            field.step = raw.step;
+        }
         if (raw.base !== undefined) {
-            if ((field.type !== "number" && field.type !== "text") || !safeMapPath(raw.base))
+            if ((field.type !== "number" && field.type !== "text") ||
+                !safeMapPath(raw.base))
                 return null;
             field.base = [...raw.base];
         }
@@ -309,7 +318,9 @@ export function readMapUnits(value) {
                 fallback = {
                     of: f.of,
                     share: f.share,
-                    ...(f.shareField ? { shareField: [...f.shareField] } : {}),
+                    ...(f.shareField
+                        ? { shareField: [...f.shareField] }
+                        : {}),
                 };
             }
             ranges.push({

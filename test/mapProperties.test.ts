@@ -88,6 +88,19 @@ describe("declarative map forms", () => {
       }),
     ).toBeNull();
   });
+  it("keeps a number field's step and refuses a step that is not positive or not on a number", () => {
+    const field = { path: ["hp"], label: "HP", type: "number" as const };
+    expect(
+      readMapProperties({ fields: [{ ...field, step: 1 }] })?.fields[0]?.step,
+    ).toBe(1);
+    for (const step of [0, -1, Number.NaN, "1"])
+      expect(readMapProperties({ fields: [{ ...field, step }] })).toBeNull();
+    expect(
+      readMapProperties({
+        fields: [{ path: ["n"], label: "N", type: "text", step: 1 }],
+      }),
+    ).toBeNull();
+  });
   it("rejects collisions between authoring paths", () => {
     expect(
       readLayerEditor({

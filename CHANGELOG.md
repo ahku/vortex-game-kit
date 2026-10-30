@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.18.0
+
+- A `number` field may declare `step`: how much the arrows and dragging change it by, while typing still accepts any
+  decimals (hit points that step by 1 but may be fractional). Without it an editor steps by 1 for an integer and 0.1
+  otherwise. Existing games and editors are unaffected; protocol and manifest versions are unchanged.
+
 ## 0.17.0
 
 - A `text` field of a `units` descriptor may declare `suggestFrom`: the path, in the other units, of the values it is

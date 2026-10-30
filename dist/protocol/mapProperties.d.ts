@@ -34,6 +34,11 @@ export interface MapPropertyField {
     /** A short unit an editor shows after a number, such as `%`. Presentation only: the saved value stays a plain number. */
     unit?: string;
     /**
+     * How much the arrows and dragging change a number by. Presentation only: the value may still be typed with any
+     * decimals unless `integer` is set. Without it an editor steps by 1 for an integer and by 0.1 otherwise.
+     */
+    step?: number;
+    /**
      * On a `units` field that overrides a character's own value (hit points, say): the path to that value in the
      * character's data, as for a range's `stat`. An editor shows it as what the field is when left empty, and lets the
      * author go back to it. A text field with `base` overrides the character's name. Presentation only.
