@@ -67,7 +67,7 @@ export interface HandoverAction {
 }
 
 export interface HandoverGame {
-  /** The event name stored in the step: `downbeat`. */
+  /** The event name stored in the step: `turn-tactics-1`. */
   id: string;
   name: string;
   /** An icon name for menus (`i-lucide-swords`). The studio picks a plain one when it is absent. */
