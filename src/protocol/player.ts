@@ -1,5 +1,5 @@
 /**
- * The story player as a game sees it. The player is a web component, `<vns-player>` (`vortex-game-kit/player`), that draws
+ * The story player as a game sees it. The player is a web component, `<vns-player>` (`vortex-game-kit/story`), that draws
  * a story the game's own engine is running. This file is its contract: the version both sides check, the properties a host
  * sets and the events the element emits. Pure types and constants; the element itself is in the `player` entry.
  *

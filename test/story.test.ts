@@ -3,14 +3,14 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { PLAYER_CONTRACT } from '../src/protocol/index.js';
 
-const dir = new URL('../player/', import.meta.url);
+const dir = new URL('../story/', import.meta.url);
 const stamp = JSON.parse(readFileSync(new URL('STAMP.json', dir), 'utf8')) as {
   contract: number;
   outputHash: string;
   version: string;
 };
 
-describe('the story player in `player/`', () => {
+describe('the story player in `story/`', () => {
   it('is the file its stamp describes (copied whole by `pnpm player:sync` in the Studio)', () => {
     const hash = createHash('sha256').update(readFileSync(new URL('vns-player.js', dir))).digest('hex');
     expect(hash).toBe(stamp.outputHash);
