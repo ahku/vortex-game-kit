@@ -10,6 +10,7 @@ game from the editor), the protocol (types, message names and validators) and th
 - Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`, `vortex-game-kit/story` (the player),
   `vortex-game-kit/engine` and `vortex-game-kit/schema` (what the player runs on), and the `vortex-story-import` command that brings a published story into a game.
 - Install: `pnpm add vortex-game-kit`
+- **Sound and known problems:** [docs/AUDIO.md](docs/AUDIO.md), [docs/FAQ.md](docs/FAQ.md).
 - **Start here:** [docs/START-HERE.md](docs/START-HERE.md) — play stories in your game, with a prompt to hand to your AI.
 
 ```

@@ -35,7 +35,7 @@ This file, the standard and the package are everything. So:
 - **The player needs its properties before it is on the page** (`bundle`, `engine`), or it fails when it mounts.
 - **Your page's CSS does not reach inside the player** (it has a shadow root). Style the dialog with `::part()` (level 3).
   The player lets clicks through to your game in overlay mode except on its dialog; keep your buttons outside it.
-- **Browsers start audio only after a click or key press.** Show a start button before the first story.
+- **Browsers start audio only after a click or key press.** Show a start button before the first story. Pause sound when the tab is hidden: see [AUDIO.md](AUDIO.md).
 - **One music channel.** If your game starts its own music while the story is on screen (a victory theme), stop the story's
   voice yourself (`audio.stopVoice()` on the audio you share) and let the story's music be restored only when the story
   comes back (`active` true again).
@@ -44,6 +44,8 @@ This file, the standard and the package are everything. So:
 - **Every file is an address in the bundle.** Make them absolute (level 0) and let your server send the right content type.
 - **Answer a game event once.** A late or repeated answer is refused; one for an older session too.
 - **Version check.** Compare `PLAYER_CONTRACT` once at start and show a clear error on a mismatch.
+
+More help: [AUDIO.md](AUDIO.md) (sound that behaves: tab switch, iOS, victory songs) and [FAQ.md](FAQ.md) (known problems and their fixes).
 
 ## What the package gives you
 
