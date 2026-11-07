@@ -5,6 +5,7 @@ export * from './validate.js';
 export * from './version.js';
 export * from './previewer.js';
 export * from './previewerHost.js';
+export * from './player.js';
 export type { GameModule, GameSaveLike } from './module.js';
 export * from './manifest.js';
 export * from './layers.js';
