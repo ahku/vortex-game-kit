@@ -218,7 +218,7 @@ A change to an objective is finished only when both lists match and the story ha
 
 ## 8. The story player in a game
 
-A game draws a story with the kit's player, `<vns-player>` (`vortex-game-kit/player`), the same player the studio uses, so
+A game draws a story with the kit's player, `<vns-player>` (`vortex-game-kit/story`), the same player the studio uses, so
 the story looks the same in both. The contract (types and the version) is `vortex-game-kit/protocol`
 (`PLAYER_CONTRACT`, `PlayerProperties`, `PlayerEvents`).
 
@@ -253,7 +253,7 @@ canvas is a few lines of CSS in the game, not a change to the player.
 the game's canvas, any dimming or pointing at a unit (section 4, spotlight), and the keys the game itself uses. While the
 story talks, keys the player handles are stopped before they reach the game (Enter must not also end a turn).
 
-**Keeping it current.** The player is built from the studio's source and copied into the kit (`player/`, with a
+**Keeping it current.** The player is built from the studio's source and copied into the kit (`story/`, with a
 `STAMP.json`) by `pnpm player:sync` in the studio. Games get it by updating the kit. The contract number is raised when the
 views the player draws, the properties or the events change in a way an older host would not understand. How a change
 travels from the studio to a game, and how to try one before it is published, is in `docs/PLAYER-RELEASING.md`.

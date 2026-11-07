@@ -1,7 +1,7 @@
 # Releasing the story player
 
 The player's source is in the Vortex Studio repository (`packages/player-element`). This repository holds the built file
-(`player/`, with a `STAMP.json`) and publishes it. A change travels in three lanes. Use the fastest lane that is honest
+(`story/`, with a `STAMP.json`) and publishes it. A change travels in three lanes. Use the fastest lane that is honest
 about what you have tested.
 
 | Lane        | For                                   | Who sees it                      | Cost                       |
@@ -19,7 +19,7 @@ finds the kit at `../vortex-game-kit` (override with `--kit <dir>` or `VGK_DIR`)
 
 1. Change the player in the Studio.
 2. In the Studio: `pnpm player:sync --only kit`. It builds the player and writes `vns-player.js`, `vns-player.d.ts` and
-   `STAMP.json` straight into the kit's `player/` folder. Nothing is committed or published.
+   `STAMP.json` straight into the kit's `story/` folder. Nothing is committed or published.
 3. In the game, run its dev server with the kit as a local source: `VGK_DEV=/path/to/vortex-game-kit pnpm dev`. The game's
    Vite config aliases `vortex-game-kit` to that folder in development only (see "Game side" below), so a reload shows
    the change. Production builds ignore it and use the installed package.
@@ -74,6 +74,6 @@ Unset `VGK_DEV` and the game uses the version in its `package.json`. Do not comm
 
 ## Rules
 
-- `player/` is written only by the Studio's sync tool; a test fails if the file and its stamp disagree.
+- `story/` is written only by the Studio's sync tool; a test fails if the file and its stamp disagree.
 - A `next` version is never the one a game's `package.json` pins in a commit that ships. Ship `latest`.
 - The kit's own tests do not test the player's look; the lists above do. Say what you did not test.

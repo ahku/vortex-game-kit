@@ -22,8 +22,8 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 
 - **Entry points are layers.** `vortex-game-kit/protocol` is pure types and validators with no runtime and no
   dependencies. **Vortex Studio imports `protocol` only.** `vortex-game-kit/conformance` is for tests.
-  `vortex-game-kit/player` is the story player as a web component, built from the studio's source and copied here by the
-  studio's `pnpm player:sync` (never edit `player/` by hand: its `STAMP.json` and a test catch that; the process is in `docs/PLAYER-RELEASING.md`); games import it, the
+  `vortex-game-kit/story` is the story player as a web component, built from the studio's source and copied here by the
+  studio's `pnpm player:sync` (never edit `story/` by hand: its `STAMP.json` and a test catch that; the process is in `docs/PLAYER-RELEASING.md`); games import it, the
   studio never does. A runtime for games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
 - **General utilities only.** Nothing in this package names a game, a unit, a battle or a lesson. It holds what any game
   needs to run a story: the standard, the protocol, the player and the tests.
@@ -59,6 +59,6 @@ for (const c of previewerCases(previewerSubject)) it(c.name, c.run); // see docs
 Use the player (see docs/GAME-INTEGRATION-STANDARD.md, section 8):
 
 ```ts
-import { defineVnsPlayer } from 'vortex-game-kit/player';
+import { defineVnsPlayer } from 'vortex-game-kit/story';
 import { PLAYER_CONTRACT } from 'vortex-game-kit/protocol';
 ```

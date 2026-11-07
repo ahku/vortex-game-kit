@@ -7,7 +7,7 @@ game from the editor), the protocol (types, message names and validators) and th
 - Start with [AGENTS.md](AGENTS.md) (for people and for AI agents) and
   [docs/GAME-INTEGRATION-STANDARD.md](docs/GAME-INTEGRATION-STANDARD.md) (stories) and
   [docs/PREVIEWER-STANDARD.md](docs/PREVIEWER-STANDARD.md) (map previews).
-- Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`, `vortex-game-kit/player`.
+- Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`, `vortex-game-kit/story`.
 - Install: `pnpm add vortex-game-kit`
 
 ```
