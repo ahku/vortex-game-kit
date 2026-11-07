@@ -11,6 +11,9 @@
 - **Player contract.** `vortex-game-kit/protocol` gains `PLAYER_CONTRACT` (1), `PlayerProperties`, `PlayerEvents`,
   `PlayerMode`, `PlayerGameplay`, `PlayerMute` and `PlayerAudio`. Additive: `PROTOCOL_VERSION` and the manifest version
   are unchanged.
+- **The story engine and schema.** New entries `vortex-game-kit/engine` and `vortex-game-kit/schema`, built from the
+  studio's own packages and copied in with a stamp, so a game no longer needs private copies of them to run a story. The
+  package now depends on `zod` (used by `schema` and `engine` only).
 - The integration standard has a new section 8, "The story player in a game".
 - `PlayerProperties` gains `language`, and the protocol names the dialog's styling hooks (`PlayerPart`, for `::part()`).
   Additive; `PLAYER_CONTRACT` stays 1.

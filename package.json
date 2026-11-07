@@ -1,7 +1,7 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.19.0-next.4",
-  "description": "Everything a game needs to run Vortex Studio stories: the story player, the protocol, the integration standard and conformance tests.",
+  "version": "0.19.0-next.5",
+  "description": "Everything a game needs to run Vortex Studio stories: the story player, the engine and schema it runs on, the protocol, the integration standard and conformance tests.",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -15,6 +15,9 @@
   "files": [
     "dist",
     "story",
+    "engine",
+    "schema",
+    "shared",
     "docs",
     "AGENTS.md",
     "CHANGELOG.md"
@@ -31,6 +34,14 @@
     "./story": {
       "types": "./story/vns-player.d.ts",
       "default": "./story/vns-player.js"
+    },
+    "./engine": {
+      "types": "./engine/index.d.ts",
+      "default": "./engine/index.js"
+    },
+    "./schema": {
+      "types": "./schema/index.d.ts",
+      "default": "./schema/index.js"
     },
     "./package.json": "./package.json"
   },
@@ -65,5 +76,8 @@
   "publishConfig": {
     "access": "public",
     "provenance": true
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
   }
 }
