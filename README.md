@@ -14,3 +14,7 @@ game from the editor), the protocol (types, message names and validators) and th
 npm install
 npm run check     # typecheck, test, build
 ```
+
+## Releasing
+
+See `docs/PLAYER-RELEASING.md` for how a player change goes from the studio to a game: local iteration, a `next` prerelease, and a release.

@@ -1,6 +1,8 @@
 name: Publish
 
 # Runs when a version tag is pushed (`npm run release` does that). The tag must match package.json.
+# A tag with a hyphen (`v0.19.1-next.3`) is a prerelease: it goes out under the npm tag `next`, so `latest` never moves
+# and `pnpm add vortex-game-kit@next` gets it. A plain tag (`v0.19.1`) is a release and becomes `latest`.
 on:
   push:
     tags: ['v*']
@@ -24,6 +26,11 @@ jobs:
         run: test "v$(node -p "require('./package.json').version")" = "${GITHUB_REF_NAME}"
       - run: pnpm install --frozen-lockfile
       - run: pnpm run check
-      - run: npm publish
+      - name: Publish (prerelease under `next`, release under `latest`)
+        run: |
+          case "${GITHUB_REF_NAME}" in
+            *-*) npm publish --tag next ;;
+            *)   npm publish ;;
+          esac
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

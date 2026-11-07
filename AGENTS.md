@@ -23,7 +23,7 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 - **Entry points are layers.** `vortex-game-kit/protocol` is pure types and validators with no runtime and no
   dependencies. **Vortex Studio imports `protocol` only.** `vortex-game-kit/conformance` is for tests.
   `vortex-game-kit/player` is the story player as a web component, built from the studio's source and copied here by the
-  studio's `pnpm player:sync` (never edit `player/` by hand: its `STAMP.json` and a test catch that); games import it, the
+  studio's `pnpm player:sync` (never edit `player/` by hand: its `STAMP.json` and a test catch that; the process is in `docs/PLAYER-RELEASING.md`); games import it, the
   studio never does. A runtime for games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
 - **General utilities only.** Nothing in this package names a game, a unit, a battle or a lesson. It holds what any game
   needs to run a story: the standard, the protocol, the player and the tests.
@@ -37,6 +37,7 @@ This file is for any agent working in or with this repository (Claude, Codex, an
   `PLAYER_CONTRACT` for the player) and the package's minor version. Release: update `CHANGELOG.md` and `package.json`,
   run `npm run check`, commit, then `npm run release`. Pushing the tag `vX.Y.Z` runs the Publish workflow, which checks
   that the tag matches `package.json` and publishes to npm with provenance (it needs the repository secret `NPM_TOKEN`).
+  A tag with a hyphen (`v0.19.1-next.1`) is a prerelease and is published under the npm tag `next`, never `latest`.
 - **Published stories keep working.** Never rename an id without an alias for the old one.
 - **Say what you did not do.** If something cannot meet a rule yet, write it under "Open" in the game's docs.
 

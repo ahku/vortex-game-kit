@@ -70,7 +70,25 @@ export interface PlayerProperties {
   active?: boolean;
   /** Show the language and sound buttons in the corner. A game with its own controls leaves them out. */
   controls?: boolean;
+  /** The language the story is shown in (a code the bundle has). The player follows it when the host changes it. */
+  language?: string;
 }
+
+/**
+ * Parts of the dialog a host can style from outside with CSS `::part()` (the element's shadow root hides everything else):
+ * `dialog`, `dialog-name`, `dialog-face`, `dialog-text`, and for a line that plays by itself over a running game the same
+ * four with the prefix `dialog-automatic` (`dialog-automatic`, `dialog-automatic-name`, `dialog-automatic-face`,
+ * `dialog-automatic-text`). Declarations in the host's stylesheet win over the player's own.
+ */
+export type PlayerPart =
+  | 'dialog'
+  | 'dialog-name'
+  | 'dialog-face'
+  | 'dialog-text'
+  | 'dialog-automatic'
+  | 'dialog-automatic-name'
+  | 'dialog-automatic-face'
+  | 'dialog-automatic-text';
 
 /** The events `<vns-player>` emits (DOM `CustomEvent`s; the values are in `detail`, an array). */
 export interface PlayerEvents {
