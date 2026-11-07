@@ -8,6 +8,7 @@
     "type": "git",
     "url": "git+https://github.com/ahku/vortex-game-kit.git"
   },
+  "packageManager": "pnpm@9.15.9",
   "engines": {
     "node": ">=20"
   },
