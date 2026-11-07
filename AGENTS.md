@@ -18,6 +18,10 @@ This file is for any agent working in or with this repository (Claude, Codex, an
    (section 6 is the checklist, in order; section 9 is the manifest, section 10 the layer editor description).
 3. The game's own `docs/STORY-INTEGRATION.md`, if you are in a game.
 
+**Adding stories to a game? Read [docs/START-HERE.md](docs/START-HERE.md) first**, then the standard it points to. If you are
+helping a person who is not sure how it works, follow its section "If you are an AI agent guiding a person": ask them what
+you need, tell them which steps only they can do, and go level by level.
+
 ## Rules for this repository
 
 - **Entry points are layers.** `vortex-game-kit/protocol` is pure types and validators with no runtime and no

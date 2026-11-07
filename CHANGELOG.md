@@ -14,6 +14,10 @@
 - **The story engine and schema.** New entries `vortex-game-kit/engine` and `vortex-game-kit/schema`, built from the
   studio's own packages and copied in with a stamp, so a game no longer needs private copies of them to run a story. The
   package now depends on `zod` (used by `schema` and `engine` only).
+- **The story importer.** `npx vortex-story-import <slug> <folder> --studio <address>` downloads a story published in the
+  Studio and its media into a game, as the games used to do with their own script.
+- **Start here.** New `docs/START-HERE.md`: play a story in a game in levels, from showing one on its own to a game the
+  editor knows, with the editor side of each level and a prompt to hand to an AI agent.
 - The integration standard has a new section 8, "The story player in a game".
 - `PlayerProperties` gains `language`, and the protocol names the dialog's styling hooks (`PlayerPart`, for `::part()`).
   Additive; `PLAYER_CONTRACT` stays 1.

@@ -8,8 +8,9 @@ game from the editor), the protocol (types, message names and validators) and th
   [docs/GAME-INTEGRATION-STANDARD.md](docs/GAME-INTEGRATION-STANDARD.md) (stories) and
   [docs/PREVIEWER-STANDARD.md](docs/PREVIEWER-STANDARD.md) (map previews).
 - Entry points: `vortex-game-kit/protocol`, `vortex-game-kit/conformance`, `vortex-game-kit/story` (the player),
-  `vortex-game-kit/engine` and `vortex-game-kit/schema` (what the player runs on).
+  `vortex-game-kit/engine` and `vortex-game-kit/schema` (what the player runs on), and the `vortex-story-import` command that brings a published story into a game.
 - Install: `pnpm add vortex-game-kit`
+- **Start here:** [docs/START-HERE.md](docs/START-HERE.md) — play stories in your game, with a prompt to hand to your AI.
 
 ```
 npm install
