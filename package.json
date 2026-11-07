@@ -1,17 +1,22 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.18.0",
-  "description": "Shared standard, protocol and conformance tests for connecting games to Vortex Studio stories and editors.",
+  "version": "0.19.0",
+  "description": "Everything a game needs to run Vortex Studio stories: the story player, the protocol, the integration standard and conformance tests.",
   "type": "module",
   "license": "MIT",
-  "repository": "github:ahku/vortex-game-kit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahku/vortex-game-kit.git"
+  },
   "engines": {
     "node": ">=20"
   },
   "files": [
     "dist",
+    "player",
     "docs",
-    "AGENTS.md"
+    "AGENTS.md",
+    "CHANGELOG.md"
   ],
   "exports": {
     "./protocol": {
@@ -22,17 +27,42 @@
       "types": "./dist/conformance/index.d.ts",
       "default": "./dist/conformance/index.js"
     },
+    "./player": {
+      "types": "./player/vns-player.d.ts",
+      "default": "./player/vns-player.js"
+    },
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "npm run typecheck && npm run test && npm run build",
-    "release": "(git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && false)) && npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version"
+    "release": "(git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && false)) && npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version",
+    "prepack": "npm run build",
+    "pack:check": "npm pack --dry-run"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "@types/node": "^22.10.0"
+  },
+  "homepage": "https://github.com/ahku/vortex-game-kit#readme",
+  "bugs": {
+    "url": "https://github.com/ahku/vortex-game-kit/issues"
+  },
+  "keywords": [
+    "visual-novel",
+    "story",
+    "game",
+    "vortex",
+    "web-component"
+  ],
+  "sideEffects": [
+    "./player/vns-player.js"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
   }
 }

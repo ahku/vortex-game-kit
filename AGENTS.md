@@ -21,25 +21,32 @@ This file is for any agent working in or with this repository (Claude, Codex, an
 ## Rules for this repository
 
 - **Entry points are layers.** `vortex-game-kit/protocol` is pure types and validators with no runtime and no
-  dependencies. **Vortex Studio imports `protocol` only.** `vortex-game-kit/conformance` is for tests. A runtime for
-  games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
+  dependencies. **Vortex Studio imports `protocol` only.** `vortex-game-kit/conformance` is for tests.
+  `vortex-game-kit/player` is the story player as a web component, built from the studio's source and copied here by the
+  studio's `pnpm player:sync` (never edit `player/` by hand: its `STAMP.json` and a test catch that; the process is in `docs/PLAYER-RELEASING.md`); games import it, the
+  studio never does. A runtime for games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
+- **General utilities only.** Nothing in this package names a game, a unit, a battle or a lesson. It holds what any game
+  needs to run a story: the standard, the protocol, the player and the tests.
 - **No game logic until two games need it.** Rendering, units and combat stay each game's own. Do not extract something
   from one game into the kit.
 - **Editor descriptors are experimental.** The layer and character editor descriptions (`layers`, `characters`) were
   written from one game. Do not widen them for a single game; wait for a second game, then keep what both need.
 - **No dependencies** in `protocol` and `conformance`.
-- **`dist` is committed.** After changing `src`, run `npm run check` and commit the rebuilt `dist` in the same commit.
-- **Versions are tags.** A change that older code cannot ignore raises `PROTOCOL_VERSION` and the package's minor version.
-  Release: update `CHANGELOG.md` and `package.json`, run `npm run check`, commit, then `git tag vX.Y.Z`.
+- **`dist` is not committed.** It is built when the package is packed (`prepack`), so run `npm run check` before you commit.
+- **Versions are tags, and tags are releases.** A change that older code cannot ignore raises `PROTOCOL_VERSION` (or
+  `PLAYER_CONTRACT` for the player) and the package's minor version. Release: update `CHANGELOG.md` and `package.json`,
+  run `npm run check`, commit, then `npm run release`. Pushing the tag `vX.Y.Z` runs the Publish workflow, which checks
+  that the tag matches `package.json` and publishes to npm with provenance (it needs the repository secret `NPM_TOKEN`).
+  A tag with a hyphen (`v0.19.1-next.1`) is a prerelease and is published under the npm tag `next`, never `latest`.
 - **Published stories keep working.** Never rename an id without an alias for the old one.
 - **Say what you did not do.** If something cannot meet a rule yet, write it under "Open" in the game's docs.
 
-## Installing and updating (for people who are new to Git)
+## Installing and updating
 
-Install into a project: `pnpm add https://github.com/ahku/vortex-game-kit/archive/refs/tags/v0.16.1.tar.gz` (or `npm install` with the same URL).
-Update: change the version in that URL (`v0.16.1`) to the new one and run it again. The project's `package.json` keeps it.
-Use the URL form, not `github:ahku/vortex-game-kit#v0.16.1`: pnpm puts that one in a folder with a `#` in its name, which
-Vite and Vitest cannot read.
+Install into a project: `pnpm add vortex-game-kit` (or `npm install vortex-game-kit`). Update: `pnpm update vortex-game-kit`,
+or change the version in the project's `package.json`. Projects that still use the old tarball URL
+(`https://github.com/ahku/vortex-game-kit/archive/refs/tags/vX.Y.Z.tar.gz`) keep working for tags up to v0.18.0, which carry
+a built `dist`; later tags do not, so switch them to the npm version.
 
 Use it in a game's tests:
 
@@ -47,4 +54,11 @@ Use it in a game's tests:
 import { signalCases, handshakeCases, declarationCase, previewerCases } from 'vortex-game-kit/conformance';
 for (const c of signalCases(subject)) it(c.name, c.run);
 for (const c of previewerCases(previewerSubject)) it(c.name, c.run); // see docs/PREVIEWER-STANDARD.md, section 7
+```
+
+Use the player (see docs/GAME-INTEGRATION-STANDARD.md, section 8):
+
+```ts
+import { defineVnsPlayer } from 'vortex-game-kit/player';
+import { PLAYER_CONTRACT } from 'vortex-game-kit/protocol';
 ```

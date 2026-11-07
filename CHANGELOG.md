@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.19.0
+
+- **Published on npm.** `pnpm add vortex-game-kit`. `dist` is built when the package is packed and is no longer committed;
+  pushing a version tag publishes it (with provenance) through the Publish workflow. Projects that install from a tag
+  tarball keep working up to v0.18.0 and should switch to the npm version.
+- **The story player.** New entry `vortex-game-kit/player`: the studio's player as a web component, `<vns-player>`, to draw
+  a story a game's own engine is running, with overlay over a running game, shared audio and mute, and an end screen. It is
+  built in the studio and copied in with a stamp; a test checks the copy against it.
+- **Player contract.** `vortex-game-kit/protocol` gains `PLAYER_CONTRACT` (1), `PlayerProperties`, `PlayerEvents`,
+  `PlayerMode`, `PlayerGameplay`, `PlayerMute` and `PlayerAudio`. Additive: `PROTOCOL_VERSION` and the manifest version
+  are unchanged.
+- The integration standard has a new section 8, "The story player in a game".
+- `PlayerProperties` gains `language`, and the protocol names the dialog's styling hooks (`PlayerPart`, for `::part()`).
+  Additive; `PLAYER_CONTRACT` stays 1.
+- The Publish workflow publishes a hyphenated tag (`v0.19.1-next.1`) as a prerelease under the npm tag `next`; a plain tag
+  stays `latest`. `docs/PLAYER-RELEASING.md` describes the three lanes (local, `next`, `latest`).
+
 ## 0.18.0
 
 - A `number` field may declare `step`: how much the arrows and dragging change it by, while typing still accepts any

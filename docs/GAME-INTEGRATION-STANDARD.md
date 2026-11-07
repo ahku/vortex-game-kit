@@ -212,5 +212,48 @@ A change to an objective is finished only when both lists match and the story ha
   loop, it needs a declaration instead.
 - When you add or change an objective, an input rule or an event param, follow section 4 completely, including both
   repositories' docs, before you say it is done.
+- When you touch how a game shows the story (the player, overlay, input while the story talks), follow section 8.
 - Say what you did not do. If a game cannot meet a rule here yet, write it under "Open" in that game's docs rather than
   working around it.
+
+## 8. The story player in a game
+
+A game draws a story with the kit's player, `<vns-player>` (`vortex-game-kit/player`), the same player the studio uses, so
+the story looks the same in both. The contract (types and the version) is `vortex-game-kit/protocol`
+(`PLAYER_CONTRACT`, `PlayerProperties`, `PlayerEvents`).
+
+**Who owns what.** The host (the game's story layer) owns the engine, the audio, the mute setting, the battle and the
+saves. The player owns drawing and the reader's input on the story. The player never talks to the game: the game learns
+about the story only through the engine's host events and answers through `engine.resume(outcome)`, as in sections 1 and 1b.
+
+**How a host uses it.**
+
+1. Create and load the engine, then create the element and set its properties **before** `engine.start()`, so it sees
+   every view: `bundle`, `engine`, and (to share them with the game) `audio` and `mute`.
+2. `mode`: `full` when the story has the screen, `overlay` when the game is on screen under it (no background is drawn and
+   the element lets the pointer through, except on the dialog and its buttons).
+3. `paused`: the host holds the story (sequences wait, the voice is cut, authored autoplay waits). `active`: false while
+   the host shows something else in full, so the player takes no keys. `language`: the language to show; set it again
+   when the reader changes it and the player follows. `controls`: false when the game has its own language and sound
+   buttons (it then sets `language` and shares `mute`).
+4. Listen to `gameplay`. `active` means an authored autoplay line talks over a game that keeps running (the line does not
+   ask the game to pause), so leave the game's input and buttons live; `paused` means the story holds the game while it
+   talks, so lock them and let the story take the click that moves it on. This is "input ownership is explicit" for the
+   player: the host revokes the game's input before the story takes it.
+5. `exit` and `restart` come from the end screen. The host decides what they do.
+6. Check `PLAYER_CONTRACT` at start and refuse to run the story when it is not the number the game was written for.
+
+**Styling the dialog.** The element's shadow root hides its styles, so a game restyles the dialog from its own stylesheet
+with `::part()` (`vns-player::part(dialog-text) { … }`). The parts are `dialog`, `dialog-name`, `dialog-face`,
+`dialog-text`, and the same four prefixed `dialog-automatic` for a line that plays by itself over a running game
+(`PlayerPart`). A rule in the game's stylesheet wins over the player's own, so a compact autoplay dialog at the top of the
+canvas is a few lines of CSS in the game, not a change to the player.
+
+**What the host keeps.** Everything that is the game's: the curtain between story and battle, where the overlay sits over
+the game's canvas, any dimming or pointing at a unit (section 4, spotlight), and the keys the game itself uses. While the
+story talks, keys the player handles are stopped before they reach the game (Enter must not also end a turn).
+
+**Keeping it current.** The player is built from the studio's source and copied into the kit (`player/`, with a
+`STAMP.json`) by `pnpm player:sync` in the studio. Games get it by updating the kit. The contract number is raised when the
+views the player draws, the properties or the events change in a way an older host would not understand. How a change
+travels from the studio to a game, and how to try one before it is published, is in `docs/PLAYER-RELEASING.md`.
