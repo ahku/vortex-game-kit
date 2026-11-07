@@ -16519,7 +16519,7 @@ var CD = ["lang"], wD = ["data-stage-layout", "data-text-style"], TD = {
 				},
 				overlay: { true: {
 					outer: "bg-transparent",
-					stage: "bg-transparent self-end"
+					stage: "self-end bg-transparent"
 				} }
 			}
 		}), _ = /* @__PURE__ */ F(!1);
@@ -17123,7 +17123,7 @@ var CD = ["lang"], wD = ["data-stage-layout", "data-text-style"], TD = {
 			], 10, CD);
 		};
 	}
-}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-6193815b]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-6193815b"]]), ND = {
+}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-8799b64e]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-8799b64e"]]), ND = {
 	en: {
 		progress: "Story progress",
 		progressExact: "{current} / {total}",
