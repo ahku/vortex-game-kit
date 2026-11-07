@@ -24,14 +24,17 @@ This file is for any agent working in or with this repository (Claude, Codex, an
   dependencies. **Vortex Studio imports `protocol` only.** `vortex-game-kit/conformance` is for tests.
   `vortex-game-kit/story` is the story player as a web component, built from the studio's source and copied here by the
   studio's `pnpm player:sync` (never edit `story/` by hand: its `STAMP.json` and a test catch that; the process is in `docs/PLAYER-RELEASING.md`); games import it, the
-  studio never does. A runtime for games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
+  studio never does. `vortex-game-kit/engine` and `vortex-game-kit/schema` are the story engine and the story format the player
+  runs on, built from the studio's own packages and copied the same way (never edit `engine/`, `schema/` or `shared/`; the
+  stamp `engine/STAMP.json` and a test catch that). A game creates its engine with `engine`, and `schema` is its story format
+  and validator. A runtime for games (`vortex-game-kit/game`) comes later and must never be imported by the studio.
 - **General utilities only.** Nothing in this package names a game, a unit, a battle or a lesson. It holds what any game
-  needs to run a story: the standard, the protocol, the player and the tests.
+  needs to run a story: the standard, the protocol, the player, the engine and schema, and the tests.
 - **No game logic until two games need it.** Rendering, units and combat stay each game's own. Do not extract something
   from one game into the kit.
 - **Editor descriptors are experimental.** The layer and character editor descriptions (`layers`, `characters`) were
   written from one game. Do not widen them for a single game; wait for a second game, then keep what both need.
-- **No dependencies** in `protocol` and `conformance`.
+- **No dependencies** in `protocol` and `conformance`. The package's one dependency, `zod`, is for `schema` and `engine` only.
 - **`dist` is not committed.** It is built when the package is packed (`prepack`), so run `npm run check` before you commit.
 - **Versions are tags, and tags are releases.** A change that older code cannot ignore raises `PROTOCOL_VERSION` (or
   `PLAYER_CONTRACT` for the player) and the package's minor version. Release: update `CHANGELOG.md` and `package.json`,
@@ -60,5 +63,7 @@ Use the player (see docs/GAME-INTEGRATION-STANDARD.md, section 8):
 
 ```ts
 import { defineVnsPlayer } from 'vortex-game-kit/story';
+import { createEngine } from 'vortex-game-kit/engine';
+import { validateStory } from 'vortex-game-kit/schema';
 import { PLAYER_CONTRACT } from 'vortex-game-kit/protocol';
 ```

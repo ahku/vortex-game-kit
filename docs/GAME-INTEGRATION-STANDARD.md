@@ -220,7 +220,10 @@ A change to an objective is finished only when both lists match and the story ha
 
 A game draws a story with the kit's player, `<vns-player>` (`vortex-game-kit/story`), the same player the studio uses, so
 the story looks the same in both. The contract (types and the version) is `vortex-game-kit/protocol`
-(`PLAYER_CONTRACT`, `PlayerProperties`, `PlayerEvents`).
+(`PLAYER_CONTRACT`, `PlayerProperties`, `PlayerEvents`). The engine the player draws is the host's own, made with
+`createEngine` from `vortex-game-kit/engine`; the story format and its validator are `vortex-game-kit/schema`. Both are
+built from the same studio source as the player, so they cannot drift from it. A game does not copy the studio's engine
+or schema into its own repository.
 
 **Who owns what.** The host (the game's story layer) owns the engine, the audio, the mute setting, the battle and the
 saves. The player owns drawing and the reader's input on the story. The player never talks to the game: the game learns
