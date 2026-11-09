@@ -223,6 +223,8 @@ export interface LoadOptions {
     hostFlags?: FlagStore;
     /** Event names the host can handle. Others use the step's `default` outcome. */
     hostEvents?: string[];
+    /** Event steps (by id) the host handles even when their event name is not in `hostEvents`. The editor preview uses it to stop at the events a story branches on. */
+    hostEventSteps?: string[];
     /** Used by `completed` conditions; collections rely on it. */
     isCompleted?(storyId: string): boolean;
 }

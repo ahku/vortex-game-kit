@@ -30,7 +30,7 @@ export interface FlatStep {
     own?: Condition;
 }
 /** Default post-title beat (ms). The story may override it with sceneTitleGapMs. */
-export declare const TITLE_TAIL_MS = 1500;
+export declare const TITLE_TAIL_MS = 1000;
 /**
  * All the steps of the story in order. The scene fades of the story settings become steps of their own, so
  * the player, skipping, saving and "play from here" treat them like any fade the author wrote:

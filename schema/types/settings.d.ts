@@ -18,13 +18,13 @@ export declare const DEFAULT_TEXT_SPEED: TextSpeed;
 export declare const cpsOf: (speed: TextSpeed | undefined) => number;
 /** What a story gets for its scene fades and the pause between scenes when its settings say nothing. */
 export declare const DEFAULT_SCENE_FADE_MS = 500;
-export declare const DEFAULT_SCENE_GAP_MS = 1000;
+export declare const DEFAULT_SCENE_GAP_MS = 1500;
 /** How long a scene's title shows on its own, before its first step. 0 shows it over the first step instead. */
-export declare const DEFAULT_SCENE_TITLE_MS = 4000;
+export declare const DEFAULT_SCENE_TITLE_MS = 3500;
 /** How long a scene's title card stays up before a click or key can dismiss it (never longer than the card itself). */
 export declare const SCENE_CARD_MIN_MS = 1500;
 /** Reading beat after the large title leaves, before the scene's first authored step. */
-export declare const DEFAULT_SCENE_TITLE_GAP_MS = 1500;
+export declare const DEFAULT_SCENE_TITLE_GAP_MS = 1000;
 /**
  * How a scene begins: with its title card (`title`), with the title kept small in the top-left corner for as long as
  * the scene lasts (`corner`), or `quiet`, with no title, for a scene that carries on from the one before (after a fork,

@@ -1,8 +1,8 @@
 {
   "note": "Written by tools/player-sync.mjs in the Studio repository. Do not edit; run `pnpm player:sync` there.",
-  "version": "0.17.0",
-  "commit": "5badbdd-dirty",
-  "engineHash": "742908448bd6ee69850117a8b6da9e8332233b1f6c5caf4aebbd37b6c33f01c4",
-  "schemaHash": "58542d26f32d096887c6a321b5dca150d7dbad832ea6dc809b30d40d010c5d94",
-  "outputHash": "677e2d1930037b16ee510351567ee53804b856048ec72c4d49042742b5d10e35"
+  "version": "0.17.1",
+  "commit": "f701504",
+  "engineHash": "73a30c97e2c086f7c89094568ec96201987dc4b8892d3282020c161f984cf6a8",
+  "schemaHash": "d5005d66200d7efad6795fd2bdcff631923dac2b208e7b7c8867dd9f2bfa7ff9",
+  "outputHash": "0d4883d554664dd8057a866337ebe4a2d59235f37009129141388e152c448867"
 }

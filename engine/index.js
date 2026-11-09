@@ -1,4 +1,4 @@
-import { Dn as leaveTarget, Et as triggerPresentation, Lt as DEFAULT_SCENE_TITLE_GAP_MS, On as routeChain, Sn as resolveTransition, Tr as resolveDialogPlayback, br as resolveNarrationPresentation, f as eventResultFlag, fi as resolvePortraitSettings, gn as nameForLanguage, kn as routeIndex, m as validateStory, mi as showsStage, mt as textOf, p as hasErrors, pi as showsDialog, wn as applyRoutes, wr as resolveAutoplaySettings, yr as resolveLinePresentation } from "../shared/src.js";
+import { An as routeIndex, Cn as resolveTransition, Dt as triggerPresentation, Er as resolveDialogPlayback, On as leaveTarget, Rt as DEFAULT_SCENE_TITLE_GAP_MS, Tn as applyRoutes, Tr as resolveAutoplaySettings, _n as nameForLanguage, br as resolveLinePresentation, h as validateStory, hi as showsStage, ht as textOf, kn as routeChain, m as hasErrors, mi as showsDialog, p as eventResultFlag, pi as resolvePortraitSettings, xr as resolveNarrationPresentation } from "../shared/src.js";
 //#region ../engine/src/types.ts
 /**
 * The host contract: how a game, the studio preview or the shared-URL player drives a story.
@@ -84,9 +84,9 @@ function fade(id, mode, outMs, inMs, stage, holdMs = 0, dialog = false) {
 function flattenScenes(story) {
 	const storyOutMs = story.settings?.sceneFadeOutMs ?? 500;
 	const storyInMs = story.settings?.sceneFadeInMs ?? 500;
-	const storyGapMs = story.settings?.sceneGapMs ?? 1e3;
-	const storyTitleMs = story.settings?.sceneTitleMs ?? 4e3;
-	const titleGapMs = story.settings?.sceneTitleGapMs ?? 1500;
+	const storyGapMs = story.settings?.sceneGapMs ?? 1500;
+	const storyTitleMs = story.settings?.sceneTitleMs ?? 3500;
+	const titleGapMs = story.settings?.sceneTitleGapMs ?? 1e3;
 	const inStory = story.scenes.filter((sc) => !sc.trigger);
 	const ordered = [...inStory, ...story.scenes.filter((sc) => sc.trigger)];
 	const triggered = new Set(story.scenes.filter((sc) => sc.trigger).map((sc) => sc.id));
@@ -163,33 +163,32 @@ function flattenScenes(story) {
 		const firstAt = entries.findIndex((e) => e.sceneStart);
 		if (titleMs > 0 && startMode === "title" && (meta.title?.trim() || meta.displayTitle) && firstAt >= 0) {
 			const first = entries[firstAt];
-			if (first.step.type !== "transition") {
-				entries[firstAt] = {
-					...first,
-					sceneStart: false
-				};
-				entries.splice(firstAt, 0, {
-					sceneId: scene.id,
-					sceneStart: false,
-					title: titleMs,
-					step: {
-						id: `scene-title:${scene.id}`,
-						type: "delay",
-						ms: titleMs,
-						skippable: true
-					}
-				});
-				if (titleGapMs > 0) entries.splice(firstAt + 1, 0, {
-					sceneId: scene.id,
-					sceneStart: false,
-					step: {
-						id: `scene-title-tail:${scene.id}`,
-						type: "delay",
-						ms: titleGapMs,
-						skippable: true
-					}
-				});
-			}
+			const at = first.step.type === "transition" ? firstAt + 1 : firstAt;
+			entries[firstAt] = {
+				...first,
+				sceneStart: false
+			};
+			entries.splice(at, 0, {
+				sceneId: scene.id,
+				sceneStart: false,
+				title: titleMs,
+				step: {
+					id: `scene-title:${scene.id}`,
+					type: "delay",
+					ms: titleMs,
+					skippable: true
+				}
+			});
+			if (titleGapMs > 0) entries.splice(at + 1, 0, {
+				sceneId: scene.id,
+				sceneStart: false,
+				step: {
+					id: `scene-title-tail:${scene.id}`,
+					type: "delay",
+					ms: titleGapMs,
+					skippable: true
+				}
+			});
 		}
 		if (outMs > 0) {
 			const lastShown = (before) => {
@@ -625,6 +624,9 @@ function createEngine() {
 	let exitName;
 	let current = null;
 	let handledEvents = /* @__PURE__ */ new Set();
+	/** Event steps the host answers by id, on top of every step whose event name is in `handledEvents`. */
+	let handledSteps = /* @__PURE__ */ new Set();
+	const handles = (step) => handledEvents.has(step.name) || handledSteps.has(step.id);
 	/** The studio preview plays every step, whatever its `when` says. */
 	let ignoreWhen = false;
 	/**
@@ -945,7 +947,7 @@ function createEngine() {
 					i++;
 					continue;
 				case "event":
-					if (handledEvents.has(step.name)) {
+					if (handles(step)) {
 						phase = "waiting";
 						present(viewFor(step), ops);
 						visits[step.id] = (visits[step.id] ?? 0) + 1;
@@ -1016,9 +1018,10 @@ function createEngine() {
 			tables = b.strings;
 			lang = opts.lang && tables[opts.lang] ? opts.lang : b.story.languages.source;
 			handledEvents = new Set(opts.hostEvents ?? []);
+			handledSteps = new Set(opts.hostEventSteps ?? []);
 			const warnings = [];
 			for (const name of b.story.contract.reads.length ? b.story.contract.reads : []) if (opts.hostFlags?.[name] === void 0 && b.registry?.flags[name] === void 0) warnings.push(`Shared flag "${name}" was not provided by the host.`);
-			for (const { step } of steps) if (step.type === "event" && !handledEvents.has(step.name)) warnings.push(`Host event "${step.name}" is not handled; step "${step.id}" will use its default outcome "${step.default}".`);
+			for (const { step } of steps) if (step.type === "event" && !handles(step)) warnings.push(`Host event "${step.name}" is not handled; step "${step.id}" will use its default outcome "${step.default}".`);
 			baseFlags = {
 				...initialFlags(b.story, b.registry),
 				...opts.hostFlags ?? {}
@@ -1093,7 +1096,7 @@ function createEngine() {
 					if (!playing) history.push(s.id);
 					stage = applyStep(stage, s, stageContext);
 					if (s.type === "set") for (const op of s.set) writeFlag(op.flag, applySetOp(getFlag(op.flag), op));
-					else if (s.type === "event" && !handledEvents.has(s.name)) writeFlag(eventResultFlag(s), s.default);
+					else if (s.type === "event" && !handles(s)) writeFlag(eventResultFlag(s), s.default);
 					else if (s.type === "sequence" && s.hold) {
 						open.set(s.id, s);
 						openHolds.set(s.id, steps[i].sceneId);
@@ -1294,7 +1297,7 @@ function createEngine() {
 			}
 			const view = viewFor(step, coveredBefore);
 			if (view) present(view, []);
-			if (step.type === "event" && handledEvents.has(step.name)) emit("hostEvent", {
+			if (step.type === "event" && handles(step)) emit("hostEvent", {
 				stepId: step.id,
 				visit: visits[step.id] ?? 1,
 				name: step.name,

@@ -22,6 +22,12 @@ export interface ValidateContext {
 export declare function eventResultFlag(step: Extract<Step, {
     type: 'event';
 }>): string;
+/**
+ * The event steps a game would decide: they report more than one outcome and something in the story (a condition on a
+ * step, a fork route, a choice or a scene) reads the result. The editor preview stops at these so the author can pick
+ * the outcome; an event nothing branches on plays its default.
+ */
+export declare function branchingEventSteps(story: Story): string[];
 /** Compute a story's contract from its steps, so it never has to be filled in by hand. */
 export declare function deriveContract(story: Story): Required<Contract>;
 export declare function validateStory(story: Story, ctx?: ValidateContext): Issue[];
