@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.19.1
+
+- **Scene starts and fades in the story player** (built from Studio v0.17.1). A scene that opens with a Fade step now shows
+  its title card after the fade, not during it. The small scene title in the corner fades with the picture when a scene
+  ends, stays through the closing fade, and waits for the big title card in the next scene.
+- **New scene timing defaults** in `vortex-game-kit/schema`: a 1.5 s pause between scenes (`DEFAULT_SCENE_GAP_MS`), a
+  3.5 s scene title (`DEFAULT_SCENE_TITLE_MS`) and a 1 s pause after it (`DEFAULT_SCENE_TITLE_GAP_MS`). A story that sets
+  its own times keeps them; one that does not now uses these.
+- **Engine and schema.** `engine.load` accepts an optional `hostEventSteps` (event steps, by id, the host handles on top of
+  `hostEvents`), and `vortex-game-kit/schema` exports `branchingEventSteps`. Both are additive and used by the Studio's
+  preview. `PLAYER_CONTRACT` stays 1.
+
 ## 0.19.0
 
 - **Published on npm.** `pnpm add vortex-game-kit`. `dist` is built when the package is packed and is no longer committed;

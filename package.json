@@ -1,6 +1,6 @@
 {
   "name": "vortex-game-kit",
-  "version": "0.19.0",
+  "version": "0.19.1",
   "description": "Everything a game needs to run Vortex Studio stories: the story player, the engine and schema it runs on, the protocol, the integration standard and conformance tests.",
   "type": "module",
   "license": "MIT",
@@ -11,6 +11,15 @@
   "packageManager": "pnpm@12.11.2",
   "engines": {
     "node": ">=20"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm run test && npm run build",
+    "release": "(git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && false)) && npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version",
+    "prepack": "npm run build",
+    "pack:check": "npm pack --dry-run"
   },
   "files": [
     "dist",
@@ -45,15 +54,6 @@
       "default": "./schema/index.js"
     },
     "./package.json": "./package.json"
-  },
-  "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "check": "npm run typecheck && npm run test && npm run build",
-    "release": "(git diff --quiet && git diff --cached --quiet || (echo 'Commit your changes first.' && false)) && npm run check && git push && git tag v$npm_package_version && git push origin v$npm_package_version",
-    "prepack": "npm run build",
-    "pack:check": "npm pack --dry-run"
   },
   "devDependencies": {
     "typescript": "^5.9.3",
