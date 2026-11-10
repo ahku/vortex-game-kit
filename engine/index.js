@@ -1,4 +1,4 @@
-import { An as routeIndex, Cn as resolveTransition, Dt as triggerPresentation, Er as resolveDialogPlayback, On as leaveTarget, Rt as DEFAULT_SCENE_TITLE_GAP_MS, Tn as applyRoutes, Tr as resolveAutoplaySettings, _n as nameForLanguage, br as resolveLinePresentation, h as validateStory, hi as showsStage, ht as textOf, kn as routeChain, m as hasErrors, mi as showsDialog, p as eventResultFlag, pi as resolvePortraitSettings, xr as resolveNarrationPresentation } from "../shared/src.js";
+import { An as routeChain, Dr as resolveDialogPlayback, En as applyRoutes, Er as resolveAutoplaySettings, Ot as triggerPresentation, Sr as resolveNarrationPresentation, gi as showsStage, gt as textOf, h as validateStory, hi as showsDialog, jn as routeIndex, kn as leaveTarget, m as hasErrors, mi as resolvePortraitSettings, p as eventResultFlag, vn as nameForLanguage, wn as resolveTransition, xr as resolveLinePresentation, zt as DEFAULT_SCENE_TITLE_GAP_MS } from "../shared/src.js";
 //#region ../engine/src/types.ts
 /**
 * The host contract: how a game, the studio preview or the shared-URL player drives a story.

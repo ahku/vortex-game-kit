@@ -1,10 +1,10 @@
 {
   "note": "Written by tools/player-sync.mjs in the Studio repository. Do not edit; run `pnpm player:sync` there.",
-  "version": "0.17.1",
-  "commit": "f701504",
+  "version": "0.18.0",
+  "commit": "eeb5ecb-dirty",
   "contract": 1,
-  "outputHash": "086ad2e7ff129ee630a1dbc701c19b00ddb106c5f104d37480463ddb111f7d10",
-  "inputsHash": "0223e2456f18ff92f75572ecb9252ddf90e41b7f0bb6a28914c131b76acb2c9a",
+  "outputHash": "9f76fd6baf70641f414eabf1b812646a9430e68aacfac9fbb1b7e44a2159696b",
+  "inputsHash": "3a9c1e31a9c385f11bf333a5cbc4148be5186af00ddb1abdd6369de2a344e69d",
   "inputs": [
     "apps/studio/app/components/characters/PortraitImage.vue",
     "apps/studio/app/components/player/Asset.vue",
@@ -141,5 +141,5 @@
     "packages/schema/src/workspace.ts"
   ],
   "engineHash": "73a30c97e2c086f7c89094568ec96201987dc4b8892d3282020c161f984cf6a8",
-  "schemaHash": "d5005d66200d7efad6795fd2bdcff631923dac2b208e7b7c8867dd9f2bfa7ff9"
+  "schemaHash": "efebb55afc747129ac7ff1b639143ba06be1f34eb8943f20002c90a888f70011"
 }

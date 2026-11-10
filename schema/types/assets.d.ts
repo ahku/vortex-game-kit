@@ -21,11 +21,16 @@ export type AssetKind = z.infer<typeof AssetKind>;
  * What an uploaded file is for. One role per asset; it decides which pickers offer it first and what name is
  * suggested, but it never locks the file: any image can still be used wherever an image fits.
  */
-export declare const ASSET_ROLES: readonly ["portrait", "background", "scene", "object", "music", "sfx", "voice", "video"];
+export declare const ASSET_ROLES: readonly ["portrait", "background", "scene", "object", "music", "sfx", "voice", "video", "normal"];
 export type AssetRole = (typeof ASSET_ROLES)[number];
 export declare const isAssetRole: (value: unknown) => value is AssetRole;
 /** Whether a role belongs to images, audio or video. */
 export declare const ROLE_MEDIA: Record<AssetRole, 'image' | 'audio' | 'video'>;
+/**
+ * Roles that pictures are not picked from: a normal map is made for a color picture in the relief editor and found
+ * through it (plan 027), not chosen as a picture of its own. Pickers list it only when asked for by role.
+ */
+export declare const HIDDEN_ROLES: readonly AssetRole[];
 /** The name prefix a role suggests (`char/<id>/` is used for portraits when the character is known). */
 export declare const ROLE_PREFIX: Record<AssetRole, string>;
 /**
