@@ -20,6 +20,17 @@ export declare const CharacterHeadSchema: z.ZodObject<{
 export type CharacterHead = z.infer<typeof CharacterHeadSchema>;
 /** The head of a picture that has none set. */
 export declare const DEFAULT_HEAD: CharacterHead;
+/**
+ * Which way a stage picture looks, after its own mirror: toward the right, toward the left, or straight at the viewer.
+ * With it set, the picture turns to face the center by itself when it stands on a side (see `autoFlip`).
+ */
+export declare const LOOKS: readonly ["right", "left", "front"];
+export declare const LooksSchema: z.ZodEnum<{
+    left: "left";
+    right: "right";
+    front: "front";
+}>;
+export type Looks = z.infer<typeof LooksSchema>;
 /** Adjusts one stage picture. All fields are optional; no value means no change. */
 export declare const CharacterFitSchema: z.ZodObject<{
     scale: z.ZodOptional<z.ZodNumber>;
@@ -31,6 +42,11 @@ export declare const CharacterFitSchema: z.ZodObject<{
         y: z.ZodNumber;
         size: z.ZodNumber;
     }, z.core.$strict>>;
+    looks: z.ZodOptional<z.ZodEnum<{
+        left: "left";
+        right: "right";
+        front: "front";
+    }>>;
 }, z.core.$strict>;
 export type CharacterFit = z.infer<typeof CharacterFitSchema>;
 /**
@@ -71,6 +87,11 @@ export declare const CharacterSchema: z.ZodObject<{
         follow: "follow";
     }>>;
     dimExtra: z.ZodOptional<z.ZodNumber>;
+    looks: z.ZodOptional<z.ZodEnum<{
+        left: "left";
+        right: "right";
+        front: "front";
+    }>>;
     fits: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
         scale: z.ZodOptional<z.ZodNumber>;
         lift: z.ZodOptional<z.ZodNumber>;
@@ -81,6 +102,11 @@ export declare const CharacterSchema: z.ZodObject<{
             y: z.ZodNumber;
             size: z.ZodNumber;
         }, z.core.$strict>>;
+        looks: z.ZodOptional<z.ZodEnum<{
+            left: "left";
+            right: "right";
+            front: "front";
+        }>>;
     }, z.core.$strict>>>;
 }, z.core.$strict>;
 export type Character = z.infer<typeof CharacterSchema>;
@@ -129,6 +155,14 @@ export declare function stagePictureOf(character: Character | undefined, expr?: 
 export declare function stageArtOf(character: Character | undefined, expr?: string): string | undefined;
 /** How the stage picture shown for `expr` sits: the adjustments saved for that picture's expression, if any. */
 export declare function fitOf(character: Character | undefined, expr?: string): CharacterFit | undefined;
+/** Which way the stage picture shown for `expr` looks: its own setting, else the character's; none when unset. */
+export declare function looksOf(character: Character | undefined, expr?: string): Looks | undefined;
+/**
+ * Whether a portrait standing with its centre at `x` (0 is the left edge of the stage, 1 the right) is to be mirrored so
+ * it faces the center. A picture on the left should look right and one on the right should look left; the middle
+ * third and pictures that look at the viewer or have no `looks` are left alone.
+ */
+export declare function autoFlip(looks: Looks | undefined, x: number): boolean;
 /**
  * Where the head is in the stage picture shown for `expr`, in the picture's own coordinates (see
  * `CharacterHeadSchema`): the picture's own, else the default expression's, else `DEFAULT_HEAD`.

@@ -610,9 +610,9 @@ var AnimationSchema = z.strictObject({
 	opacity: keyframes(0, 1).optional()
 });
 /**
-* Layer switches on pictures, text, video and color. `locked` keeps the editor from picking or moving the layer, so
-* clicks reach the ones behind it; `hidden` leaves it out of the frame, in the editor and the player, without
-* deleting it. Both are absent when off.
+* Layer switches on pictures, text, video and color. `locked` prevents edits and lets clicks on the preview reach
+* the layers behind it. `hidden` leaves the layer out of the frame in the editor and the player. Both are absent
+* when off.
 */
 var layerFlags = {
 	locked: z.literal(true).optional(),
@@ -1347,6 +1347,16 @@ var DEFAULT_HEAD = {
 	y: .22,
 	size: .37
 };
+/**
+* Which way a stage picture looks, after its own mirror: toward the right, toward the left, or straight at the viewer.
+* With it set, the picture turns to face the center by itself when it stands on a side (see `autoFlip`).
+*/
+var LOOKS = [
+	"right",
+	"left",
+	"front"
+];
+var LooksSchema = z.enum(LOOKS);
 /** Adjusts one stage picture. All fields are optional; no value means no change. */
 var CharacterFitSchema = z.strictObject({
 	/** 1 is the host’s default stage portrait height; other values scale relative to it. */
@@ -1358,7 +1368,9 @@ var CharacterFitSchema = z.strictObject({
 	/** Mirror the illustration left to right. */
 	flip: z.boolean().optional(),
 	/** Where the head is in this picture. Without it the default expression's head is used. */
-	head: CharacterHeadSchema.optional()
+	head: CharacterHeadSchema.optional(),
+	/** Which way this picture looks; absent follows the character's own `looks`. */
+	looks: LooksSchema.optional()
 });
 /**
 * A character: a speaker with names, a color and portraits. It lives in the workspace library (shared by
@@ -1407,6 +1419,11 @@ var CharacterSchema = z.strictObject({
 	* (0 to 0.5, so 0.25 on top of a 0.2 story level is 0.45). A light-colored character needs more than a dark one.
 	*/
 	dimExtra: z.number().min(0).max(MAX_DIM_EXTRA).optional(),
+	/**
+	* Which way the character's stage pictures look. Set, they mirror themselves to face the center; absent, they are
+	* never mirrored automatically (how characters made before this worked). New characters start with `right`.
+	*/
+	looks: LooksSchema.optional(),
 	/** Expression name -> how its stage picture sits, for art whose proportions differ from the usual. */
 	fits: z.record(z.string().max(64), CharacterFitSchema).optional()
 });
@@ -1533,7 +1550,8 @@ function fitOf(character, expr) {
 		if (visited.has(source.sameAs) || !character.expressions[source.sameAs]) return {
 			scale: own.scale,
 			lift: own.lift,
-			flip: own.flip
+			flip: own.flip,
+			looks: own.looks
 		};
 		visited.add(source.sameAs);
 		source = character.fits?.[source.sameAs] ?? {};
@@ -1541,8 +1559,24 @@ function fitOf(character, expr) {
 	return {
 		scale: source.scale,
 		lift: source.lift,
-		flip: own.flip
+		flip: own.flip,
+		looks: own.looks
 	};
+}
+/** Which way the stage picture shown for `expr` looks: its own setting, else the character's; none when unset. */
+function looksOf(character, expr) {
+	return fitOf(character, expr)?.looks ?? character?.looks;
+}
+/**
+* Whether a portrait standing with its centre at `x` (0 is the left edge of the stage, 1 the right) is to be mirrored so
+* it faces the center. A picture on the left should look right and one on the right should look left; the middle
+* third and pictures that look at the viewer or have no `looks` are left alone.
+*/
+function autoFlip(looks, x) {
+	if (looks === void 0 || looks === "front") return false;
+	if (x < .4) return looks === "left";
+	if (x > .6) return looks === "right";
+	return false;
 }
 /**
 * Where the head is in the stage picture shown for `expr`, in the picture's own coordinates (see
@@ -2420,15 +2454,12 @@ var StoryDocumentSchema = z.strictObject({
 	story: StorySchema,
 	strings: z.record(LangCode, StringTableSchema)
 });
-/** A minimal valid story for the "new story" button: one scene, one narration line. */
+/** A minimal valid story for the "new story" button: one scene with no steps yet. */
 function newStoryDocument(id, title, lang = "en") {
 	const strings = {
 		schemaVersion: 1,
 		lang,
-		entries: {
-			t_scene1: title,
-			t_s1: ""
-		}
+		entries: { t_scene1: title }
 	};
 	return {
 		story: StorySchema.parse({
@@ -2445,11 +2476,7 @@ function newStoryDocument(id, title, lang = "en") {
 					title,
 					displayTitle: "t_scene1"
 				},
-				steps: [{
-					id: "s1",
-					type: "narration",
-					text: "t_s1"
-				}]
+				steps: []
 			}]
 		}),
 		strings: { [lang]: strings }
@@ -3179,6 +3206,10 @@ function storyDraftJsonSchema() {
 					type: "object",
 					properties: {
 						title: { type: "string" },
+						subtitle: { type: "string" },
+						location: { type: "string" },
+						time: { type: "string" },
+						background: { type: "string" },
 						steps: {
 							type: "array",
 							items: { $ref: "#/$defs/step" }
@@ -3221,4 +3252,4 @@ function storyDraftJsonSchema() {
 	};
 }
 //#endregion
-export { assetSlugFromName as $, TRANSITION_MODES as $n, PORTRAIT_IF_TAKEN as $r, TEXT_SPEED_CPS as $t, GraphicSizeSchema as A, AssetRefOrEmpty as Ai, routeChain as An, EasingSchema as Ar, BACKGROUND_PRESETS as At, AssetEntrySchema as B, Slot as Bi, ExprChangeSchema as Bn, BRIGHTNESS_MAX as Br, DEFAULT_SCENE_TITLE_MS as Bt, ExportBundleSchema as C, effectSettingsShape as Ci, TRANSITION_DEFAULTS as Cn, AutoplaySettingsSchema as Cr, StorySchema as Ct, ThemeSchema as D, conditionFlags as Di, effectiveWhen as Dn, resolveDialogPlayback as Dr, storyScenes as Dt, FlagRegistrySchema as E, SetOpSchema as Ei, applyRoutes as En, resolveAutoplaySettings as Er, TriggerSchema as Et, spriteStartOffset as F, Id as Fi, ChoiceStepSchema as Fn, SequenceDefaultsSchema as Fr, DEFAULT_NAME_TAG as Ft, IMAGE_WIDTHS as G, LeaveStepSchema as Gn, ToneMood as Gr, SCENE_CARD_MIN_MS as Gt, AssetManifestSchema as H, Unit as Hi, ForkStepSchema as Hn, BgStyleSchema as Hr, DEFAULT_TEXT_SPEED as Ht, ASSET_KINDS as I, LangCode as Ii, DelayStepSchema as In, SequenceIdSchema as Ir, DEFAULT_SCENE_FADE_MS as It, UPLOAD_ACCEPT as J, NarrationStepSchema as Jn, FACE_SIDES as Jr, StorySettingsSchema as Jt, ROLE_MEDIA as K, LineStepSchema as Kn, DEFAULT_PORTRAIT_POSITION as Kr, SCENE_STARTS as Kt, ASSET_ORIGIN_KINDS as L, Pos as Li, EXPR_CHANGES as Ln, SequenceItemSchema as Lr, DEFAULT_SCENE_GAP_MS as Lt, spriteCell as M, FlagName as Mi, AutoplayEndStepSchema as Mn, ImageFitSchema as Mr, BoxStyleSchema as Mt, spriteFrame as N, FlagValue as Ni, AutoplayStartStepSchema as Nn, ImageFocusSchema as Nr, CORNERS as Nt, GRAPHIC_BLEND_MODES as O, conditionUsesCompleted as Oi, forkBlockEnd as On, AnimationSchema as Or, triggerPresentation as Ot, spriteFrameRect as P, HexColor as Pi, ChoiceOptionSchema as Pn, ImageMotionSchema as Pr, CornersSchema as Pt, VIDEO_WARN_BYTES as Q, TRANSITION_CHANNELS as Qn, PORTRAIT_ANIMATIONS as Qr, TEXT_SPEEDS as Qt, ASSET_PREFIX as R, SCHEMA_VERSION as Ri, EndStepSchema as Rn, SequenceSchema as Rr, DEFAULT_SCENE_START as Rt, newStoryDocument as S, Speed as Si, stagePictureOf as Sn, resolveNarrationPresentation as Sr, SceneSchema as St, CollectionSchema as T, ConditionSchema as Ti, transitionLength as Tn, DialogPlaybackSchema as Tr, TriggerPresentationSchema as Tt, HIDDEN_ROLES as U, GotoStepSchema as Un, StageOpSchema as Ur, DEFAULT_TEXT_STYLE as Ut, AssetKind as V, StringKey as Vi, ForkRouteSchema as Vn, BRIGHTNESS_MIN as Vr, DEFAULT_STYLES as Vt, IMAGE_SIZE as W, HoldEndStepSchema as Wn, TONE_MOODS as Wr, NameTagStyleSchema as Wt, UPLOAD_MAX_BYTES as X, SetStepSchema as Xn, LinePortraitSchema as Xr, TAG_BORDER_PRESETS as Xt, UPLOAD_ACCEPT_ALL as Y, SequenceStepSchema as Yn, FaceSideSchema as Yr, TAG_BACKGROUND_PRESETS as Yt, UPLOAD_TYPES as Z, StepSchema as Zn, MAX_DIM_EXTRA as Zr, TEXT_PRESETS as Zt, SchemaVersionError as _, toneLookFor as _i, mergeCharacters as _n, automaticLineMode as _r, translationEntry as _t, stepReference as a, PortraitAnimationSchema as ai, resolveNameTag as an, LINE_ENTRANCES as ar, parseAssetOriginRequest as at, MAX_DOCUMENT_BYTES as b, EffectName as bi, publicCharacter as bn, presentationForNewStep as br, DEFAULT_TRIGGER_PRESENTATION as bt, referencedCharacters as c, PortraitPictureSchema as ci, CharacterSchema as cn, LinePresentationSchema as cr, snapImageWidth as ct, branchingEventSteps as d, PortraitToneSchema as di, characterFullName as dn, PresentationDefaultsSchema as dr, StringTableSchema as dt, PORTRAIT_LAYERS as ei, TEXT_STYLES as en, TransitionChannelSchema as er, collectAssetRoles as et, deriveContract as f, TONE_LOOK as fi, characterIdFromName as fn, SPEAKER_BADGES as fr, extractMarkupTags as ft, STORY_MIGRATIONS as g, showsStage as gi, headOf as gn, TextPositionSchema as gr, textOf as gt, validateStory as h, showsDialog as hi, fitOf as hn, TEXT_POSITIONS as hr, markupMatches as ht, stageReference as i, PORTRAIT_TONES as ii, resolveBoxStyle as in, DEFAULT_NARRATION_PRESENTATION as ir, isAssetRole as it, SpriteSheetSchema as j, DurationMs as ji, routeIndex as jn, IMAGE_FOCUS as jr, BORDER_PRESETS as jt, GraphicAppearanceSchema as k, AssetKey as ki, leaveTarget as kn, EASINGS as kr, triggeredScenes as kt, renameCharacterRefs as l, PortraitSettingsSchema as li, DEFAULT_HEAD as ln, NARRATION_MODES as lr, sniffUploadType as lt, hasErrors as m, resolvePortraitSettings as mi, faceOf as mn, TEXT_ALIGNMENTS as mr, findStaleTranslations as mt, sequenceDraftJsonSchema as n, PORTRAIT_POSITIONS as ni, TextStyleSchema as nn, TransitionStepSchema as nr, formatAssetOriginRequest as nt, storyDraftJsonSchema as o, PortraitIfTakenSchema as oi, CharacterFitSchema as on, LINE_MODES as or, parseByteRange as ot, eventResultFlag as p, resolvePortraitEmphasis as pi, expressionNames as pn, SpeakerBadgeSchema as pr, findMissingTranslations as pt, ROLE_PREFIX as q, MarkStepSchema as qn, DEFAULT_PORTRAIT_SETTINGS as qr, SceneStartSchema as qt, sequenceItemReference as r, PORTRAIT_SHOWS as ri, cpsOf as rn, DEFAULT_LINE_PRESENTATION as rr, isAssetPrefix as rt, autoplayBlockAt as s, PortraitLayerSchema as si, CharacterHeadSchema as sn, LineEntranceSchema as sr, renameAssetRefs as st, describeType as t, PORTRAIT_PICTURES as ti, TextSpeedSchema as tn, TransitionModeSchema as tr, forEachAssetRef as tt, standInCharacters as u, PortraitShowSchema as ui, PortraitCropSchema as un, NarrationPresentationSchema as ur, StringEntrySchema as ut, migrateStoryDocument as v, EFFECT_NAMES as vi, nameForLanguage as vn, lineModeIsAutomatic as vr, hashText as vt, CollectionNodeSchema as w, resolveEffect as wi, resolveTransition as wn, DEFAULT_AUTOPLAY_DELAY_MS as wr, TRIGGER_PRESENTATIONS as wt, StoryDocumentSchema as x, Size as xi, stageArtOf as xn, resolveLinePresentation as xr, FlagDeclSchema as xt, parseStory as y, EFFECT_SPECS as yi, portraitOf as yn, patchNarrationPresentation as yr, ContractSchema as yt, ASSET_ROLES as z, SLOTS as zi, EventStepSchema as zn, BG_STYLES as zr, DEFAULT_SCENE_TITLE_GAP_MS as zt };
+export { assetSlugFromName as $, SequenceStepSchema as $n, FaceSideSchema as $r, TEXT_SPEED_CPS as $t, GraphicSizeSchema as A, SetOpSchema as Ai, applyRoutes as An, resolveAutoplaySettings as Ar, BACKGROUND_PRESETS as At, AssetEntrySchema as B, LangCode as Bi, DelayStepSchema as Bn, SequenceIdSchema as Br, DEFAULT_SCENE_TITLE_MS as Bt, ExportBundleSchema as C, EFFECT_SPECS as Ci, portraitOf as Cn, patchNarrationPresentation as Cr, StorySchema as Ct, ThemeSchema as D, effectSettingsShape as Di, TRANSITION_DEFAULTS as Dn, AutoplaySettingsSchema as Dr, storyScenes as Dt, FlagRegistrySchema as E, Speed as Ei, stagePictureOf as En, resolveNarrationPresentation as Er, TriggerSchema as Et, spriteStartOffset as F, DurationMs as Fi, routeIndex as Fn, IMAGE_FOCUS as Fr, DEFAULT_NAME_TAG as Ft, IMAGE_WIDTHS as G, StringKey as Gi, ForkRouteSchema as Gn, BRIGHTNESS_MIN as Gr, SCENE_CARD_MIN_MS as Gt, AssetManifestSchema as H, SCHEMA_VERSION as Hi, EndStepSchema as Hn, SequenceSchema as Hr, DEFAULT_TEXT_SPEED as Ht, ASSET_KINDS as I, FlagName as Ii, AutoplayEndStepSchema as In, ImageFitSchema as Ir, DEFAULT_SCENE_FADE_MS as It, UPLOAD_ACCEPT as J, HoldEndStepSchema as Jn, TONE_MOODS as Jr, StorySettingsSchema as Jt, ROLE_MEDIA as K, Unit as Ki, ForkStepSchema as Kn, BgStyleSchema as Kr, SCENE_STARTS as Kt, ASSET_ORIGIN_KINDS as L, FlagValue as Li, AutoplayStartStepSchema as Ln, ImageFocusSchema as Lr, DEFAULT_SCENE_GAP_MS as Lt, spriteCell as M, conditionUsesCompleted as Mi, forkBlockEnd as Mn, AnimationSchema as Mr, BoxStyleSchema as Mt, spriteFrame as N, AssetKey as Ni, leaveTarget as Nn, EASINGS as Nr, CORNERS as Nt, GRAPHIC_BLEND_MODES as O, resolveEffect as Oi, resolveTransition as On, DEFAULT_AUTOPLAY_DELAY_MS as Or, triggerPresentation as Ot, spriteFrameRect as P, AssetRefOrEmpty as Pi, routeChain as Pn, EasingSchema as Pr, CornersSchema as Pt, VIDEO_WARN_BYTES as Q, NarrationStepSchema as Qn, FACE_SIDES as Qr, TEXT_SPEEDS as Qt, ASSET_PREFIX as R, HexColor as Ri, ChoiceOptionSchema as Rn, ImageMotionSchema as Rr, DEFAULT_SCENE_START as Rt, newStoryDocument as S, EFFECT_NAMES as Si, nameForLanguage as Sn, lineModeIsAutomatic as Sr, SceneSchema as St, CollectionSchema as T, Size as Ti, stageArtOf as Tn, resolveLinePresentation as Tr, TriggerPresentationSchema as Tt, HIDDEN_ROLES as U, SLOTS as Ui, EventStepSchema as Un, BG_STYLES as Ur, DEFAULT_TEXT_STYLE as Ut, AssetKind as V, Pos as Vi, EXPR_CHANGES as Vn, SequenceItemSchema as Vr, DEFAULT_STYLES as Vt, IMAGE_SIZE as W, Slot as Wi, ExprChangeSchema as Wn, BRIGHTNESS_MAX as Wr, NameTagStyleSchema as Wt, UPLOAD_MAX_BYTES as X, LineStepSchema as Xn, DEFAULT_PORTRAIT_POSITION as Xr, TAG_BORDER_PRESETS as Xt, UPLOAD_ACCEPT_ALL as Y, LeaveStepSchema as Yn, ToneMood as Yr, TAG_BACKGROUND_PRESETS as Yt, UPLOAD_TYPES as Z, MarkStepSchema as Zn, DEFAULT_PORTRAIT_SETTINGS as Zr, TEXT_PRESETS as Zt, SchemaVersionError as _, resolvePortraitEmphasis as _i, faceOf as _n, SpeakerBadgeSchema as _r, translationEntry as _t, stepReference as a, PORTRAIT_PICTURES as ai, resolveNameTag as an, TransitionModeSchema as ar, parseAssetOriginRequest as at, MAX_DOCUMENT_BYTES as b, showsStage as bi, looksOf as bn, TextPositionSchema as br, DEFAULT_TRIGGER_PRESENTATION as bt, referencedCharacters as c, PORTRAIT_TONES as ci, CharacterSchema as cn, DEFAULT_NARRATION_PRESENTATION as cr, snapImageWidth as ct, branchingEventSteps as d, PortraitLayerSchema as di, LooksSchema as dn, LineEntranceSchema as dr, StringTableSchema as dt, LinePortraitSchema as ei, TEXT_STYLES as en, SetStepSchema as er, collectAssetRoles as et, deriveContract as f, PortraitPictureSchema as fi, PortraitCropSchema as fn, LinePresentationSchema as fr, extractMarkupTags as ft, STORY_MIGRATIONS as g, TONE_LOOK as gi, expressionNames as gn, SPEAKER_BADGES as gr, textOf as gt, validateStory as h, PortraitToneSchema as hi, characterIdFromName as hn, PresentationDefaultsSchema as hr, markupMatches as ht, stageReference as i, PORTRAIT_LAYERS as ii, resolveBoxStyle as in, TransitionChannelSchema as ir, isAssetRole as it, SpriteSheetSchema as j, conditionFlags as ji, effectiveWhen as jn, resolveDialogPlayback as jr, BORDER_PRESETS as jt, GraphicAppearanceSchema as k, ConditionSchema as ki, transitionLength as kn, DialogPlaybackSchema as kr, triggeredScenes as kt, renameCharacterRefs as l, PortraitAnimationSchema as li, DEFAULT_HEAD as ln, LINE_ENTRANCES as lr, sniffUploadType as lt, hasErrors as m, PortraitShowSchema as mi, characterFullName as mn, NarrationPresentationSchema as mr, findStaleTranslations as mt, sequenceDraftJsonSchema as n, PORTRAIT_ANIMATIONS as ni, TextStyleSchema as nn, TRANSITION_CHANNELS as nr, formatAssetOriginRequest as nt, storyDraftJsonSchema as o, PORTRAIT_POSITIONS as oi, CharacterFitSchema as on, TransitionStepSchema as or, parseByteRange as ot, eventResultFlag as p, PortraitSettingsSchema as pi, autoFlip as pn, NARRATION_MODES as pr, findMissingTranslations as pt, ROLE_PREFIX as q, GotoStepSchema as qn, StageOpSchema as qr, SceneStartSchema as qt, sequenceItemReference as r, PORTRAIT_IF_TAKEN as ri, cpsOf as rn, TRANSITION_MODES as rr, isAssetPrefix as rt, autoplayBlockAt as s, PORTRAIT_SHOWS as si, CharacterHeadSchema as sn, DEFAULT_LINE_PRESENTATION as sr, renameAssetRefs as st, describeType as t, MAX_DIM_EXTRA as ti, TextSpeedSchema as tn, StepSchema as tr, forEachAssetRef as tt, standInCharacters as u, PortraitIfTakenSchema as ui, LOOKS as un, LINE_MODES as ur, StringEntrySchema as ut, migrateStoryDocument as v, resolvePortraitSettings as vi, fitOf as vn, TEXT_ALIGNMENTS as vr, hashText as vt, CollectionNodeSchema as w, EffectName as wi, publicCharacter as wn, presentationForNewStep as wr, TRIGGER_PRESENTATIONS as wt, StoryDocumentSchema as x, toneLookFor as xi, mergeCharacters as xn, automaticLineMode as xr, FlagDeclSchema as xt, parseStory as y, showsDialog as yi, headOf as yn, TEXT_POSITIONS as yr, ContractSchema as yt, ASSET_ROLES as z, Id as zi, ChoiceStepSchema as zn, SequenceDefaultsSchema as zr, DEFAULT_SCENE_TITLE_GAP_MS as zt };

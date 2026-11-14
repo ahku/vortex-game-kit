@@ -3409,6 +3409,11 @@ export declare const StoryDocumentSchema: z.ZodObject<{
                 follow: "follow";
             }>>;
             dimExtra: z.ZodOptional<z.ZodNumber>;
+            looks: z.ZodOptional<z.ZodEnum<{
+                left: "left";
+                right: "right";
+                front: "front";
+            }>>;
             fits: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
                 scale: z.ZodOptional<z.ZodNumber>;
                 lift: z.ZodOptional<z.ZodNumber>;
@@ -3419,6 +3424,11 @@ export declare const StoryDocumentSchema: z.ZodObject<{
                     y: z.ZodNumber;
                     size: z.ZodNumber;
                 }, z.core.$strict>>;
+                looks: z.ZodOptional<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                    front: "front";
+                }>>;
             }, z.core.$strict>>>;
         }, z.core.$strict>>>;
     }, z.core.$strict>;
@@ -3432,5 +3442,5 @@ export declare const StoryDocumentSchema: z.ZodObject<{
     }, z.core.$strict>>;
 }, z.core.$strict>;
 export type StoryDocument = z.output<typeof StoryDocumentSchema>;
-/** A minimal valid story for the "new story" button: one scene, one narration line. */
+/** A minimal valid story for the "new story" button: one scene with no steps yet. */
 export declare function newStoryDocument(id: string, title: string, lang?: string): StoryDocument;

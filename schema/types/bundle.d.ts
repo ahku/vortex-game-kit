@@ -3410,6 +3410,11 @@ export declare const ExportBundleSchema: z.ZodObject<{
                 follow: "follow";
             }>>;
             dimExtra: z.ZodOptional<z.ZodNumber>;
+            looks: z.ZodOptional<z.ZodEnum<{
+                left: "left";
+                right: "right";
+                front: "front";
+            }>>;
             fits: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
                 scale: z.ZodOptional<z.ZodNumber>;
                 lift: z.ZodOptional<z.ZodNumber>;
@@ -3420,6 +3425,11 @@ export declare const ExportBundleSchema: z.ZodObject<{
                     y: z.ZodNumber;
                     size: z.ZodNumber;
                 }, z.core.$strict>>;
+                looks: z.ZodOptional<z.ZodEnum<{
+                    left: "left";
+                    right: "right";
+                    front: "front";
+                }>>;
             }, z.core.$strict>>>;
         }, z.core.$strict>>>;
     }, z.core.$strict>;
@@ -3488,6 +3498,11 @@ export declare const ExportBundleSchema: z.ZodObject<{
             follow: "follow";
         }>>;
         dimExtra: z.ZodOptional<z.ZodNumber>;
+        looks: z.ZodOptional<z.ZodEnum<{
+            left: "left";
+            right: "right";
+            front: "front";
+        }>>;
         fits: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodObject<{
             scale: z.ZodOptional<z.ZodNumber>;
             lift: z.ZodOptional<z.ZodNumber>;
@@ -3498,6 +3513,11 @@ export declare const ExportBundleSchema: z.ZodObject<{
                 y: z.ZodNumber;
                 size: z.ZodNumber;
             }, z.core.$strict>>;
+            looks: z.ZodOptional<z.ZodEnum<{
+                left: "left";
+                right: "right";
+                front: "front";
+            }>>;
         }, z.core.$strict>>>;
     }, z.core.$strict>>>;
     registry: z.ZodOptional<z.ZodObject<{

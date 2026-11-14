@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.20.0
+
+- **Portraits turn toward the center by themselves** (built from the Studio after v0.19.0). A character, or a single
+  expression, can now say which way its picture looks: `looks` is `right`, `left` or `front` (straight at the viewer).
+  A picture that looks the wrong way for its side is mirrored automatically, so a character moved to the right of the
+  stage faces the middle; pictures that look at the viewer, and characters with no `looks`, are never mirrored this
+  way. A line's own flip still works on top. `vortex-game-kit/schema` exports `LOOKS`, `LooksSchema`, `looksOf` and
+  `autoFlip`.
+- **Update before you import new stories.** Characters made in the Studio from now on carry `looks: "right"`, and the
+  schema in 0.19.x does not know that field, so a game on an older kit refuses a story that uses such a character.
+  Characters made earlier are unaffected. `PLAYER_CONTRACT` stays 1.
+- **Scene title card.** The big title no longer cuts off the bottom of letters such as g and y.
+- **AI drafts.** `storyDraftJsonSchema` accepts `subtitle`, `location`, `time` and `background` on a scene.
+
 ## 0.19.1
 
 - **Scene starts and fades in the story player** (built from Studio v0.17.1). A scene that opens with a Fade step now shows
