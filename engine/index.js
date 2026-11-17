@@ -1,4 +1,4 @@
-import { Bn as routeChain, Ei as showsStage, Gt as DEFAULT_SCENE_TITLE_GAP_MS, In as applyRoutes, Ir as resolveAutoplaySettings, Lr as resolveDialogPlayback, Mr as resolveNarrationPresentation, On as nameForLanguage, Pn as resolveTransition, Pt as triggerPresentation, Ti as showsDialog, Vn as routeIndex, bt as textOf, h as validateStory, jr as resolveLinePresentation, m as hasErrors, p as eventResultFlag, wi as resolvePortraitSettings, zn as leaveTarget } from "../shared/src.js";
+import { Br as resolveDialogPlayback, Di as resolvePortraitSettings, Fr as resolveNarrationPresentation, Hn as leaveTarget, It as triggerPresentation, Ln as resolveTransition, Oi as showsDialog, Pr as resolveLinePresentation, St as textOf, Un as routeChain, Wn as routeIndex, _ as validateStory, c as resolveSceneReset, g as hasErrors, h as eventResultFlag, jn as nameForLanguage, ki as showsStage, l as sceneResetOps, qt as DEFAULT_SCENE_TITLE_GAP_MS, zn as applyRoutes, zr as resolveAutoplaySettings } from "../shared/src.js";
 //#region ../engine/src/types.ts
 /**
 * The host contract: how a game, the studio preview or the shared-URL player drives a story.
@@ -114,7 +114,8 @@ function flattenScenes(story) {
 			op: "bg",
 			asset: bgAsset
 		}] : [];
-		const carrier = (s > 0 ? outMs > 0 || inMs > 0 || pause > 0 : inMs > 0) || bgOp.length > 0;
+		const resetOps = trig || s === 0 ? [] : sceneResetOps(resolveSceneReset(scene, story.settings));
+		const carrier = (s > 0 ? outMs > 0 || inMs > 0 || pause > 0 : inMs > 0) || bgOp.length > 0 || resetOps.length > 0;
 		const routes = routeIndex(scene.steps);
 		applyRoutes(scene.steps).forEach((step, n) => {
 			const start = n === 0;
@@ -134,7 +135,13 @@ function flattenScenes(story) {
 			if (start && carrier && step.type !== "transition") {
 				const moves = !step.hidden && !step.when;
 				const { stage, ...rest } = step;
-				const under = [...bgOp, ...moves ? stage ?? [] : []];
+				const oneShots = moves ? (stage ?? []).filter((o) => o.op === "effect" || o.op === "sfx") : [];
+				const changes = moves ? (stage ?? []).filter((o) => o.op !== "effect" && o.op !== "sfx") : [];
+				const under = [
+					...resetOps,
+					...bgOp,
+					...changes
+				];
 				entries.push({
 					sceneId: scene.id,
 					sceneStart: false,
@@ -143,13 +150,20 @@ function flattenScenes(story) {
 				entries.push({
 					sceneId: scene.id,
 					sceneStart: true,
-					step: moves ? rest : step,
+					step: moves ? {
+						...rest,
+						...oneShots.length ? { stage: oneShots } : {}
+					} : step,
 					...inForks
 				});
 			} else {
-				const first = start && step.type === "transition" && bgOp.length > 0 ? {
+				const first = start && step.type === "transition" && (bgOp.length > 0 || resetOps.length > 0) ? {
 					...step,
-					stage: [...bgOp, ...step.stage ?? []]
+					stage: [
+						...resetOps,
+						...bgOp,
+						...step.stage ?? []
+					]
 				} : step;
 				entries.push({
 					sceneId: scene.id,
@@ -455,8 +469,8 @@ function applyStageOp(stage, op, context = {}) {
 		};
 		case "clear": return {
 			...stage,
-			portraits: {},
-			objects: {}
+			...op.what === "objects" ? {} : { portraits: {} },
+			...op.what === "portraits" ? {} : { objects: {} }
 		};
 		case "sfx":
 		case "effect": return stage;
@@ -774,6 +788,7 @@ function createEngine() {
 				hold: !!step.hold,
 				keepDialog: !!step.keepDialog,
 				layer: step.layer === "front" ? "front" : "behind",
+				...step.fadeInMs ? { fadeInMs: step.fadeInMs } : {},
 				skippable: step.skippable,
 				trigger: step.trigger,
 				...step.skipPromptKey ? { skipPrompt: text(step.skipPromptKey) } : {}

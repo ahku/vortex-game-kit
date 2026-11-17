@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.22.0
+
+- **Scenes can clear what the scene before left** (built from the Studio at v0.23.0). `settings.sceneReset` sets the
+  story's default and `scene.meta.reset` overrides it for one scene, each with `people`, `world` and `music`. People takes
+  the portraits, objects and pictures off the stage, world puts the mood, dimming and backdrop look back to normal (the
+  background stays), and music stops the music. The first scene and scenes the game starts over the game never clear.
+  A story with no setting clears nothing, so stories made earlier play as before. `vortex-game-kit/schema` exports
+  `SceneResetSchema`, `resolveSceneReset` and `sceneResetOps`.
+- **Sequence pictures and videos** can be flipped (`flipX`, `flipY`) and turned by a fixed `rotation` from -360 to 360
+  degrees. A sequence step accepts `fadeInMs` (0 to 10000) to fade in. The player loads the pictures of coming sequences
+  ahead of time.
+- **A stage clear removes only what it names.** `clear` with `what: "portraits"` no longer also removes objects and
+  pictures, and `what: "objects"` no longer removes the portraits. A published story that relied on the old behavior
+  keeps those objects on stage.
+- **Portraits and bubbles.** A portrait that moves a long way across the stage fades out and in at its new place instead
+  of sliding, and the speech bubble waits for its speaker. A clear set to run before the step holds a sequence until the
+  portraits are gone.
+- **Screen effects and sounds on a scene's first step** play when the step shows, not under the scene's fade.
+- **Update before you import new stories.** A game on 0.21.x refuses a story that uses `reset`, `flipX`, `flipY`,
+  `rotation` or `fadeInMs`. Stories that use none of them are unaffected. `PLAYER_CONTRACT` stays 1.
+
 ## 0.21.0
 
 - **Speech bubbles** (built from the Studio at v0.22.0). A bubble no longer waits when its speaker is already standing on

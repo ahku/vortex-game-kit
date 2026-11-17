@@ -439,6 +439,7 @@ export declare const SequenceStepSchema: z.ZodObject<{
         front: "front";
         behind: "behind";
     }>>;
+    fadeInMs: z.ZodOptional<z.ZodNumber>;
     id: z.ZodString;
     when: z.ZodOptional<z.ZodType<import("./conditions").Condition, unknown, z.core.$ZodTypeInternals<import("./conditions").Condition, unknown>>>;
     stage: z.ZodOptional<z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
@@ -3438,6 +3439,7 @@ export declare const StepSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
         front: "front";
         behind: "behind";
     }>>;
+    fadeInMs: z.ZodOptional<z.ZodNumber>;
     id: z.ZodString;
     when: z.ZodOptional<z.ZodType<import("./conditions").Condition, unknown, z.core.$ZodTypeInternals<import("./conditions").Condition, unknown>>>;
     stage: z.ZodOptional<z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{

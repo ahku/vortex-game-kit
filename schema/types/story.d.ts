@@ -77,6 +77,11 @@ export declare const SceneSchema: z.ZodObject<{
             corner: "corner";
             quiet: "quiet";
         }>>;
+        reset: z.ZodOptional<z.ZodObject<{
+            people: z.ZodOptional<z.ZodBoolean>;
+            world: z.ZodOptional<z.ZodBoolean>;
+            music: z.ZodOptional<z.ZodBoolean>;
+        }, z.core.$strict>>;
         backgroundAsset: z.ZodOptional<z.ZodString>;
     }, z.core.$strict>;
     trigger: z.ZodOptional<z.ZodObject<{
@@ -831,6 +836,7 @@ export declare const SceneSchema: z.ZodObject<{
             front: "front";
             behind: "behind";
         }>>;
+        fadeInMs: z.ZodOptional<z.ZodNumber>;
         id: z.ZodString;
         when: z.ZodOptional<z.ZodType<import("./conditions").Condition, unknown, z.core.$ZodTypeInternals<import("./conditions").Condition, unknown>>>;
         stage: z.ZodOptional<z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
@@ -2790,6 +2796,11 @@ export declare const StorySchema: z.ZodObject<{
             corner: "corner";
             quiet: "quiet";
         }>>;
+        sceneReset: z.ZodOptional<z.ZodObject<{
+            people: z.ZodOptional<z.ZodBoolean>;
+            world: z.ZodOptional<z.ZodBoolean>;
+            music: z.ZodOptional<z.ZodBoolean>;
+        }, z.core.$strict>>;
         portraits: z.ZodOptional<z.ZodObject<{
             show: z.ZodOptional<z.ZodEnum<{
                 both: "both";
@@ -2945,6 +2956,11 @@ export declare const StorySchema: z.ZodObject<{
                 corner: "corner";
                 quiet: "quiet";
             }>>;
+            reset: z.ZodOptional<z.ZodObject<{
+                people: z.ZodOptional<z.ZodBoolean>;
+                world: z.ZodOptional<z.ZodBoolean>;
+                music: z.ZodOptional<z.ZodBoolean>;
+            }, z.core.$strict>>;
             backgroundAsset: z.ZodOptional<z.ZodString>;
         }, z.core.$strict>;
         trigger: z.ZodOptional<z.ZodObject<{
@@ -3699,6 +3715,7 @@ export declare const StorySchema: z.ZodObject<{
                 front: "front";
                 behind: "behind";
             }>>;
+            fadeInMs: z.ZodOptional<z.ZodNumber>;
             id: z.ZodString;
             when: z.ZodOptional<z.ZodType<import("./conditions").Condition, unknown, z.core.$ZodTypeInternals<import("./conditions").Condition, unknown>>>;
             stage: z.ZodOptional<z.ZodArray<z.ZodDiscriminatedUnion<[z.ZodObject<{
@@ -5634,6 +5651,9 @@ export declare const StorySchema: z.ZodObject<{
                 cover: "cover";
                 contain: "contain";
             }>>;
+            rotation: z.ZodOptional<z.ZodNumber>;
+            flipX: z.ZodOptional<z.ZodLiteral<true>>;
+            flipY: z.ZodOptional<z.ZodLiteral<true>>;
             scale: z.ZodOptional<z.ZodNumber>;
             offset: z.ZodOptional<z.ZodObject<{
                 x: z.ZodNumber;
@@ -5763,6 +5783,9 @@ export declare const StorySchema: z.ZodObject<{
                 cover: "cover";
                 contain: "contain";
             }>>;
+            rotation: z.ZodOptional<z.ZodNumber>;
+            flipX: z.ZodOptional<z.ZodLiteral<true>>;
+            flipY: z.ZodOptional<z.ZodLiteral<true>>;
             scale: z.ZodOptional<z.ZodNumber>;
             offset: z.ZodOptional<z.ZodObject<{
                 x: z.ZodNumber;

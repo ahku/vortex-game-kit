@@ -22,6 +22,7 @@ export * from './migrate';
 export * from './validate';
 export * from './cast';
 export * from './settings';
+export * from './sceneReset';
 export * from './playback';
 export * from './autoplay';
 export * from './portrait';

@@ -1,10 +1,10 @@
 {
   "note": "Written by tools/player-sync.mjs in the Studio repository. Do not edit; run `pnpm player:sync` there.",
-  "version": "0.22.0",
-  "commit": "d712387",
+  "version": "0.23.0",
+  "commit": "22bcb46",
   "contract": 1,
-  "outputHash": "e9de899575fc7e055b3df6fd5bfb4bb99b6adc7ac407b126e87e69404eb09a03",
-  "inputsHash": "d7c0f156b9d5ab3f10d6699960bcb9e7036c28f28e07bc14f0aa80b5c5546249",
+  "outputHash": "55eeb2a617e4241fd746f57e1f2a6665105580d74b5239bd400bcb8f62de9774",
+  "inputsHash": "d3f3923687afe0b15a0a0dc8cafd06f4631d8adf5e77ddfba4cbd8076f3a6b4c",
   "inputs": [
     "apps/studio/app/components/characters/PortraitImage.vue",
     "apps/studio/app/components/player/Asset.vue",
@@ -115,6 +115,7 @@
     "packages/schema/src/portrait.ts",
     "packages/schema/src/presentation.ts",
     "packages/schema/src/routes.ts",
+    "packages/schema/src/sceneReset.ts",
     "packages/schema/src/sequence.ts",
     "packages/schema/src/settings.ts",
     "packages/schema/src/spriteSheet.ts",
@@ -131,6 +132,6 @@
     "packages/story-edit/src/utils/sequenceFades.ts",
     "packages/story-edit/src/utils/storyLanguages.ts"
   ],
-  "engineHash": "73a30c97e2c086f7c89094568ec96201987dc4b8892d3282020c161f984cf6a8",
-  "schemaHash": "08f4e5992f0e4aa34a8c1506e92a0a04504caddaf199c7029d34b18cfb9d5498"
+  "engineHash": "c21ed0e15d79b9e389992080a279f78d5bfe1eeecbd03af4f1834db6d72d5e5b",
+  "schemaHash": "3daedc0bbbaaf57b2c70248332cd34469cbf7aa8bc2fbb98cb7573c314667b6c"
 }

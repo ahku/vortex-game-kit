@@ -108,6 +108,8 @@ export type View = ({
     keepDialog: boolean;
     /** Drawn behind or in front of the dialog box. */
     layer: 'behind' | 'front';
+    /** The sequence fades in over this long. */
+    fadeInMs?: number;
     skippable: boolean;
     trigger: 'auto' | 'onClick';
     skipPrompt?: string;

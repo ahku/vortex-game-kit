@@ -153,6 +153,9 @@ export declare const SequenceItemSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
         cover: "cover";
         contain: "contain";
     }>>;
+    rotation: z.ZodOptional<z.ZodNumber>;
+    flipX: z.ZodOptional<z.ZodLiteral<true>>;
+    flipY: z.ZodOptional<z.ZodLiteral<true>>;
     scale: z.ZodOptional<z.ZodNumber>;
     offset: z.ZodOptional<z.ZodObject<{
         x: z.ZodNumber;
@@ -282,6 +285,9 @@ export declare const SequenceItemSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
         cover: "cover";
         contain: "contain";
     }>>;
+    rotation: z.ZodOptional<z.ZodNumber>;
+    flipX: z.ZodOptional<z.ZodLiteral<true>>;
+    flipY: z.ZodOptional<z.ZodLiteral<true>>;
     scale: z.ZodOptional<z.ZodNumber>;
     offset: z.ZodOptional<z.ZodObject<{
         x: z.ZodNumber;
@@ -701,6 +707,9 @@ export declare const SequenceSchema: z.ZodObject<{
             cover: "cover";
             contain: "contain";
         }>>;
+        rotation: z.ZodOptional<z.ZodNumber>;
+        flipX: z.ZodOptional<z.ZodLiteral<true>>;
+        flipY: z.ZodOptional<z.ZodLiteral<true>>;
         scale: z.ZodOptional<z.ZodNumber>;
         offset: z.ZodOptional<z.ZodObject<{
             x: z.ZodNumber;
@@ -830,6 +839,9 @@ export declare const SequenceSchema: z.ZodObject<{
             cover: "cover";
             contain: "contain";
         }>>;
+        rotation: z.ZodOptional<z.ZodNumber>;
+        flipX: z.ZodOptional<z.ZodLiteral<true>>;
+        flipY: z.ZodOptional<z.ZodLiteral<true>>;
         scale: z.ZodOptional<z.ZodNumber>;
         offset: z.ZodOptional<z.ZodObject<{
             x: z.ZodNumber;

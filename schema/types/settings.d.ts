@@ -38,6 +38,18 @@ export declare const SceneStartSchema: z.ZodEnum<{
 }>;
 export type SceneStart = z.infer<typeof SceneStartSchema>;
 export declare const DEFAULT_SCENE_START: SceneStart;
+/**
+ * What a scene puts away when it starts (plan 030), in three groups, each its own choice. `people`: the portraits on
+ * stage, the objects and CGs shown with `show`, and each person's brightness. `world`: the mood, the dimming and the
+ * background picture's look (not the background itself). `music`: the music stops. An absent choice follows the story's
+ * default, and an absent default means nothing is put away, as before.
+ */
+export declare const SceneResetSchema: z.ZodObject<{
+    people: z.ZodOptional<z.ZodBoolean>;
+    world: z.ZodOptional<z.ZodBoolean>;
+    music: z.ZodOptional<z.ZodBoolean>;
+}, z.core.$strict>;
+export type SceneReset = z.infer<typeof SceneResetSchema>;
 /** The story text typeface. Legacy `default` means Sans-serif; omitted settings use Serif. */
 export declare const TEXT_STYLES: readonly ["serif", "default"];
 export declare const TextStyleSchema: z.ZodEnum<{
@@ -209,6 +221,11 @@ export declare const StorySettingsSchema: z.ZodObject<{
         corner: "corner";
         quiet: "quiet";
     }>>;
+    sceneReset: z.ZodOptional<z.ZodObject<{
+        people: z.ZodOptional<z.ZodBoolean>;
+        world: z.ZodOptional<z.ZodBoolean>;
+        music: z.ZodOptional<z.ZodBoolean>;
+    }, z.core.$strict>>;
     portraits: z.ZodOptional<z.ZodObject<{
         show: z.ZodOptional<z.ZodEnum<{
             both: "both";
