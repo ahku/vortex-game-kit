@@ -11,7 +11,7 @@ var t = {}, n = [], r = () => {}, i = () => !1, a = (e) => e.charCodeAt(0) === 1
 }, l = Object.prototype.hasOwnProperty, u = (e, t) => l.call(e, t), d = Array.isArray, f = (e) => x(e) === "[object Map]", p = (e) => x(e) === "[object Set]", m = (e) => x(e) === "[object Date]", h = (e) => typeof e == "function", g = (e) => typeof e == "string", _ = (e) => typeof e == "symbol", v = (e) => typeof e == "object" && !!e, y = (e) => (v(e) || h(e)) && h(e.then) && h(e.catch), b = Object.prototype.toString, x = (e) => b.call(e), S = (e) => x(e).slice(8, -1), C = (e) => x(e) === "[object Object]", w = (e) => g(e) && e !== "NaN" && e[0] !== "-" && "" + parseInt(e, 10) === e, T = /* @__PURE__ */ e(",key,ref,ref_for,ref_key,onVnodeBeforeMount,onVnodeMounted,onVnodeBeforeUpdate,onVnodeUpdated,onVnodeBeforeUnmount,onVnodeUnmounted"), E = (e) => {
 	let t = /* @__PURE__ */ Object.create(null);
 	return ((n) => t[n] || (t[n] = e(n)));
-}, D = /-\w/g, O = E((e) => e.replace(D, (e) => e.slice(1).toUpperCase())), ee = /\B([A-Z])/g, te = E((e) => e.replace(ee, "-$1").toLowerCase()), ne = E((e) => e.charAt(0).toUpperCase() + e.slice(1)), k = E((e) => e ? `on${ne(e)}` : ""), A = (e, t) => !Object.is(e, t), re = (e, ...t) => {
+}, D = /-\w/g, O = E((e) => e.replace(D, (e) => e.slice(1).toUpperCase())), ee = /\B([A-Z])/g, te = E((e) => e.replace(ee, "-$1").toLowerCase()), k = E((e) => e.charAt(0).toUpperCase() + e.slice(1)), ne = E((e) => e ? `on${k(e)}` : ""), A = (e, t) => !Object.is(e, t), re = (e, ...t) => {
 	for (let n = 0; n < e.length; n++) e[n](...t);
 }, ie = (e, t, n, r = !1) => {
 	Object.defineProperty(e, t, {
@@ -1511,7 +1511,7 @@ var Gr = !0;
 function Kr(e) {
 	let t = Xr(e), n = e.proxy, i = e.ctx;
 	Gr = !1, t.beforeCreate && Jr(t.beforeCreate, e, "bc");
-	let { data: a, computed: o, methods: s, watch: c, provide: l, inject: u, created: f, beforeMount: p, mounted: m, beforeUpdate: g, updated: _, activated: y, deactivated: b, beforeDestroy: x, beforeUnmount: S, destroyed: C, unmounted: w, render: T, renderTracked: E, renderTriggered: D, errorCaptured: O, serverPrefetch: ee, expose: te, inheritAttrs: ne, components: k, directives: A, filters: re } = t;
+	let { data: a, computed: o, methods: s, watch: c, provide: l, inject: u, created: f, beforeMount: p, mounted: m, beforeUpdate: g, updated: _, activated: y, deactivated: b, beforeDestroy: x, beforeUnmount: S, destroyed: C, unmounted: w, render: T, renderTracked: E, renderTriggered: D, errorCaptured: O, serverPrefetch: ee, expose: te, inheritAttrs: k, components: ne, directives: A, filters: re } = t;
 	if (u && qr(u, i, null), s) for (let e in s) {
 		let t = s[e];
 		h(t) && (i[e] = t.bind(n));
@@ -1555,7 +1555,7 @@ function Kr(e) {
 			});
 		} else e.exposed ||= {};
 	}
-	T && e.render === r && (e.render = T), ne != null && (e.inheritAttrs = ne), k && (e.components = k), A && (e.directives = A), ee && cr(e);
+	T && e.render === r && (e.render = T), k != null && (e.inheritAttrs = k), ne && (e.components = ne), A && (e.directives = A), ee && cr(e);
 }
 function qr(e, t, n = r) {
 	d(e) && (e = ti(e));
@@ -1768,8 +1768,8 @@ function fi(e, n, ...r) {
 	if (e.isUnmounted) return;
 	let i = e.vnode.props || t, a = r, o = n.startsWith("update:"), s = o && di(i, n.slice(7));
 	s && (s.trim && (a = r.map((e) => g(e) ? e.trim() : e)), s.number && (a = a.map(j)));
-	let c, l = i[c = k(n)] || i[c = k(O(n))];
-	!l && o && (l = i[c = k(te(n))]), l && dn(l, e, 6, a);
+	let c, l = i[c = ne(n)] || i[c = ne(O(n))];
+	!l && o && (l = i[c = ne(te(n))]), l && dn(l, e, 6, a);
 	let u = i[c + "Once"];
 	if (u) {
 		if (!e.emitted) e.emitted = {};
@@ -2028,7 +2028,7 @@ function Ui(e, i) {
 				e ?? x(t, r, i, s);
 				break;
 			case L:
-				k(e, t, r, i, a, o, s, c, l);
+				ne(e, t, r, i, a, o, s, c, l);
 				break;
 			default: f & 1 ? w(e, t, r, i, a, o, s, c, l) : f & 6 ? A(e, t, r, i, a, o, s, c, l) : (f & 64 || f & 128) && u.process(e, t, r, i, a, o, s, c, l, ve);
 		}
@@ -2093,7 +2093,7 @@ function Ui(e, i) {
 		u |= e.patchFlag & 16;
 		let m = e.props || t, h = n.props || t, g;
 		if (r && Gi(r, !1), (g = h.onVnodeBeforeUpdate) && xa(g, r, n, e), f && Pn(n, e, r, "beforeUpdate"), r && Gi(r, !0), d && (!e.dynamicChildren || e.dynamicChildren.length !== d.length) && (u = 0, s = !1, d = null), (m.innerHTML && h.innerHTML == null || m.textContent && h.textContent == null) && p(l, ""), d ? te(e.dynamicChildren, d, l, r, i, Wi(n, a), o) : s || M(e, n, l, null, r, i, Wi(n, a), o, !1), u > 0) {
-			if (u & 16) ne(l, m, h, r, a);
+			if (u & 16) k(l, m, h, r, a);
 			else if (u & 2 && m.class !== h.class && c(l, "class", null, h.class, a), u & 4 && c(l, "style", m.style, h.style, a), u & 8) {
 				let e = n.dynamicProps;
 				for (let t = 0; t < e.length; t++) {
@@ -2102,7 +2102,7 @@ function Ui(e, i) {
 				}
 			}
 			u & 1 && e.children !== n.children && p(l, n.children);
-		} else !s && d == null && ne(l, m, h, r, a);
+		} else !s && d == null && k(l, m, h, r, a);
 		((g = h.onVnodeUpdated) || f) && Vi(() => {
 			g && xa(g, r, n, e), f && Pn(n, e, r, "updated");
 		}, i);
@@ -2111,7 +2111,7 @@ function Ui(e, i) {
 			let c = e[s], l = t[s], u = c.el && (c.type === L || !ua(c, l) || c.shapeFlag & 198) ? m(c.el) : n;
 			v(c, l, u, null, r, i, a, o, !0);
 		}
-	}, ne = (e, n, r, i, a) => {
+	}, k = (e, n, r, i, a) => {
 		if (n !== r) {
 			if (n !== t) for (let t in n) !T(t) && !(t in r) && c(e, t, n[t], null, a, i);
 			for (let t in r) {
@@ -2121,7 +2121,7 @@ function Ui(e, i) {
 			}
 			"value" in r && c(e, "value", n.value, r.value, a);
 		}
-	}, k = (e, t, n, r, i, a, s, c, l) => {
+	}, ne = (e, t, n, r, i, a, s, c, l) => {
 		let d = t.el = e ? e.el : u(""), f = t.anchor = e ? e.anchor : u(""), { patchFlag: p, dynamicChildren: m, slotScopeIds: h } = t;
 		h && (c = c ? c.concat(h) : h), e == null ? (o(d, n, r), o(f, n, r), O(t.children || [], n, f, i, a, s, c, l)) : p > 0 && p & 64 && m && e.dynamicChildren && e.dynamicChildren.length === m.length ? (te(e.dynamicChildren, m, n, i, a, s, c), (t.key != null || i && t === i.subTree) && qi(e, t, !0)) : M(e, t, n, f, i, a, s, c, l);
 	}, A = (e, t, n, r, i, a, o, s, c) => {
@@ -2966,7 +2966,7 @@ function Oo(e, t) {
 	if (n) return n;
 	let r = O(t);
 	if (r !== "filter" && r in e) return Do[t] = r;
-	r = ne(r);
+	r = k(r);
 	for (let n = 0; n < Eo.length; n++) {
 		let i = Eo[n] + r;
 		if (i in e) return Do[t] = i;
@@ -9912,7 +9912,7 @@ function gb(e, t, n) {
 				...o ? { layer: o } : {}
 			}
 		}
-	}), u = i?.show === void 0 ? n.stageByDefault !== !1 : Gg(i.show), d = i?.faceSide === "left" || i?.faceSide === "right" ? i.faceSide : void 0, f = i?.picture ?? (a || u && (t.expr || n.defaultExpression?.(r) || n.hasPicture?.(r)) ? "temporary" : "face");
+	}), u = i?.show === void 0 ? n.stageByDefault !== !1 : Gg(i.show), d = !(t.stage ?? []).some((e) => e.op === "enter" && e.who === r && (e.slot !== void 0 || e.pos !== void 0)) && (i?.faceSide === "left" || i?.faceSide === "right") ? i.faceSide : void 0, f = i?.picture ?? (a || u && (t.expr || n.defaultExpression?.(r) || n.hasPicture?.(r)) ? "temporary" : "face");
 	if (f === "face") return e;
 	if (f === "leave") return a ? l({
 		...s,
@@ -9932,8 +9932,8 @@ function gb(e, t, n) {
 	}
 	let h = i?.pos, g = h ? void 0 : i?.slot ?? d ?? a?.slot ?? n.home?.(r) ?? n.speakerSide?.(r, i) ?? "left", _ = e.portraits;
 	if (g) {
-		let t = fb(e, g, r);
-		f === "stage" && (_ = ((i?.ifTaken ?? "replace") === "replace" ? t : t.slice(0, t.length - 1)).reduce(ub, _));
+		let n = new Set((t.stage ?? []).flatMap((e) => e.op === "enter" ? [e.who] : [])), a = fb(e, g, r).filter((e) => !n.has(e));
+		f === "stage" && (_ = ((i?.ifTaken ?? "replace") === "replace" ? a : a.slice(0, a.length - 1)).reduce(ub, _));
 	}
 	return {
 		...e,
@@ -10004,14 +10004,14 @@ function vb() {
 		get stageByDefault() {
 			return Gg($g(E().story.settings?.portraits).show);
 		}
-	}, ne = (e) => s[e], k = (e, t) => {
+	}, k = (e) => s[e], ne = (e, t) => {
 		let n = s[e];
 		s = {
 			...s,
 			[e]: t
 		}, n !== t && T("flagChanged", e, t, n);
 	}, A = {
-		getFlag: ne,
+		getFlag: k,
 		isCompleted: (e) => n.isCompleted?.(e) ?? !1
 	}, re = (e) => x || e.when === void 0 || rb(e.when, A), ie = (e) => {
 		let t = e.chain;
@@ -10191,7 +10191,7 @@ function vb() {
 					f = "showing", j(oe(c), g);
 					return;
 				case "set":
-					for (let e of c.set) k(e.flag, ib(ne(e.flag), e));
+					for (let e of c.set) ne(e.flag, ib(k(e.flag), e));
 					n++;
 					continue;
 				case "choice":
@@ -10226,7 +10226,7 @@ function vb() {
 						});
 						return;
 					}
-					k(Cy(c), c.default), n++;
+					ne(Cy(c), c.default), n++;
 					continue;
 				case "autoplay-start":
 				case "autoplay-end":
@@ -10295,7 +10295,10 @@ function vb() {
 				let o = E().story.scenes.find((e) => e.id === n.sceneId), s = o?.steps[0];
 				if (e.withOpening && o && !o.trigger && s?.id === n.stepId && !s.hidden && !s.when) {
 					let e = r.findIndex((e) => e.sceneId === n.sceneId);
-					e >= 0 && e < a && (t = e);
+					if (e >= 0 && e < a && (t = e), r[t]?.step.id === `scene-in:${n.sceneId}`) {
+						let e = r[t + 1];
+						e?.sceneId === n.sceneId && e.step.id === `scene-title:${n.sceneId}` && (t += 1);
+					}
 				}
 				let c = 0, u = E().story.scenes.find((e) => e.id === n.sceneId);
 				if (u?.trigger) {
@@ -10322,8 +10325,8 @@ function vb() {
 				for (let e = c; e < t; e++) {
 					let t = r[e].step;
 					if (!t.hidden && ie(r[e])) {
-						if (w || l.push(t.id), d = _b(d, t, te), t.type === "set") for (let e of t.set) k(e.flag, ib(ne(e.flag), e));
-						else t.type === "event" && !b(t) ? k(Cy(t), t.default) : t.type === "sequence" && t.hold ? (f.set(t.id, t), m.set(t.id, r[e].sceneId)) : t.type === "hold-end" && (f.delete(t.start), m.delete(t.start));
+						if (w || l.push(t.id), d = _b(d, t, te), t.type === "set") for (let e of t.set) ne(e.flag, ib(k(e.flag), e));
+						else t.type === "event" && !b(t) ? ne(Cy(t), t.default) : t.type === "sequence" && t.hold ? (f.set(t.id, t), m.set(t.id, r[e].sceneId)) : t.type === "hold-end" && (f.delete(t.start), m.delete(t.start));
 					}
 				}
 				for (let [e] of [...f]) m.get(e) !== r[t].sceneId && (f.delete(e), m.delete(e));
@@ -10385,7 +10388,7 @@ function vb() {
 			if (t?.type !== "choice") throw Error("Internal error: not at a choice step.");
 			let n = t.options.find((t) => t.id === e && re(t));
 			if (!n) throw Error(`"${e}" is not an available option at "${t.id}".`);
-			for (let e of n.set ?? []) k(e.flag, ib(ne(e.flag), e));
+			for (let e of n.set ?? []) ne(e.flag, ib(k(e.flag), e));
 			ue(p + 1);
 		},
 		resume(e) {
@@ -10393,7 +10396,7 @@ function vb() {
 			let t = de(p);
 			if (t?.type !== "event") throw Error("Internal error: not at an event step.");
 			if (e === "error" && !t.outcomes.includes("error") && (e = t.default), !t.outcomes.includes(e)) throw Error(`"${e}" is not an outcome of event "${t.name}" (expected: ${t.outcomes.join(", ")}).`);
-			k(Cy(t), e), ue(p + 1);
+			ne(Cy(t), e), ue(p + 1);
 		},
 		sequenceDone() {
 			f === "sequence" && ue(p + 1);
@@ -10414,9 +10417,9 @@ function vb() {
 		},
 		getView: () => _,
 		getFlags: () => ({ ...s }),
-		getFlag: ne,
+		getFlag: k,
 		setFlag(e, t) {
-			k(e, t);
+			ne(e, t);
 		},
 		snapshot() {
 			let e = E(), t = w ? w.outer : {
@@ -10646,17 +10649,17 @@ function Ib(e) {
 	return t.length ? Math.min(...t) : void 0;
 }
 function Lb(e, t, n, r) {
-	let i = Rb(t), a = i ? {
+	let i = Rb(t) ? {
 		x: 0,
 		y: 0
-	} : Pb(e, t, n, r), o = Tb(t.animation, n - t.startTime), s = t.animation?.scale !== void 0;
+	} : Pb(e, t, n, r), a = Tb(t.animation, n - t.startTime), o = t.animation?.scale !== void 0;
 	return {
-		opacity: Math.max(0, Math.min(1, (i ? 1 : jb(e, t, n, r)) * o.opacity)),
-		x: a.x + o.x,
-		y: a.y + o.y,
-		scale: o.scale,
-		scaleY: t.animation?.scaleY === void 0 && s ? o.scale : o.scaleY,
-		rotation: o.rotation
+		opacity: Math.max(0, Math.min(1, (t.animation?.opacity?.length ? 1 : jb(e, t, n, r)) * a.opacity)),
+		x: i.x + a.x,
+		y: i.y + a.y,
+		scale: a.scale,
+		scaleY: t.animation?.scaleY === void 0 && o ? a.scale : a.scaleY,
+		rotation: a.rotation
 	};
 }
 var Rb = (e) => e.animated === !0 || e.animation !== void 0 && Object.values(e.animation).some((e) => e?.length);
@@ -10905,9 +10908,9 @@ function lx(e, t, n, { showBeforeTitle: r = !1 } = {}) {
 		let t = cx(e, n), r = cx(e, `scene-title:${o.id}`);
 		if (t !== void 0 && r !== void 0 && t < r) return null;
 	}
-	let s = (n) => n ? _y(e.strings[t]?.entries[n]) || _y(e.strings[e.story.languages.source]?.entries[n]) : void 0;
+	let s = (n) => n ? _y(e.strings[t]?.entries[n]) || _y(e.strings[e.story.languages.source]?.entries[n]) : void 0, c = o.meta.title?.trim(), l = c && !/^scene\s*\d+$/i.test(c) ? c : "";
 	return {
-		title: s(o.meta.displayTitle) ?? "",
+		title: s(o.meta.displayTitle) || l,
 		subtitle: s(o.meta.displaySubtitle),
 		number: a + 1,
 		corner: !0
@@ -12192,14 +12195,14 @@ var gS = hS(), _S = (e) => {
 		"baseline",
 		"center-safe",
 		"end-safe"
-	], ne = () => [
+	], k = () => [
 		"start",
 		"end",
 		"center",
 		"stretch",
 		"center-safe",
 		"end-safe"
-	], k = () => ["auto", ...w()], A = () => [
+	], ne = () => ["auto", ...w()], A = () => [
 		VC,
 		"auto",
 		"full",
@@ -12578,18 +12581,18 @@ var gS = hS(), _S = (e) => {
 			"gap-x": [{ "gap-x": w() }],
 			"gap-y": [{ "gap-y": w() }],
 			"justify-content": [{ justify: [...te(), "normal"] }],
-			"justify-items": [{ "justify-items": [...ne(), "normal"] }],
-			"justify-self": [{ "justify-self": ["auto", ...ne()] }],
+			"justify-items": [{ "justify-items": [...k(), "normal"] }],
+			"justify-self": [{ "justify-self": ["auto", ...k()] }],
 			"align-content": [{ content: ["normal", ...te()] }],
-			"align-items": [{ items: [...ne(), { baseline: ["", "last"] }] }],
+			"align-items": [{ items: [...k(), { baseline: ["", "last"] }] }],
 			"align-self": [{ self: [
 				"auto",
-				...ne(),
+				...k(),
 				{ baseline: ["", "last"] }
 			] }],
 			"place-content": [{ "place-content": te() }],
-			"place-items": [{ "place-items": [...ne(), "baseline"] }],
-			"place-self": [{ "place-self": ["auto", ...ne()] }],
+			"place-items": [{ "place-items": [...k(), "baseline"] }],
+			"place-self": [{ "place-self": ["auto", ...k()] }],
 			p: [{ p: w() }],
 			px: [{ px: w() }],
 			py: [{ py: w() }],
@@ -12601,17 +12604,17 @@ var gS = hS(), _S = (e) => {
 			pr: [{ pr: w() }],
 			pb: [{ pb: w() }],
 			pl: [{ pl: w() }],
-			m: [{ m: k() }],
-			mx: [{ mx: k() }],
-			my: [{ my: k() }],
-			ms: [{ ms: k() }],
-			me: [{ me: k() }],
-			mbs: [{ mbs: k() }],
-			mbe: [{ mbe: k() }],
-			mt: [{ mt: k() }],
-			mr: [{ mr: k() }],
-			mb: [{ mb: k() }],
-			ml: [{ ml: k() }],
+			m: [{ m: ne() }],
+			mx: [{ mx: ne() }],
+			my: [{ my: ne() }],
+			ms: [{ ms: ne() }],
+			me: [{ me: ne() }],
+			mbs: [{ mbs: ne() }],
+			mbe: [{ mbe: ne() }],
+			mt: [{ mt: ne() }],
+			mr: [{ mr: ne() }],
+			mb: [{ mb: ne() }],
+			ml: [{ ml: ne() }],
 			"space-x": [{ "space-x": w() }],
 			"space-x-reverse": ["space-x-reverse"],
 			"space-y": [{ "space-y": w() }],
@@ -14026,29 +14029,44 @@ function wT(e) {
 }
 //#endregion
 //#region ../../apps/studio/app/utils/preload.ts
-function TT(e, t, n = 6) {
+function TT(e, t) {
+	let n = /^scene-(?:in|title|title-tail):(.+)$/.exec(t);
+	if (n) {
+		let t = e.story.scenes.find((e) => e.id === n[1]);
+		return t ? {
+			scene: t,
+			from: 0
+		} : null;
+	}
 	let r = e.story.scenes.find((e) => e.steps.some((e) => e.id === t));
+	return r ? {
+		scene: r,
+		from: r.steps.findIndex((e) => e.id === t)
+	} : null;
+}
+function ET(e, t, n = 6) {
+	let r = TT(e, t);
 	if (!r) return [];
-	let i = r.steps.findIndex((e) => e.id === t), a = /* @__PURE__ */ new Map(), o = (e, t, n) => a.set(`${n}:${e}:${t ?? ""}`, {
+	let { scene: i, from: a } = r, o = /* @__PURE__ */ new Map(), s = (e, t, n) => o.set(`${n}:${e}:${t ?? ""}`, {
 		who: e,
 		expr: t,
 		kind: n
 	});
-	for (let e of r.steps.slice(i + 1, i + 1 + n)) {
-		e.type === "line" && (o(e.speaker, e.expr, "face"), e.portrait?.picture !== "face" && o(e.speaker, e.expr, "stage"));
-		for (let t of e.stage ?? []) (t.op === "enter" || t.op === "expr") && o(t.who, t.expr, "stage");
+	for (let e of i.steps.slice(a, a + 1 + n)) {
+		e.type === "line" && (s(e.speaker, e.expr, "face"), e.portrait?.picture !== "face" && s(e.speaker, e.expr, "stage"));
+		for (let t of e.stage ?? []) (t.op === "enter" || t.op === "expr") && s(t.who, t.expr, "stage");
 	}
-	let s = [];
-	for (let { who: t, expr: n, kind: r } of a.values()) {
+	let c = [];
+	for (let { who: t, expr: n, kind: r } of o.values()) {
 		let i = e.characters.find((e) => e.id === t), a = r === "face" ? Rv(i, n) : Nv(i, n), o = a ? e.assets.assets[a]?.url : void 0;
-		o && s.push({
+		o && c.push({
 			url: o,
 			width: r === "face" ? by.dialogPortrait : by.stagePortrait
 		});
 	}
-	return s;
+	return c;
 }
-function ET(e, t) {
+function DT(e, t) {
 	let n = /* @__PURE__ */ new Set();
 	for (let r of e.items) {
 		let e = r.type === "video" && r.src ? t.assets.assets[r.src]?.url : void 0;
@@ -14056,17 +14074,17 @@ function ET(e, t) {
 	}
 	return [...n];
 }
-function DT(e, t, n = 4) {
-	let r = e.story.scenes.find((e) => e.steps.some((e) => e.id === t));
+function OT(e, t, n = 4) {
+	let r = TT(e, t);
 	if (!r) return [];
-	let i = r.steps.findIndex((e) => e.id === t), a = /* @__PURE__ */ new Set();
-	for (let t of r.steps.slice(i + 1, i + 1 + n)) {
+	let { scene: i, from: a } = r, o = /* @__PURE__ */ new Set();
+	for (let t of i.steps.slice(a, a + 1 + n)) {
 		let n = t.type === "sequence" ? e.story.sequences[t.ref] : void 0;
-		if (n) for (let t of ET(n, e)) a.add(t);
+		if (n) for (let t of DT(n, e)) o.add(t);
 	}
-	return [...a];
+	return [...o];
 }
-function OT(e, t) {
+function kT(e, t) {
 	let n = /* @__PURE__ */ new Set();
 	for (let r of e.items) {
 		let e = r.type === "image" && r.src ? t.assets.assets[r.src]?.url : void 0, i = e ? Yb(e, by.background) : void 0;
@@ -14074,19 +14092,42 @@ function OT(e, t) {
 	}
 	return [...n];
 }
-function kT(e, t, n = 6) {
-	let r = e.story.scenes.find((e) => e.steps.some((e) => e.id === t));
+function AT(e, t, n = 6) {
+	let r = TT(e, t);
 	if (!r) return [];
-	let i = r.steps.findIndex((e) => e.id === t), a = /* @__PURE__ */ new Set();
-	for (let t of r.steps.slice(i, i + 1 + n)) {
+	let { scene: i, from: a } = r, o = /* @__PURE__ */ new Set();
+	for (let t of i.steps.slice(a, a + 1 + n)) {
 		let n = t.type === "sequence" ? e.story.sequences[t.ref] : void 0;
-		if (n) for (let t of OT(n, e)) a.add(t);
+		if (n) for (let t of kT(n, e)) o.add(t);
 	}
-	return [...a];
+	return [...o];
+}
+var jT = /* @__PURE__ */ new Set();
+function MT(e, t = 2500) {
+	if (typeof Image > "u") return Promise.resolve();
+	let n = [];
+	for (let t of new Set(e)) {
+		let e = new Image();
+		e.src = t, jT.add(e), n.push(e.decode ? e.decode().catch(() => void 0) : Promise.resolve());
+	}
+	return Promise.race([Promise.all(n).then(() => void 0), new Promise((e) => setTimeout(e, t))]);
+}
+function NT(e, t, n = 6) {
+	let r = TT(e, t);
+	if (!r) return [];
+	let i = /* @__PURE__ */ new Set();
+	r.scene.meta.backgroundAsset && i.add(r.scene.meta.backgroundAsset);
+	for (let e of r.scene.steps.slice(r.from, r.from + 1 + n)) for (let t of e.stage ?? []) t.op === "bg" && t.asset && i.add(t.asset);
+	let a = [];
+	for (let t of i) {
+		let n = e.assets.assets[t]?.url, r = n ? Yb(n, by.background) : void 0;
+		r && a.push(r);
+	}
+	return a;
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/Sequence.vue?vue&type=script&setup=true&lang.ts
-var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-center text-default" }, jT = { class: "text-[2.2cqw]" }, MT = { class: "flex justify-center gap-[1cqw]" }, NT = /* @__PURE__ */ sr({
+var PT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-center text-default" }, FT = { class: "text-[2.2cqw]" }, IT = { class: "flex justify-center gap-[1cqw]" }, LT = /* @__PURE__ */ sr({
 	__name: "Sequence",
 	props: {
 		sequence: { type: null },
@@ -14141,23 +14182,25 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 		"done",
 		"skipped",
 		"played",
+		"ready",
 		"effect"
 	],
 	setup(e, { emit: t }) {
-		let n = (e) => e.type === "image" || e.type === "video" || e.type === "color", r = e, i = t, { t: a } = Jy(), o = /* @__PURE__ */ F(r.trigger === "onClick" && !r.overlay), s = /* @__PURE__ */ F(!1), c = /* @__PURE__ */ F(0), l = W(() => kb(r.sequence)), u = 0, d = 0, f = 0, p = !1, m = /* @__PURE__ */ F(!1);
+		let n = (e) => e.type === "image" || e.type === "video" || e.type === "color", r = e, i = t, { t: a } = Jy(), o = /* @__PURE__ */ F(r.trigger === "onClick" && !r.overlay), s = /* @__PURE__ */ F(!1), c = W(() => kb(r.sequence)), l = /* @__PURE__ */ F(r.frozen ? c.value : 0), u = 0, d = 0, f = 0, p = !1, m = /* @__PURE__ */ F(!1);
 		function h(e = !1) {
 			p || (p = !0, cancelAnimationFrame(u), e && i("skipped"), i("done"));
 		}
-		function g() {
-			o.value = !1, d = performance.now(), f = -1, u = requestAnimationFrame(_);
+		let g = !1;
+		function _() {
+			o.value = !1, d = performance.now(), f = -1, g = !0, u = requestAnimationFrame(v);
 		}
-		function _(e) {
+		function v(e) {
 			if (m.value || r.hostPaused) {
-				d = e, u = requestAnimationFrame(_);
+				d = e, u = requestAnimationFrame(v);
 				return;
 			}
-			let t = c.value + (e - d);
-			d = e;
+			let t = l.value + (g ? Math.min(e - d, 34) : e - d);
+			g = !1, d = e;
 			for (let e of Ob(r.sequence, f < 0 ? 0 : f, t)) e.type === "effect" ? i("effect", {
 				op: "effect",
 				name: e.name,
@@ -14166,99 +14209,116 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 				speed: e.speed,
 				size: e.size
 			}) : mT(r.audio, e);
-			f = t, t >= l.value && r.hold && r.overlay ? (c.value = l.value, i("played")) : (c.value = t, t >= l.value ? h() : u = requestAnimationFrame(_));
+			f = t, t >= c.value && r.hold && r.overlay ? (l.value = c.value, i("played")) : (l.value = t, t >= c.value ? h() : u = requestAnimationFrame(v));
 		}
 		Cr(() => {
-			r.frozen ? c.value = l.value : o.value || g();
-		}), Er(() => cancelAnimationFrame(u));
-		function v() {
+			r.frozen ? (l.value = c.value, x().then(() => {
+				y || i("ready");
+			})) : x().then(() => {
+				!y && !o.value && _();
+			});
+		});
+		let y = !1;
+		Er(() => {
+			y = !0;
+		});
+		let b = lr("box");
+		async function x() {
+			await xn();
+			let e = [...b.value?.querySelectorAll("img") ?? []].map((e) => e.decode ? e.decode().catch(() => void 0) : null);
+			await Promise.race([Promise.all(e), new Promise((e) => setTimeout(e, 1500))]);
+		}
+		Er(() => cancelAnimationFrame(u));
+		function S() {
 			r.skipPrompt ? (s.value = !0, m.value = !0) : h(!0);
 		}
-		function y(e) {
+		function C(e) {
 			s.value = !1, m.value = !1, e && h(!0);
 		}
-		let b = (e) => r.hold && Fb(r.sequence, e), x = W(() => {
-			let e = c.value, t = Db(r.sequence, e).filter(n);
+		let w = (e) => r.hold && Fb(r.sequence, e), T = W(() => {
+			let e = l.value, t = Db(r.sequence, e).filter(n);
 			if (!r.hold) return t;
-			let i = r.sequence.items.filter((r) => n(r) && !r.hidden && e >= r.startTime && b(r) && !t.includes(r));
+			let i = r.sequence.items.filter((r) => n(r) && !r.hidden && e >= r.startTime && w(r) && !t.includes(r));
 			return [...t, ...i];
-		}), S = W(() => !o.value && !m.value && !r.hostPaused && !r.frozen && c.value < l.value), C = [];
+		}), E = W(() => !o.value && !m.value && !r.hostPaused && !r.frozen && l.value < c.value), D = [];
 		Cr(() => {
-			for (let e of ET(r.sequence, r.bundle)) {
+			for (let e of DT(r.sequence, r.bundle)) {
 				let t = document.createElement("video");
-				t.preload = "auto", t.muted = !0, t.src = e, C.push(t);
+				t.preload = "auto", t.muted = !0, t.src = e, D.push(t);
 			}
 		}), Er(() => {
-			for (let e of C) e.removeAttribute("src"), e.load();
-			C.length = 0;
+			for (let e of D) e.removeAttribute("src"), e.load();
+			D.length = 0;
 		});
-		function w(e) {
-			let t = b(e) ? {
+		function O(e) {
+			let t = w(e) ? {
 				...e,
 				endTime: 2 ** 53 - 1
-			} : e, n = Lb(r.sequence, t, c.value);
+			} : e, n = Lb(r.sequence, t, l.value);
 			return {
 				background: e.color ?? "#000000",
 				opacity: String(n.opacity * (e.strength ?? .6))
 			};
 		}
-		function T(e) {
-			let t = b(e) ? {
+		function ee(e) {
+			let t = w(e) ? {
 				...e,
 				endTime: 2 ** 53 - 1
-			} : e, n = Lb(r.sequence, t, c.value);
+			} : e, n = Lb(r.sequence, t, l.value);
 			return {
 				opacity: String(n.opacity),
 				...yT(t, n)
 			};
 		}
-		let E = W(() => Db(r.sequence, c.value).filter((e) => e.type === "text"));
-		function D(e) {
+		let te = W(() => Db(r.sequence, l.value).filter((e) => e.type === "text"));
+		function k(e) {
 			let t = r.bundle.story.languages.source;
 			return _y(r.bundle.strings[r.lang ?? t]?.entries[e]) ?? _y(r.bundle.strings[t]?.entries[e]) ?? "";
 		}
-		function O(e) {
-			let t = Lb(r.sequence, e, c.value);
+		function ne(e) {
+			let t = Lb(r.sequence, e, l.value);
 			return {
 				opacity: String(t.opacity),
 				...ST(e, t, r.bundle.story.settings?.textStyle)
 			};
 		}
-		let ee = (e) => e ? r.bundle.assets.assets[e]?.url : void 0, te = /* @__PURE__ */ F(!r.fadeInMs);
+		let A = (e) => e ? r.bundle.assets.assets[e]?.url : void 0, re = /* @__PURE__ */ F(!r.fadeInMs);
 		Cr(() => {
-			te.value || requestAnimationFrame(() => requestAnimationFrame(() => te.value = !0));
+			re.value || requestAnimationFrame(() => requestAnimationFrame(() => re.value = !0));
 		});
-		let ne = W(() => {
+		let ie = W(() => {
 			if (r.leavingMs !== null) return {
 				opacity: 0,
 				transition: `opacity ${r.leavingMs}ms linear`
 			};
 			if (r.fadeInMs) return {
-				opacity: +!!te.value,
+				opacity: +!!re.value,
 				transition: `opacity ${r.fadeInMs}ms ease`
 			};
 		});
 		return (t, n) => {
-			let r = fT, i = uT, l = nb;
+			let r = fT, i = uT, c = nb;
 			return R(), z("div", {
+				ref_key: "box",
+				ref: b,
 				class: N(["absolute inset-0", [e.behind ? "z-10" : "z-30", e.overlay ? "pointer-events-none" : ""]]),
-				style: M(I(ne)),
-				onClick: n[4] ||= us((e) => I(o) ? g() : void 0, ["stop"])
+				style: M(I(ie)),
+				onClick: n[4] ||= us((e) => I(o) ? _() : void 0, ["stop"])
 			}, [
-				(R(!0), z(L, null, Nr(I(x), (t) => (R(), z(L, { key: e.sequence.items.indexOf(t) }, [t.type === "color" ? (R(), z("div", {
+				(R(!0), z(L, null, Nr(I(T), (t) => (R(), z(L, { key: e.sequence.items.indexOf(t) }, [t.type === "color" ? (R(), z("div", {
 					key: 0,
 					class: "absolute inset-0",
-					style: M(w(t))
+					style: M(O(t))
 				}, null, 4)) : (R(), z("div", {
 					key: 1,
 					class: "absolute",
-					style: M(T(t))
+					style: M(ee(t))
 				}, [t.type === "video" ? (R(), B(r, {
 					key: 0,
 					item: t,
-					url: ee(t.src),
-					at: I(c),
-					playing: I(S),
+					url: A(t.src),
+					at: I(l),
+					playing: I(E),
 					label: t.label ?? t.src ?? "video",
 					focus: t.focus,
 					fit: t.fit ?? "cover"
@@ -14272,7 +14332,7 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 					"fit"
 				])) : (R(), B(i, {
 					key: 1,
-					url: ee(t.src),
+					url: A(t.src),
 					label: t.label ?? t.src ?? "image",
 					focus: t.focus,
 					fit: t.fit ?? "cover"
@@ -14282,11 +14342,11 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 					"focus",
 					"fit"
 				]))], 4))], 64))), 128)),
-				(R(!0), z(L, null, Nr(I(E), (e, t) => (R(), z("div", {
+				(R(!0), z(L, null, Nr(I(te), (e, t) => (R(), z("div", {
 					key: `t${e.startTime}-${t}`,
 					class: "absolute",
-					style: M(O(e))
-				}, [(R(!0), z(L, null, Nr(I(wT)(D(e.textKey)), (e, t) => (R(), z("span", {
+					style: M(ne(e))
+				}, [(R(!0), z(L, null, Nr(I(wT)(k(e.textKey)), (e, t) => (R(), z("span", {
 					key: t,
 					class: N(e.classes)
 				}, P(e.text), 3))), 128))], 4))), 128)),
@@ -14294,15 +14354,15 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 					key: 0,
 					type: "button",
 					class: "absolute inset-0 grid cursor-pointer place-items-center text-[2.6cqw] text-white",
-					onClick: n[0] ||= us((e) => g(), ["stop"])
+					onClick: n[0] ||= us((e) => _(), ["stop"])
 				}, P(I(a)("player.clickToPlay")), 1)) : U("", !0),
-				!e.overlay && e.skippable && !I(o) && !I(s) ? (R(), B(l, {
+				!e.overlay && e.skippable && !I(o) && !I(s) ? (R(), B(c, {
 					key: 1,
 					class: N(["absolute left-1/2 -translate-x-1/2", e.behind ? "top-[2cqw]" : "bottom-[max(16px,2.5%)]"]),
 					color: "neutral",
 					variant: "subtle",
 					size: "sm",
-					onClick: us(v, ["stop"])
+					onClick: us(S, ["stop"])
 				}, {
 					default: Nn(() => [ga(P(I(a)("player.skip")), 1)]),
 					_: 1
@@ -14311,16 +14371,16 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 					key: 2,
 					class: "absolute inset-0 grid place-items-center bg-black/60",
 					onClick: n[3] ||= us(() => {}, ["stop"])
-				}, [V("div", AT, [V("p", jT, P(e.skipPrompt), 1), V("div", MT, [H(l, {
+				}, [V("div", PT, [V("p", FT, P(e.skipPrompt), 1), V("div", IT, [H(c, {
 					color: "primary",
-					onClick: n[1] ||= (e) => y(!0)
+					onClick: n[1] ||= (e) => C(!0)
 				}, {
 					default: Nn(() => [ga(P(I(a)("player.yes")), 1)]),
 					_: 1
-				}), H(l, {
+				}), H(c, {
 					color: "neutral",
 					variant: "subtle",
-					onClick: n[2] ||= (e) => y(!1)
+					onClick: n[2] ||= (e) => C(!1)
 				}, {
 					default: Nn(() => [ga(P(I(a)("player.no")), 1)]),
 					_: 1
@@ -14328,7 +14388,7 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 			], 6);
 		};
 	}
-}), PT = ["data-static"], FT = { class: "vn-question-content" }, IT = ["aria-label"], LT = /* @__PURE__ */ sr({
+}), RT = ["data-static"], zT = { class: "vn-question-content" }, BT = ["aria-label"], VT = /* @__PURE__ */ sr({
 	__name: "Choices",
 	props: {
 		view: { type: Object },
@@ -14344,7 +14404,7 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 				"data-static": !!e.static,
 				onClick: r[1] ||= us(() => {}, ["stop"]),
 				onDblclick: r[2] ||= (e) => n("prompt")
-			}, [V("div", FT, [e.view.prompt ? (R(), z("p", {
+			}, [V("div", zT, [e.view.prompt ? (R(), z("p", {
 				key: 0,
 				class: "vn-question-prompt",
 				onClick: r[0] ||= (e) => n("prompt")
@@ -14372,10 +14432,10 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 				"aria-keyshortcuts",
 				"onMousedown",
 				"onClick"
-			]))), 128))], 8, IT)])], 40, PT);
+			]))), 128))], 8, BT)])], 40, RT);
 		};
 	}
-}), RT = ["src", "alt"], zT = /* @__PURE__ */ sr({
+}), HT = ["src", "alt"], UT = /* @__PURE__ */ sr({
 	__name: "PortraitImage",
 	props: {
 		url: { type: String },
@@ -14411,13 +14471,13 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 			class: "absolute h-auto max-h-none max-w-none select-none",
 			style: M(I(a)),
 			onLoad: r
-		}, null, 44, RT)], 4));
+		}, null, 44, HT)], 4));
 	}
-}), BT = [
+}), WT = [
 	"data-position",
 	"data-mode",
 	"data-horizontal-align"
-], VT = /* @__PURE__ */ sr({
+], GT = /* @__PURE__ */ sr({
 	__name: "NarrationBackdrop",
 	props: {
 		position: { type: String },
@@ -14447,9 +14507,9 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 				maskImage: e.mask,
 				WebkitMaskImage: e.mask
 			})
-		}, null, 4))), 128)), r[0] ||= V("div", { class: "vn-narration-shade" }, null, -1)], 8, BT));
+		}, null, 4))), 128)), r[0] ||= V("div", { class: "vn-narration-shade" }, null, -1)], 8, WT));
 	}
-}), HT = 620 / 941, UT = {
+}), KT = 620 / 941, qT = {
 	"far-left": .1,
 	left: .23,
 	center: .5,
@@ -14458,7 +14518,7 @@ var AT = { class: "grid gap-[1.4cqw] rounded-[1cqw] bg-default p-[2.4cqw] text-c
 };
 //#endregion
 //#region ../../apps/studio/app/utils/speakerBadge.ts
-function WT(e) {
+function JT(e) {
 	let t = (e.slice(1).match(/.{2}/g)?.map((e) => parseInt(e, 16) / 255) ?? [
 		.6,
 		.5,
@@ -14466,36 +14526,36 @@ function WT(e) {
 	]).map((e) => e <= .04045 ? e / 12.92 : ((e + .055) / 1.055) ** 2.4);
 	return .2126 * t[0] + .7152 * t[1] + .0722 * t[2] > .179 ? "#080a0d" : "#fff3e2";
 }
-function GT(e) {
+function YT(e) {
 	return e < 40 ? "waiting" : e < 200 ? "entering" : "ready";
 }
-function KT(e, t) {
+function XT(e, t) {
 	return t.bubble && !!e?.bubble && !!t.speaker && e.speaker !== t.speaker;
 }
-function qT(e) {
-	return e < 480 ? "waiting" : e < 780 ? "entering" : "ready";
+function ZT(e) {
+	return e < 300 ? "waiting" : e < 600 ? "entering" : "ready";
 }
-function JT(e, t, n = !1) {
+function QT(e, t, n = !1) {
 	return t.bubble && !n && !(e?.bubble && t.speaker && e.speaker === t.speaker);
 }
-var YT = 480, XT = 1e3;
-function ZT(e) {
+var $T = 300, eE = 1e3;
+function tE(e) {
 	switch (e) {
 		case "portrait-short": return {
-			boxWait: YT,
+			boxWait: $T,
 			portraitDelay: 0
 		};
 		case "portrait-long": return {
-			boxWait: XT,
+			boxWait: eE,
 			portraitDelay: 0
 		};
 		case "text-short": return {
 			boxWait: 0,
-			portraitDelay: YT
+			portraitDelay: $T
 		};
 		case "text-long": return {
 			boxWait: 0,
-			portraitDelay: XT
+			portraitDelay: eE
 		};
 		default: return {
 			boxWait: 0,
@@ -14503,17 +14563,17 @@ function ZT(e) {
 		};
 	}
 }
-function QT(e, t) {
+function nE(e, t) {
 	return t !== null && !(e && e.kind === t.kind && e.position === t.position);
 }
-function $T(e, t) {
+function rE(e, t) {
 	return e < t ? "waiting" : e < t + 260 ? "entering" : "ready";
 }
-var eE = (e) => e + 100, tE = (e, t, n) => Math.max(t, Math.min(Math.max(t, n), e));
-function nE(e, t, n) {
-	let r = Math.min(16, e.width * .03), i = Math.min(40, e.height * .18), a = n.x + n.radius + 40, o = n.x - n.radius - 40 - t.width, s = e.width - a - r, c = n.x - n.radius - 40 - r, l = Math.max(s, c) >= t.width, u = tE(l ? s >= c ? a : o : n.x - t.width / 2, r, e.width - r - t.width), d = n.y - n.radius - 40 - t.height, f = tE(l ? n.y - t.height * .4 : d >= r ? d : n.y + n.radius + 40, r, e.height - i - r - t.height), p = n.x < u || n.x > u + t.width || n.y < f || n.y > f + t.height, m;
+var iE = (e) => e + 100, aE = (e, t, n) => Math.max(t, Math.min(Math.max(t, n), e));
+function oE(e, t, n) {
+	let r = Math.min(16, e.width * .03), i = Math.min(40, e.height * .18), a = n.x + n.radius + 40, o = n.x - n.radius - 40 - t.width, s = e.width - a - r, c = n.x - n.radius - 40 - r, l = Math.max(s, c) >= t.width, u = aE(l ? s >= c ? a : o : n.x - t.width / 2, r, e.width - r - t.width), d = n.y - n.radius - 40 - t.height, f = aE(l ? n.y - t.height * .4 : d >= r ? d : n.y + n.radius + 40, r, e.height - i - r - t.height), p = n.x < u || n.x > u + t.width || n.y < f || n.y > f + t.height, m;
 	if (n.tail && p && n.x >= 0 && n.x <= e.width && n.y >= 0 && n.y <= e.height - i) {
-		let r = n.x - u, i = n.y - f, a = Math.min(Math.max(4, e.width * (7.5 / 1672)), t.width / 8, t.height / 8), o = tE(r, a * 2, t.width - a * 2), s = tE(i, a * 2, t.height - a * 2), c = r < 0 || r > t.width, l = r < 0 ? .5 : r > t.width ? t.width - .5 : o, d = c ? s : i < 0 ? .5 : t.height - .5, p = Math.hypot(r - l, i - d), h = Math.min(Math.max(0, p - n.radius), Math.max(7, e.width * (12 / 1672)));
+		let r = n.x - u, i = n.y - f, a = Math.min(Math.max(4, e.width * (7.5 / 1672)), t.width / 8, t.height / 8), o = aE(r, a * 2, t.width - a * 2), s = aE(i, a * 2, t.height - a * 2), c = r < 0 || r > t.width, l = r < 0 ? .5 : r > t.width ? t.width - .5 : o, d = c ? s : i < 0 ? .5 : t.height - .5, p = Math.hypot(r - l, i - d), h = Math.min(Math.max(0, p - n.radius), Math.max(7, e.width * (12 / 1672)));
 		if (h > 3) {
 			let e = l + (r - l) / p * h, t = d + (i - d) / p * h;
 			m = c ? `M ${l} ${d - a} L ${e} ${t} L ${l} ${d + a}` : `M ${l - a} ${d} L ${e} ${t} L ${l + a} ${d}`;
@@ -14527,7 +14587,7 @@ function nE(e, t, n) {
 }
 //#endregion
 //#region ../../apps/studio/app/composables/useSpeechBubble.ts
-function rE(e, t, n, r) {
+function sE(e, t, n, r) {
 	let i = /* @__PURE__ */ Jt(null), a = 0;
 	function o() {
 		let t = e.value, a = t?.parentElement;
@@ -14545,7 +14605,7 @@ function rE(e, t, n, r) {
 			radius: 0,
 			tail: !1
 		}, _ = t.getBoundingClientRect(), v = _.width * l, y = _.height * u, b = {
-			...nE({
+			...oE({
 				width: s,
 				height: c
 			}, {
@@ -14569,7 +14629,7 @@ function rE(e, t, n, r) {
 }
 //#endregion
 //#region ../../apps/studio/app/utils/typewriter.ts
-function iE(e, t) {
+function cE(e, t) {
 	let n = [], r = t > 0 ? 1e3 / t : 0, i = 0;
 	for (let t of bb(e)) if (t.kind === "pause") r > 0 && (i += t.ms);
 	else for (let e of Array.from(t.text)) n.push({
@@ -14582,7 +14642,7 @@ function iE(e, t) {
 		total: n.length ? n[n.length - 1]?.at ?? 0 : 0
 	};
 }
-function aE(e, t) {
+function lE(e, t) {
 	let n = 0, r = e.length;
 	for (; n < r;) {
 		let i = n + r >> 1;
@@ -14590,7 +14650,7 @@ function aE(e, t) {
 	}
 	return n;
 }
-function oE(e, t) {
+function uE(e, t) {
 	let n = [];
 	for (let r of e.slice(0, t)) {
 		let e = n[n.length - 1];
@@ -14603,7 +14663,7 @@ function oE(e, t) {
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/Dialog.vue?vue&type=script&setup=true&lang.ts
-var sE = [
+var dE = [
 	"part",
 	"data-gradient-border",
 	"data-mode",
@@ -14613,22 +14673,22 @@ var sE = [
 	"data-align",
 	"data-horizontal-align",
 	"aria-label"
-], cE = ["viewBox"], lE = ["d"], uE = [
+], fE = ["viewBox"], pE = ["d"], mE = [
 	"part",
 	"data-inline",
 	"data-corners",
 	"data-badge"
-], dE = ["part"], fE = ["part", "data-fade"], pE = {
+], hE = ["part"], gE = ["part", "data-fade"], _E = {
 	class: "whitespace-pre-wrap",
 	"aria-live": "polite"
-}, mE = {
+}, vE = {
 	key: 0,
 	class: "invisible"
-}, hE = {
+}, yE = {
 	key: 2,
 	class: "vn-continue-arrow",
 	"aria-hidden": "true"
-}, gE = /* @__PURE__ */ sr({
+}, bE = /* @__PURE__ */ sr({
 	inheritAttrs: !1,
 	__name: "Dialog",
 	props: {
@@ -14638,7 +14698,7 @@ var sE = [
 			type: Number
 		},
 		bubbleX: {
-			default: UT.left,
+			default: qT.left,
 			type: Number
 		},
 		hideContinue: {
@@ -14664,7 +14724,7 @@ var sE = [
 		function s(e) {
 			return o["data-dialog-playback"] === "automatic" ? `${e} ${e.replace("dialog", "dialog-automatic")}` : e;
 		}
-		let c = W(() => r.view.kind === "line" ? H_(r.view.presentation, r.settings?.presentation) : U_(r.view.presentation, r.settings?.presentation)), l = W(() => r.view.kind === "line" && c.value.mode === "bubble"), u = W(() => r.view.kind === "line" ? H_(r.view.presentation, r.settings?.presentation).enter : "portrait-short"), d = lr("panel"), f = rE(d, l, W(() => r.view.kind === "line" ? r.view.speaker : void 0), W(() => r.bubbleX)), p = W(() => l.value ? {
+		let c = W(() => r.view.kind === "line" ? H_(r.view.presentation, r.settings?.presentation) : U_(r.view.presentation, r.settings?.presentation)), l = W(() => r.view.kind === "line" && c.value.mode === "bubble"), u = W(() => r.view.kind === "line" ? H_(r.view.presentation, r.settings?.presentation).enter : "portrait-short"), d = lr("panel"), f = sE(d, l, W(() => r.view.kind === "line" ? r.view.speaker : void 0), W(() => r.bubbleX)), p = W(() => l.value ? {
 			left: `${f.value?.x ?? 0}px`,
 			top: `${f.value?.y ?? 0}px`,
 			visibility: f.value ? "visible" : "hidden"
@@ -14689,7 +14749,7 @@ var sE = [
 			if (r.view.kind !== "line") return {};
 			let e = r.view.speakerBadge === "filled" && g.value.box, t = r.view.speakerColor ?? (e ? "#9c8768" : "#EEC68B");
 			return {
-				color: e ? WT(t) : t,
+				color: e ? JT(t) : t,
 				backgroundColor: g.value.box ? e ? t : g.value.background : "transparent",
 				borderColor: e ? t : g.value.border || t
 			};
@@ -14700,13 +14760,13 @@ var sE = [
 			loud: "vn-text-loud",
 			b: "font-bold",
 			i: "italic"
-		}, C = window.matchMedia("(prefers-reduced-motion: reduce)").matches, w = W(() => iE(r.view.text, C ? 0 : r.cps)), T = /* @__PURE__ */ F(r.cps <= 0 ? w.value.chars.length : 0), E = W(() => l.value ? null : r.view.kind === "line" ? {
+		}, C = window.matchMedia("(prefers-reduced-motion: reduce)").matches, w = W(() => cE(r.view.text, C ? 0 : r.cps)), T = /* @__PURE__ */ F(r.cps <= 0 ? w.value.chars.length : 0), E = W(() => l.value ? null : r.view.kind === "line" ? {
 			kind: "line",
 			position: c.value.position
 		} : _.value.box ? {
 			kind: "narration",
 			position: c.value.position
-		} : null), D = W(() => !!E.value && r.cps > 0 && !C), O = /* @__PURE__ */ F((l.value || E.value) && r.cps > 0 && !C ? "waiting" : "ready"), ee = W(() => l.value && r.cps > 0 && !C), te = W(() => O.value === "waiting" || O.value === "entering"), ne = W(() => !te.value && T.value >= w.value.chars.length), k = null, A = !1, re = !1, ie = /* @__PURE__ */ F(!1), j = null, ae = !1, oe = null, se = 0;
+		} : null), D = W(() => !!E.value && r.cps > 0 && !C), O = /* @__PURE__ */ F((l.value || E.value) && r.cps > 0 && !C ? "waiting" : "ready"), ee = W(() => l.value && r.cps > 0 && !C), te = W(() => O.value === "waiting" || O.value === "entering"), k = W(() => !te.value && T.value >= w.value.chars.length), ne = null, A = !1, re = !1, ie = /* @__PURE__ */ F(!1), j = null, ae = !1, oe = null, se = 0;
 		function ce() {
 			return !!d.value?.parentElement?.querySelector("[data-stage-portrait][data-present='true'][class*='-enter-active']");
 		}
@@ -14715,37 +14775,49 @@ var sE = [
 			let t = d.value?.parentElement?.querySelector(`[data-stage-portrait="${CSS.escape(e)}"][data-present='true']`);
 			return !!t && !/-enter-active/.test(t.className);
 		}
-		let ue = 0, de = null;
-		function fe(e) {
-			if ((A || re) && (!f.value || f.value.portraitPending) || ae && se++ < 1) {
-				ue = requestAnimationFrame(fe);
+		function ue() {
+			let e = r.view.kind === "line" ? r.view.speaker : void 0;
+			return !!e && !!d.value?.parentElement?.querySelector(`[data-stage-portrait="${CSS.escape(e)}"][data-hopping='true']`);
+		}
+		let de = 0, fe = null, pe = !1;
+		function me(e) {
+			if (ee.value && !A && ue() && (A = !0, re = !1, ie.value = !1, O.value = "waiting", T.value = 0, fe = null), ee.value && A && ue()) {
+				fe = null, de = requestAnimationFrame(me);
 				return;
 			}
-			de ??= e;
-			let t = e - de;
-			ae && oe === null && (oe = ce() ? ZT(u.value).boxWait : 0);
-			let n = A ? 780 : re ? 200 : ae ? eE(oe ?? 0) : 0;
-			O.value = A ? qT(t) : re ? GT(t) : ae ? $T(t, oe ?? 0) : "ready", T.value = t < n ? 0 : aE(w.value.chars, t - n), ne.value || (ue = requestAnimationFrame(fe));
+			if (!l.value && r.cps > 0 && !C && ue()) {
+				pe = !0, fe = null, T.value = 0, de = requestAnimationFrame(me);
+				return;
+			}
+			if ((A || re) && (!f.value || f.value.portraitPending) || ae && se++ < 1) {
+				de = requestAnimationFrame(me);
+				return;
+			}
+			fe ??= e;
+			let t = e - fe;
+			ae && oe === null && (oe = ce() ? tE(u.value).boxWait : 0);
+			let n = A ? 600 : re ? 200 : pe ? 300 : ae ? iE(oe ?? 0) : 0;
+			O.value = A ? ZT(t) : re ? YT(t) : ae ? rE(t, oe ?? 0) : "ready", T.value = t < n ? 0 : lE(w.value.chars, t - n), k.value || (de = requestAnimationFrame(me));
 		}
-		function pe() {
-			cancelAnimationFrame(ue);
+		function he() {
+			cancelAnimationFrame(de);
 			let e = {
 				bubble: l.value,
 				speaker: r.view.kind === "line" ? r.view.speaker : void 0
 			}, t = le(e.speaker);
-			A = ee.value && JT(k, e, t), re = ee.value && !A && KT(k, e), ie.value = re, k = e, ae = D.value && QT(j, E.value), j = E.value, oe = null, se = 0, C || r.cps <= 0 ? (O.value = "ready", T.value = w.value.chars.length) : (T.value = 0, O.value = A || re || ae ? "waiting" : "ready", de = null, ue = requestAnimationFrame(fe));
+			A = ee.value && QT(ne, e, t), re = ee.value && !A && XT(ne, e), ie.value = re, ne = e, ae = D.value && nE(j, E.value), j = E.value, oe = null, se = 0, pe = !1, C || r.cps <= 0 ? (O.value = "ready", T.value = w.value.chars.length) : (T.value = 0, O.value = A || re || ae ? "waiting" : "ready", fe = null, de = requestAnimationFrame(me));
 		}
 		Bn(() => [
 			r.view.stepId,
 			r.view.text,
 			l.value,
 			r.cps
-		], pe), Cr(pe), Bn(() => ne.value && r.view.stepId, (e) => {
+		], he), Cr(he), Bn(() => k.value && r.view.stepId, (e) => {
 			e && i("finished");
-		}, { immediate: !0 }), Er(() => cancelAnimationFrame(ue));
-		let me = W(() => {
+		}, { immediate: !0 }), Er(() => cancelAnimationFrame(de));
+		let ge = W(() => {
 			let e = 0;
-			return oE(w.value.chars, w.value.chars.length).map((t) => {
+			return uE(w.value.chars, w.value.chars.length).map((t) => {
 				let n = t.tags.map((e) => S[e]).filter((e) => !!e), r = t.tags.some((e) => e === "wave" || e === "shake"), i = Array.from(t.text), a = e;
 				e += i.length;
 				let o = Math.max(0, Math.min(i.length, T.value - a));
@@ -14761,11 +14833,11 @@ var sE = [
 				};
 			});
 		});
-		function he() {
-			r.allowAdvance && (ne.value ? i("advance") : (cancelAnimationFrame(ue), O.value = "skipped", T.value = w.value.chars.length));
+		function _e() {
+			r.allowAdvance && (k.value ? i("advance") : (cancelAnimationFrame(de), O.value = "skipped", T.value = w.value.chars.length));
 		}
-		return t({ activate: he }), (t, n) => {
-			let r = VT, i = zT, o = sT;
+		return t({ activate: _e }), (t, n) => {
+			let r = GT, i = UT, o = sT;
 			return R(), z(L, null, [I(m) && !I(_).box ? (R(), B(r, {
 				key: 0,
 				position: I(m).position,
@@ -14807,7 +14879,7 @@ var sE = [
 				],
 				role: "region",
 				"aria-label": I(a)("player.dialog"),
-				onClick: us(he, ["stop"])
+				onClick: us(_e, ["stop"])
 			}), [
 				I(l) && I(f)?.tail && I(_).box ? (R(), z("svg", {
 					key: 0,
@@ -14816,7 +14888,7 @@ var sE = [
 					"aria-hidden": "true",
 					width: "100%",
 					height: "100%"
-				}, [V("path", { d: I(f).tail }, null, 8, lE)], 8, cE)) : U("", !0),
+				}, [V("path", { d: I(f).tail }, null, 8, pE)], 8, fE)) : U("", !0),
 				e.view.kind === "line" ? (R(), z("div", {
 					key: 1,
 					class: N(["vn-speaker-badge", { "vn-speaker-badge--plain": !I(g).box }]),
@@ -14825,7 +14897,7 @@ var sE = [
 					"data-corners": I(g).corners,
 					"data-badge": e.view.speakerBadge ?? "outlined",
 					style: M(I(l) ? { color: e.view.kind === "line" ? e.view.speakerColor : void 0 } : I(x))
-				}, [Pr(t.$slots, "speaker", {}, () => [ga(P(e.view.speakerName), 1)])], 14, uE)) : U("", !0),
+				}, [Pr(t.$slots, "speaker", {}, () => [ga(P(e.view.speakerName), 1)])], 14, mE)) : U("", !0),
 				V("div", { class: N(["vn-dialog-content", { "vn-dialog-content--right": I(h)?.side === "right" }]) }, [I(h) ? (R(), z("div", {
 					key: 0,
 					class: "vn-dialog-face",
@@ -14843,12 +14915,12 @@ var sE = [
 					key: 1,
 					label: I(h).label,
 					kind: "image"
-				}, null, 8, ["label"]))], 8, dE)) : U("", !0), (R(), z("div", {
+				}, null, 8, ["label"]))], 8, hE)) : U("", !0), (R(), z("div", {
 					key: e.view.stepId,
 					class: "vn-story-text",
 					part: s("dialog-text"),
 					"data-fade": e.cps > 0
-				}, [Pr(t.$slots, "text", {}, () => [V("p", pE, [(R(!0), z(L, null, Nr(I(me), (e, t) => (R(), z(L, { key: t }, [e.chars ? (R(!0), z(L, { key: 0 }, Nr(e.chars, (t) => (R(), z("span", {
+				}, [Pr(t.$slots, "text", {}, () => [V("p", _E, [(R(!0), z(L, null, Nr(I(ge), (e, t) => (R(), z(L, { key: t }, [e.chars ? (R(!0), z(L, { key: 0 }, Nr(e.chars, (t) => (R(), z("span", {
 					key: t.n,
 					class: N([
 						e.classes,
@@ -14859,15 +14931,15 @@ var sE = [
 				}, P(t.ch), 7))), 128)) : (R(), z("span", {
 					key: 1,
 					class: N(e.classes)
-				}, [ga(P(e.seen), 1), e.hidden ? (R(), z("span", mE, P(e.hidden), 1)) : U("", !0)], 2))], 64))), 128))])])], 8, fE))], 2),
-				I(ne) && !e.hideContinue && !e.view.playback?.autoplay ? (R(), z("span", hE, "▼")) : U("", !0)
-			], 16, sE)], 64);
+				}, [ga(P(e.seen), 1), e.hidden ? (R(), z("span", vE, P(e.hidden), 1)) : U("", !0)], 2))], 64))), 128))])])], 8, gE))], 2),
+				I(k) && !e.hideContinue && !e.view.playback?.autoplay ? (R(), z("span", yE, "▼")) : U("", !0)
+			], 16, dE)], 64);
 		};
 	}
 });
 //#endregion
 //#region ../../apps/studio/app/constants/sceneCard.ts
-function _E(e, t = 500, n = 500) {
+function xE(e, t = 500, n = 500) {
 	let r = Math.max(0, e ?? 3500), i = Math.min(t, r * .45), a = Math.min(n, r * .3);
 	return {
 		enter: i,
@@ -14879,22 +14951,22 @@ function _E(e, t = 500, n = 500) {
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/SceneCard.vue?vue&type=script&setup=true&lang.ts
-var vE = {
+var SE = {
 	key: 0,
 	class: "vn-scene-corner-label"
-}, yE = {
+}, CE = {
 	key: 1,
 	class: "vn-scene-corner-title"
-}, bE = {
+}, wE = {
 	key: 2,
 	class: "vn-scene-corner-subtitle"
-}, xE = ["data-shown", "data-instant"], SE = { class: "vn-scene-opening-copy" }, CE = {
+}, TE = ["data-shown", "data-instant"], EE = { class: "vn-scene-opening-copy" }, DE = {
 	key: 0,
 	class: "vn-scene-opening-label"
-}, wE = { class: "vn-scene-opening-title" }, TE = {
+}, OE = { class: "vn-scene-opening-title" }, kE = {
 	key: 1,
 	class: "vn-scene-opening-subtitle"
-}, EE = /* @__PURE__ */ sr({
+}, AE = /* @__PURE__ */ sr({
 	__name: "SceneCard",
 	props: {
 		card: { type: [Object, null] },
@@ -14924,7 +14996,7 @@ var vE = {
 				opacity: 1 - e.opacity,
 				transition: e.ms > 0 ? `opacity ${e.ms}ms linear` : "none"
 			};
-		}), o = window.matchMedia("(prefers-reduced-motion: reduce)").matches, s = W(() => !!i.static || o), c = /* @__PURE__ */ F(s.value), l = /* @__PURE__ */ F(i.card?.durationMs), u = W(() => _E(l.value, i.fadeInMs, i.fadeOutMs)), d, f = 0;
+		}), o = window.matchMedia("(prefers-reduced-motion: reduce)").matches, s = W(() => !!i.static || o), c = /* @__PURE__ */ F(s.value), l = /* @__PURE__ */ F(i.card?.durationMs), u = W(() => xE(l.value, i.fadeInMs, i.fadeOutMs)), d, f = 0;
 		function p() {
 			clearTimeout(d), cancelAnimationFrame(f);
 		}
@@ -14958,9 +15030,9 @@ var vE = {
 				"data-testid": "scene-corner",
 				class: "vn-scene-corner"
 			}, [
-				e.card.number ? (R(), z("p", vE, P(I(n)("player.sceneNumber", { n: String(e.card.number).padStart(2, "0") })), 1)) : U("", !0),
-				e.card.title ? (R(), z("p", yE, P(e.card.title), 1)) : U("", !0),
-				e.card.subtitle ? (R(), z("p", bE, P(e.card.subtitle), 1)) : U("", !0)
+				e.card.number ? (R(), z("p", SE, P(I(n)("player.sceneNumber", { n: String(e.card.number).padStart(2, "0") })), 1)) : U("", !0),
+				e.card.title ? (R(), z("p", CE, P(e.card.title), 1)) : U("", !0),
+				e.card.subtitle ? (R(), z("p", wE, P(e.card.subtitle), 1)) : U("", !0)
 			])) : U("", !0)]),
 			_: 1
 		}, 8, [
@@ -14985,12 +15057,12 @@ var vE = {
 			}, [
 				i[1] ||= V("div", { class: "vn-scene-opening-blur" }, null, -1),
 				i[2] ||= V("div", { class: "vn-scene-opening-shade" }, null, -1),
-				V("div", SE, [
-					e.card.number ? (R(), z("p", CE, P(I(n)("player.sceneNumber", { n: String(e.card.number).padStart(2, "0") })), 1)) : U("", !0),
-					V("h2", wE, P(e.card.title), 1),
-					e.card.subtitle || e.card.location || e.card.time ? (R(), z("p", TE, P(e.card.subtitle || [e.card.location, e.card.time].filter(Boolean).join(" · ")), 1)) : U("", !0)
+				V("div", EE, [
+					e.card.number ? (R(), z("p", DE, P(I(n)("player.sceneNumber", { n: String(e.card.number).padStart(2, "0") })), 1)) : U("", !0),
+					V("h2", OE, P(e.card.title), 1),
+					e.card.subtitle || e.card.location || e.card.time ? (R(), z("p", kE, P(e.card.subtitle || [e.card.location, e.card.time].filter(Boolean).join(" · ")), 1)) : U("", !0)
 				])
-			], 12, xE)) : U("", !0)]),
+			], 12, TE)) : U("", !0)]),
 			_: 1
 		}, 8, [
 			"name",
@@ -14998,35 +15070,35 @@ var vE = {
 			"appear"
 		])], 64));
 	}
-}), DE = ["title"], OE = /* @__PURE__ */ sr({
+}), jE = ["title"], ME = /* @__PURE__ */ sr({
 	__name: "UTooltip",
 	props: { text: { type: String } },
 	setup(e) {
-		return (t, n) => (R(), z("span", { title: e.text }, [Pr(t.$slots, "default")], 8, DE));
+		return (t, n) => (R(), z("span", { title: e.text }, [Pr(t.$slots, "default")], 8, jE));
 	}
-}), kE = /* @__PURE__ */ new Map();
-function AE(e, t) {
-	return kE.has(e) || kE.set(e, /* @__PURE__ */ F(t())), kE.get(e);
+}), NE = /* @__PURE__ */ new Map();
+function PE(e, t) {
+	return NE.has(e) || NE.set(e, /* @__PURE__ */ F(t())), NE.get(e);
 }
-function jE() {
+function FE() {
 	return { query: {} };
 }
 //#endregion
 //#region ../../apps/studio/app/composables/useStageLayout.ts
-function ME() {
-	let e = jE();
-	return AE("stage-layout", () => e.query.stageLayout === "classic" ? "classic" : "corners");
+function IE() {
+	let e = FE();
+	return PE("stage-layout", () => e.query.stageLayout === "classic" ? "classic" : "corners");
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/StageInformation.vue?vue&type=script&setup=true&lang.ts
-var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
+var LE = ["title"], RE = ["aria-label", "aria-expanded"], zE = [
 	"aria-label",
 	"aria-valuenow",
 	"aria-valuetext"
-], IE = ["data-complete"], LE = {
+], BE = ["data-complete"], VE = {
 	key: 0,
 	class: "vn-stage-progress-details"
-}, RE = ["data-ready", "aria-hidden"], zE = { class: "vn-stage-continue-full" }, BE = { class: "vn-stage-continue-compact" }, VE = /* @__PURE__ */ sr({
+}, HE = ["data-ready", "aria-hidden"], UE = { class: "vn-stage-continue-full" }, WE = { class: "vn-stage-continue-compact" }, GE = /* @__PURE__ */ sr({
 	__name: "StageInformation",
 	props: {
 		bundle: { type: null },
@@ -15040,7 +15112,7 @@ var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
 		continueOnly: { type: Boolean }
 	},
 	setup(e) {
-		let t = e, n = ME(), r = W(() => t.lang);
+		let t = e, n = IE(), r = W(() => t.lang);
 		Fn(Ky, r);
 		let { t: i } = Jy(r), a = W(() => {
 			let e = ox(t.bundle, t.lang), n = ux(t.bundle.story.meta.episode);
@@ -15056,13 +15128,13 @@ var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
 		return Bn(() => t.stepId, () => {
 			l.value = !1;
 		}), (t, r) => {
-			let u = OE, d = EE;
+			let u = ME, d = AE;
 			return R(), z(L, null, [
 				e.continueOnly ? U("", !0) : (R(), z("div", {
 					key: 0,
 					class: "vn-stage-heading",
 					title: I(a)
-				}, P(I(a)), 9, NE)),
+				}, P(I(a)), 9, LE)),
 				e.continueOnly ? U("", !0) : (R(), B(u, {
 					key: 1,
 					text: I(s),
@@ -15092,7 +15164,7 @@ var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
 					}, [V("span", {
 						"data-complete": e.progress.ratio >= 1,
 						style: M({ width: `${e.progress.ratio * 100}%` })
-					}, null, 12, IE)], 8, FE), I(l) ? (R(), z("span", LE, P(I(s)), 1)) : U("", !0)], 40, PE)]),
+					}, null, 12, BE)], 8, zE), I(l) ? (R(), z("span", VE, P(I(s)), 1)) : U("", !0)], 40, RE)]),
 					_: 1
 				}, 8, ["text", "content"])),
 				e.continueOnly ? U("", !0) : (R(), B(d, {
@@ -15110,11 +15182,11 @@ var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
 					"data-ready": !!e.ready && !e.preview,
 					"aria-hidden": !e.ready || e.preview,
 					role: "status"
-				}, [V("span", zE, P(I(i)(I(c) ? "player.advanceTouch" : "player.advanceDesktop")), 1), V("span", BE, P(I(i)("player.continue")), 1)], 8, RE)
+				}, [V("span", UE, P(I(i)(I(c) ? "player.advanceTouch" : "player.advanceDesktop")), 1), V("span", WE, P(I(i)("player.continue")), 1)], 8, HE)
 			], 64);
 		};
 	}
-}), HE = /* @__PURE__ */ sr({
+}), KE = /* @__PURE__ */ sr({
 	__name: "Veil",
 	props: { veil: { type: [Object, null] } },
 	setup(e) {
@@ -15129,16 +15201,16 @@ var NE = ["title"], PE = ["aria-label", "aria-expanded"], FE = [
 			})
 		}, null, 4)) : U("", !0);
 	}
-}), UE = {
+}), qE = {
 	shake: 160,
 	glitch: 350
 };
-function WE(e) {
+function JE(e) {
 	let t = e.filter((e) => hT[e.name].target === "world");
 	if (!t.length) return;
 	let n = {}, r = [];
 	for (let e of t) {
-		let t = hT[e.name].motion, i = UE[e.name];
+		let t = hT[e.name].motion, i = qE[e.name];
 		if (i !== void 0) {
 			let n = i / e.speed, a = Math.max(1, Math.round(e.durationMs / n));
 			r.push(`${t} ${n.toFixed(1)}ms linear ${a}`);
@@ -15147,7 +15219,7 @@ function WE(e) {
 	}
 	return n.animation = r.join(", "), n;
 }
-function GE(e) {
+function YE(e) {
 	return {
 		"--vn-ms": `${e.durationMs}ms`,
 		"--vn-i": String(e.intensity),
@@ -15157,21 +15229,21 @@ function GE(e) {
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/Effects.vue?vue&type=script&setup=true&lang.ts
-var KE = {
+var XE = {
 	class: "pointer-events-none absolute inset-0 z-10",
 	"aria-hidden": "true"
-}, qE = /* @__PURE__ */ sr({
+}, ZE = /* @__PURE__ */ sr({
 	__name: "Effects",
 	props: { effects: { type: Array } },
 	setup(e) {
 		let t = (e) => e.filter((e) => hT[e.name].target === "overlay");
-		return (n, r) => (R(), z("div", KE, [(R(!0), z(L, null, Nr(t(e.effects), (e) => (R(), z("div", {
+		return (n, r) => (R(), z("div", XE, [(R(!0), z(L, null, Nr(t(e.effects), (e) => (R(), z("div", {
 			key: e.id,
 			class: N(["vn-fx", I(hT)[e.name].motion]),
-			style: M(("overlayVars" in n ? n.overlayVars : I(GE))(e))
+			style: M(("overlayVars" in n ? n.overlayVars : I(YE))(e))
 		}, null, 6))), 128))]));
 	}
-}), JE = ["src", "alt"], YE = /* @__PURE__ */ sr({
+}), QE = ["src", "alt"], $E = /* @__PURE__ */ sr({
 	__name: "PortraitArt",
 	props: {
 		url: { type: String },
@@ -15187,7 +15259,20 @@ var KE = {
 			flip: t.flip,
 			head: t.head,
 			change: t.change
-		}), r = W(() => n.value.change === "cut" ? "vn-expr-cut" : n.value.change === "in-out" ? "vn-expr-inout" : "vn-expr");
+		}), r = W(() => n.value.change === "cut" ? "vn-expr-cut" : n.value.change === "in-out" ? "vn-expr-inout" : "vn-expr"), i = /* @__PURE__ */ F(!1), a = /* @__PURE__ */ F(!1), o = lr("root");
+		Cr(() => {
+			let e = o.value?.$el?.querySelector("img");
+			if (!e || e.complete && e.naturalWidth > 0) return;
+			i.value = !0;
+			let t = () => {
+				requestAnimationFrame(() => a.value = !0);
+			};
+			e.addEventListener("load", t, { once: !0 }), e.addEventListener("error", t, { once: !0 });
+		});
+		let s = W(() => i.value ? {
+			opacity: +!!a.value,
+			transition: a.value ? "opacity var(--vn-fade, 400ms) ease-in-out" : "none"
+		} : void 0);
 		return Bn(() => [
 			t.url,
 			t.label,
@@ -15225,7 +15310,10 @@ var KE = {
 			name: I(r),
 			tag: "div",
 			class: "grid h-full grid-rows-[100%]",
-			duration: I(n).change === "in-out" ? 250 : void 0
+			duration: I(n).change === "in-out" ? 250 : void 0,
+			ref_key: "root",
+			ref: o,
+			style: M(I(s))
 		}, {
 			default: Nn(() => [I(n).head ? (R(), z("span", {
 				key: "bubble-head",
@@ -15240,11 +15328,15 @@ var KE = {
 				draggable: "false",
 				class: "col-start-1 row-start-1 h-full w-auto max-w-none justify-self-center select-none",
 				style: M(I(n).flip ? { transform: "scaleX(-1)" } : void 0)
-			}, null, 12, JE))]),
+			}, null, 12, QE))]),
 			_: 1
-		}, 8, ["name", "duration"]));
+		}, 8, [
+			"name",
+			"duration",
+			"style"
+		]));
 	}
-}), XE = (e, t) => !e || !t || e.kind !== t.kind ? !1 : "id" in e && "id" in t ? e.id === t.id : !0, ZE = ["onClick"], QE = [
+}), eD = (e, t) => !e || !t || e.kind !== t.kind ? !1 : "id" in e && "id" in t ? e.id === t.id : !0, tD = ["onClick"], nD = [
 	"data-stage-portrait",
 	"data-present",
 	"data-hopping",
@@ -15252,22 +15344,22 @@ var KE = {
 	"onPointermove",
 	"onPointerup",
 	"onClick"
-], $E = [
+], rD = [
 	"data-head-dragging",
 	"onPointerdown",
 	"onPointermove",
 	"onClick"
-], eD = [
+], iD = [
 	"title",
 	"onPointerdown",
 	"onPointermove"
-], tD = ["title"], nD = [
+], aD = ["title"], oD = [
 	"title",
 	"onPointerdown",
 	"onPointermove",
 	"onPointerup",
 	"onDblclick"
-], rD = ["onClick"], iD = .14, aD = 3, oD = .3, sD = /* @__PURE__ */ sr({
+], sD = ["onClick"], cD = .14, lD = 3, uD = .3, dD = 400, fD = /* @__PURE__ */ sr({
 	__name: "Stage",
 	props: {
 		stage: { type: Object },
@@ -15303,7 +15395,7 @@ var KE = {
 			}
 		}), o = (e) => !!n.selectable && (!n.portraitsOnly || e.kind === "portrait"), s = (e) => o(e) ? a({
 			selectable: !0,
-			selected: XE(n.selected ?? null, e)
+			selected: eD(n.selected ?? null, e)
 		}) : "";
 		function c(e, t) {
 			o(e) && (t.stopPropagation(), i("pick", e));
@@ -15335,25 +15427,29 @@ var KE = {
 		let h = (e, t) => (e.brightness ?? 1) * t, g = W(() => {
 			let e = n.stage.backdrop;
 			return {
-				filter: [e?.brightness === void 0 ? "" : `brightness(${e.brightness})`, e?.blur ? `blur(${e.blur * aD}cqw)` : ""].filter(Boolean).join(" ") || "none",
-				transform: e?.blur ? `scale(${1 + e.blur * aD * .025})` : "none"
+				filter: [e?.brightness === void 0 ? "" : `brightness(${e.brightness})`, e?.blur ? `blur(${e.blur * lD}cqw)` : ""].filter(Boolean).join(" ") || "none",
+				transform: e?.blur ? `scale(${1 + e.blur * lD * .025})` : "none"
 			};
-		}), _ = /* @__PURE__ */ Ft({}), v = /* @__PURE__ */ Ft({}), y = {}, b = {};
-		function x(e) {
-			for (let t of b[e] ?? []) clearTimeout(t);
-			b[e] = [], Reflect.deleteProperty(_, e), v[e] = void 0;
+		}), _ = /* @__PURE__ */ Ft({}), v = /* @__PURE__ */ Ft({}), y = {}, b = /* @__PURE__ */ Ft({}), x = {};
+		function S(e) {
+			for (let t of x[e] ?? []) clearTimeout(t);
+			x[e] = [], Reflect.deleteProperty(_, e), v[e] = void 0;
 		}
-		function S(e, t) {
-			x(e);
-			let r = Math.max(80, Math.min(400, n.fadeMs / 2));
-			_[e] = t, v[e] = "out";
-			let i = (t, n) => (b[e] ??= []).push(setTimeout(n, t));
-			i(r, () => {
+		function C(e, t) {
+			S(e);
+			let n = O.value?.querySelector(`[data-stage-portrait="${CSS.escape(e)}"]`);
+			b[e] = n?.style.filter || "none", _[e] = t, v[e] = "out";
+			let r = (t, n) => (x[e] ??= []).push(setTimeout(n, t));
+			r(dD, () => {
 				Reflect.deleteProperty(_, e), v[e] = "jump";
-			}), i(r + 60, () => v[e] = "in"), i(r * 2 + 60, () => x(e));
+			}), r(650, () => v[e] = "in"), r(1050, () => S(e));
 		}
-		Er(() => Object.keys(b).forEach(x));
-		let C = W(() => {
+		Er(() => Object.keys(x).forEach(S));
+		function w(e) {
+			let t = e;
+			t.style.filter = getComputedStyle(t).filter;
+		}
+		let T = W(() => {
 			let e = Object.entries(n.stage.portraits), t = /* @__PURE__ */ new Map();
 			for (let [n, r] of e) {
 				if (r.pos) continue;
@@ -15361,7 +15457,7 @@ var KE = {
 				t.set(e, [...t.get(e) ?? [], n]);
 			}
 			return e.map(([e, r], i) => {
-				let a = d(e), o = r.expr ?? a?.defaultExpression, s = Nv(a, o), c = Pv(a, o), l = r.pos ? [e] : t.get(r.slot ?? "center") ?? [e], f = (l.indexOf(e) - (l.length - 1) / 2) * iD, p = T.value?.who === e ? T.value : null, g = (r.pos ? r.pos.x : UT[r.slot ?? "center"]) + f, y = p?.mode === "move" ? p.x : _[e] ?? g, b = n.speaker === e, x = b ? null : m(e), S = (p?.mode === "resize" ? p.scale : r.pos?.scale ?? 1) * (c?.scale ?? 1) * (x?.scale ?? 1), C = p?.mode === "move" && p.y !== void 0 ? p.y : r.pos?.y, w = C === void 0 ? 0 : (1 - C) * 100, E = u(s), D = E ? Lv(a, o) : void 0, O = [
+				let a = d(e), o = r.expr ?? a?.defaultExpression, s = Nv(a, o), c = Pv(a, o), l = r.pos ? [e] : t.get(r.slot ?? "center") ?? [e], f = (l.indexOf(e) - (l.length - 1) / 2) * cD, p = D.value?.who === e ? D.value : null, g = (r.pos ? r.pos.x : qT[r.slot ?? "center"]) + f, y = p?.mode === "move" ? p.x : _[e] ?? g, x = n.speaker === e, S = x ? null : m(e), C = (p?.mode === "resize" ? p.scale : r.pos?.scale ?? 1) * (c?.scale ?? 1) * (S?.scale ?? 1), w = p?.mode === "move" && p.y !== void 0 ? p.y : r.pos?.y, T = w === void 0 ? 0 : (1 - w) * 100, E = u(s), O = E ? Lv(a, o) : void 0, ee = [
 					c?.flip === !0,
 					Iv(Fv(a, o), y),
 					r.flip === !0
@@ -15371,45 +15467,45 @@ var KE = {
 					x: y,
 					homeX: g,
 					hop: v[e],
-					headRaw: D ?? null,
-					head: D ? {
-						left: `${(O ? 1 - D.x : D.x) * 100}%`,
-						top: `${D.y * 100}%`,
-						height: `${D.size * 100}%`
+					headRaw: O ?? null,
+					head: O ? {
+						left: `${(ee ? 1 - O.x : O.x) * 100}%`,
+						top: `${O.y * 100}%`,
+						height: `${O.size * 100}%`
 					} : null,
 					fitScale: c?.scale ?? 1,
 					current: r,
 					label: `${e}${o ? ` (${o})` : ""}`,
 					url: E,
-					flip: O,
+					flip: ee,
 					style: {
 						left: `${y * 100}%`,
 						...v[e] ? { opacity: +(v[e] === "in") } : {},
-						bottom: `${w + (c?.lift ?? 0) * 100}%`,
-						height: `${HT * 100 * S}%`,
-						zIndex: r.layer === "back" ? 1 + i : r.layer === "front" ? 50 + i : b ? 30 : 10 + i,
+						bottom: `${T + (c?.lift ?? 0) * 100}%`,
+						height: `${KT * 100 * C}%`,
+						zIndex: r.layer === "back" ? 1 + i : r.layer === "front" ? 50 + i : x ? 30 : 10 + i,
 						"--vn-slide": g < .5 ? "-40%" : "40%",
-						...h(r, x?.brightness ?? 1) === 1 ? {} : { filter: `brightness(${h(r, x?.brightness ?? 1)})` },
+						...v[e] === "out" ? { filter: b[e] ?? "none" } : h(r, S?.brightness ?? 1) === 1 ? {} : { filter: `brightness(${h(r, S?.brightness ?? 1)})` },
 						...E ? {} : { aspectRatio: "3 / 5" }
 					}
 				};
 			});
-		}), w = W(() => n.animation ?? f.value.animation), T = /* @__PURE__ */ F(null);
-		Bn(() => C.value.map((e) => [e.who, e.homeX]), (e) => {
+		}), E = W(() => n.animation ?? f.value.animation), D = /* @__PURE__ */ F(null);
+		Bn(() => T.value.map((e) => [e.who, e.homeX]), (e) => {
 			let t = /* @__PURE__ */ new Set();
 			for (let [n, r] of e) {
 				t.add(n);
 				let e = y[n];
-				y[n] = r, e !== void 0 && w.value !== "cut" && T.value?.who !== n && Math.abs(r - e) >= oD && S(n, e);
+				y[n] = r, e !== void 0 && E.value !== "cut" && D.value?.who !== n && Math.abs(r - e) >= uD && C(n, e);
 			}
 			for (let e of Object.keys(y)) t.has(e) || Reflect.deleteProperty(y, e);
 		}, { flush: "pre" });
-		let E = lr("root"), D = !1, O = (e, t, n) => Math.min(n, Math.max(t, e)), ee = (e, t = 3) => Math.round(e * 10 ** t) / 10 ** t, te = (e) => XE(n.selected ?? null, {
+		let O = lr("root"), ee = !1, te = (e, t, n) => Math.min(n, Math.max(t, e)), k = (e, t = 3) => Math.round(e * 10 ** t) / 10 ** t, ne = (e) => eD(n.selected ?? null, {
 			kind: "portrait",
 			id: e
-		}), ne = (e) => !!n.movable && !!n.selectable && te(e);
-		function k(e) {
-			let t = E.value?.getBoundingClientRect();
+		}), A = (e) => !!n.movable && !!n.selectable && ne(e);
+		function re(e) {
+			let t = O.value?.getBoundingClientRect();
 			return !t || t.width === 0 ? null : {
 				x: (e.clientX - t.left) / t.width,
 				y: (e.clientY - t.top) / t.height,
@@ -15417,13 +15513,13 @@ var KE = {
 				h: t.height
 			};
 		}
-		function A(e) {
-			return c_.reduce((t, n) => Math.abs(UT[n] - e) < Math.abs(UT[t] - e) ? n : t);
+		function ie(e) {
+			return c_.reduce((t, n) => Math.abs(qT[n] - e) < Math.abs(qT[t] - e) ? n : t);
 		}
-		function re(e, t) {
-			if (!ne(e.who) || t.button !== 0) return;
-			let n = k(t);
-			n && (t.currentTarget.setPointerCapture(t.pointerId), T.value = {
+		function j(e, t) {
+			if (!A(e.who) || t.button !== 0) return;
+			let n = re(t);
+			n && (t.currentTarget.setPointerCapture(t.pointerId), D.value = {
 				who: e.who,
 				mode: "move",
 				x: e.x,
@@ -15437,8 +15533,8 @@ var KE = {
 				moved: !1
 			});
 		}
-		function ie(e, t) {
-			ne(e.who) && t.button === 0 && (t.stopPropagation(), t.currentTarget.setPointerCapture(t.pointerId), T.value = {
+		function ae(e, t) {
+			A(e.who) && t.button === 0 && (t.stopPropagation(), t.currentTarget.setPointerCapture(t.pointerId), D.value = {
 				who: e.who,
 				mode: "resize",
 				x: e.x,
@@ -15452,23 +15548,23 @@ var KE = {
 				moved: !1
 			});
 		}
-		function j(e, t) {
-			let n = T.value;
+		function oe(e, t) {
+			let n = D.value;
 			if (!n || n.who !== e.who) return;
-			let r = k(t);
+			let r = re(t);
 			if (r && !(!n.moved && Math.hypot(t.clientX - n.startX, t.clientY - n.startY) < 4)) {
 				if (n.moved = !0, n.mode === "resize") {
-					let t = e.current.pos ? e.current.pos.y : 1, i = O(t - r.y, .12, 1.4);
-					n.scale = O(ee(i / HT / e.fitScale, 2), .3, 3);
-				} else n.free = t.shiftKey, n.x = O(r.x - n.grab, 0, 1), n.y = n.free ? O(ee(r.y - n.grabY), .5, 1) : void 0;
+					let t = e.current.pos ? e.current.pos.y : 1, i = te(t - r.y, .12, 1.4);
+					n.scale = te(k(i / KT / e.fitScale, 2), .3, 3);
+				} else n.free = t.shiftKey, n.x = te(r.x - n.grab, 0, 1), n.y = n.free ? te(k(r.y - n.grabY), .5, 1) : void 0;
 			}
 		}
-		function ae(e) {
-			let t = T.value;
-			if (T.value = null, t && t.who === e.who && t.moved) {
-				if (D = !0, t.mode === "resize") {
+		function se(e) {
+			let t = D.value;
+			if (D.value = null, t && t.who === e.who && t.moved) {
+				if (ee = !0, t.mode === "resize") {
 					let n = e.current.pos ?? {
-						x: ee(UT[e.current.slot ?? "center"]),
+						x: k(qT[e.current.slot ?? "center"]),
 						y: 1
 					};
 					i("place", e.who, { pos: {
@@ -15477,13 +15573,13 @@ var KE = {
 						scale: t.scale
 					} });
 				} else t.free ? i("place", e.who, { pos: {
-					x: ee(t.x),
+					x: k(t.x),
 					y: t.y ?? 1,
 					...e.current.pos?.scale === void 0 ? {} : { scale: e.current.pos.scale }
-				} }) : i("place", e.who, { slot: A(t.x) });
+				} }) : i("place", e.who, { slot: ie(t.x) });
 			}
 		}
-		let oe = [
+		let ce = [
 			{
 				name: "nw",
 				style: {
@@ -15516,14 +15612,14 @@ var KE = {
 				},
 				cursor: "cursor-nwse-resize"
 			}
-		], se = /* @__PURE__ */ F(null);
-		function ce(e, t, r) {
+		], le = /* @__PURE__ */ F(null);
+		function ue(e, t, r) {
 			if (!n.headEditable || r.button !== 0) return;
 			let i = r.currentTarget.closest("[data-head-guide]"), a = i?.closest("[data-stage-portrait]");
 			if (!i || !a) return;
 			r.stopPropagation(), r.preventDefault(), r.currentTarget.setPointerCapture(r.pointerId);
 			let o = a.getBoundingClientRect(), s = i.getBoundingClientRect(), c = s.left + s.width / 2, l = s.top + s.height / 2;
-			se.value = {
+			le.value = {
 				who: e.who,
 				mode: t,
 				flip: e.flip,
@@ -15536,8 +15632,8 @@ var KE = {
 				startSize: e.headRaw?.size ?? 0
 			};
 		}
-		function le(e, t) {
-			let n = se.value;
+		function de(e, t) {
+			let n = le.value;
 			if (!n || n.who !== e.who || !e.head) return;
 			let r = n.host.getBoundingClientRect();
 			if (!r.width || !r.height) return;
@@ -15546,8 +15642,8 @@ var KE = {
 			if (n.mode === "move") {
 				let o = (t.clientX - r.left) / r.width - n.grabX, s = (t.clientY - r.top) / r.height - n.grabY;
 				i("head", e.who, {
-					x: ee(O(n.flip ? 1 - o : o, 0, 1), 3),
-					y: ee(O(s, 0, 1), 3),
+					x: k(te(n.flip ? 1 - o : o, 0, 1), 3),
+					y: k(te(s, 0, 1), 3),
 					size: a.size
 				});
 				return;
@@ -15556,27 +15652,27 @@ var KE = {
 			n.startReach <= 0 || i("head", e.who, {
 				x: a.x,
 				y: a.y,
-				size: ee(O(n.startSize * (o / n.startReach), .02, .6), 3)
+				size: k(te(n.startSize * (o / n.startReach), .02, .6), 3)
 			});
 		}
-		function ue(e) {
+		function fe(e) {
 			let t = e.current.pos;
 			t?.scale !== void 0 && i("place", e.who, { pos: {
 				x: t.x,
 				y: t.y
 			} });
 		}
-		function de(e, t) {
-			D ? (D = !1, t.stopPropagation()) : c({
+		function pe(e, t) {
+			ee ? (ee = !1, t.stopPropagation()) : c({
 				kind: "portrait",
 				id: e
 			}, t);
 		}
-		let fe = W(() => T.value?.mode === "move" && T.value.moved && !T.value.free ? c_.map((e) => ({
+		let me = W(() => D.value?.mode === "move" && D.value.moved && !D.value.free ? c_.map((e) => ({
 			pos: e,
-			x: UT[e],
-			near: A(T.value.x) === e
-		})) : []), pe = (e) => Object.entries(n.stage.objects).filter(([, t]) => t.layer === e).map(([e, t]) => {
+			x: qT[e],
+			near: ie(D.value.x) === e
+		})) : []), he = (e) => Object.entries(n.stage.objects).filter(([, t]) => t.layer === e).map(([e, t]) => {
 			let n = t.pos ? t.pos.x : gT[t.slot ?? "center"], r = t.pos ? t.pos.y : .55;
 			return {
 				id: e,
@@ -15589,12 +15685,12 @@ var KE = {
 					aspectRatio: "4 / 3"
 				}
 			};
-		}), me = W(() => pe("back")), he = W(() => pe("front"));
+		}), ge = W(() => he("back")), _e = W(() => he("front"));
 		return (t, n) => {
-			let a = uT, d = YE, f = eb;
+			let a = uT, d = $E, f = eb;
 			return R(), z("div", {
 				ref_key: "root",
-				ref: E,
+				ref: O,
 				class: N(["absolute inset-0 overflow-hidden", e.seeThrough ? "" : "bg-black"]),
 				style: M({
 					"--vn-fade": `${e.fadeMs}ms`,
@@ -15625,7 +15721,7 @@ var KE = {
 					tag: "div",
 					class: "pointer-events-none absolute inset-0"
 				}, {
-					default: Nn(() => [(R(!0), z(L, null, Nr(I(me), (e) => (R(), z("div", {
+					default: Nn(() => [(R(!0), z(L, null, Nr(I(ge), (e) => (R(), z("div", {
 						key: e.id,
 						class: N(["pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2", s({
 							kind: "object",
@@ -15639,7 +15735,7 @@ var KE = {
 					}, [H(a, {
 						url: e.url,
 						label: e.label
-					}, null, 8, ["url", "label"])], 14, ZE))), 128))]),
+					}, null, 8, ["url", "label"])], 14, tD))), 128))]),
 					_: 1
 				}),
 				e.seeThrough ? U("", !0) : (R(), z("div", {
@@ -15655,16 +15751,17 @@ var KE = {
 					class: N([I(l)({ mood: e.stage.tone ?? "day" }), "pointer-events-none"])
 				}, null, 2)),
 				H(ns, {
-					name: `vn-portrait-${I(w)}`,
+					name: `vn-portrait-${I(E)}`,
 					duration: {
-						enter: I(w) === "cut" ? e.enterDelayMs ?? 0 : e.fadeMs + (e.enterDelayMs ?? 0),
-						leave: I(w) === "cut" ? 0 : e.fadeMs
+						enter: I(E) === "cut" ? e.enterDelayMs ?? 0 : e.fadeMs + (e.enterDelayMs ?? 0),
+						leave: I(E) === "cut" ? 0 : e.fadeMs
 					},
 					"data-enter-delayed": !!e.enterDelayMs,
 					tag: "div",
+					onBeforeLeave: w,
 					class: "pointer-events-none absolute inset-0"
 				}, {
-					default: Nn(() => [(R(!0), z(L, null, Nr(I(C), (t) => (R(), z("div", {
+					default: Nn(() => [(R(!0), z(L, null, Nr(I(T), (t) => (R(), z("div", {
 						key: t.who,
 						"data-stage-portrait": t.who,
 						"data-present": !!e.stage.portraits[t.who],
@@ -15674,15 +15771,18 @@ var KE = {
 								kind: "portrait",
 								id: t.who
 							}),
-							I(T)?.who === t.who || t.hop === "jump" ? "" : t.hop ? "transition-opacity duration-300 ease-in-out" : "transition-[left,bottom,height,filter] duration-1000 ease-in-out",
-							ne(t.who) ? "cursor-grab touch-none active:cursor-grabbing" : ""
+							I(D)?.who === t.who || t.hop === "jump" ? "" : t.hop ? "transition-opacity ease-in-out" : "transition-[left,bottom,height,filter] duration-1000 ease-in-out",
+							A(t.who) ? "cursor-grab touch-none active:cursor-grabbing" : ""
 						]]),
-						style: M(t.style),
-						onPointerdown: (e) => re(t, e),
-						onPointermove: (e) => j(t, e),
-						onPointerup: (e) => ae(t),
-						onPointercancel: n[7] ||= (e) => T.value = null,
-						onClick: (e) => de(t.who, e)
+						style: M(t.hop ? {
+							...t.style,
+							transitionDuration: `${dD}ms`
+						} : t.style),
+						onPointerdown: (e) => j(t, e),
+						onPointermove: (e) => oe(t, e),
+						onPointerup: (e) => se(t),
+						onPointercancel: n[7] ||= (e) => D.value = null,
+						onClick: (e) => pe(t.who, e)
 					}, [
 						t.url ? (R(), B(d, {
 							key: 0,
@@ -15711,24 +15811,24 @@ var KE = {
 							key: 2,
 							class: N(["absolute z-20 aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-amber-300 shadow-[0_0_0_1px_rgb(0_0_0/0.45)] transition-opacity", [e.headGuide === "focus" ? "bg-amber-300/25 opacity-100" : "bg-amber-300/10 opacity-75", e.headEditable ? "group pointer-events-auto cursor-move touch-none" : "pointer-events-none"]]),
 							style: M(t.head),
-							"data-head-dragging": I(se)?.who === t.who || void 0,
+							"data-head-dragging": I(le)?.who === t.who || void 0,
 							"data-head-guide": "",
-							onPointerdown: (e) => ce(t, "move", e),
-							onPointermove: (e) => le(t, e),
-							onPointerup: n[3] ||= (e) => se.value = null,
-							onPointercancel: n[4] ||= (e) => se.value = null,
+							onPointerdown: (e) => ue(t, "move", e),
+							onPointermove: (e) => de(t, e),
+							onPointerup: n[3] ||= (e) => le.value = null,
+							onPointercancel: n[4] ||= (e) => le.value = null,
 							onClick: us((n) => !e.headEditable && i("headPick", t.who), ["stop"])
-						}, [e.headEditable ? (R(), z(L, { key: 0 }, Nr(oe, (e) => V("span", {
+						}, [e.headEditable ? (R(), z(L, { key: 0 }, Nr(ce, (e) => V("span", {
 							key: e.name,
 							"data-head-handle": "",
 							class: N(["absolute size-[1.6cqw] min-h-2.5 min-w-2.5 -translate-x-1/2 -translate-y-1/2 touch-none rounded-sm border border-amber-300 bg-white shadow", e.cursor]),
 							style: M(e.style),
 							title: I(r)("editor.portrait.headResize"),
-							onPointerdown: (e) => ce(t, "size", e),
-							onPointermove: (e) => le(t, e),
-							onPointerup: n[1] ||= (e) => se.value = null,
-							onPointercancel: n[2] ||= (e) => se.value = null
-						}, null, 46, eD)), 64)) : U("", !0)], 46, $E)) : U("", !0),
+							onPointerdown: (e) => ue(t, "size", e),
+							onPointermove: (e) => de(t, e),
+							onPointerup: n[1] ||= (e) => le.value = null,
+							onPointercancel: n[2] ||= (e) => le.value = null
+						}, null, 46, iD)), 64)) : U("", !0)], 46, rD)) : U("", !0),
 						e.selectable && e.speaker === t.who ? (R(), z("span", {
 							key: 3,
 							class: N(["absolute top-[2%] z-10 grid size-[2.4cqw] min-h-4 min-w-4 place-items-center rounded-full bg-primary text-white shadow ring-2 ring-white", t.x > .5 ? "right-[4%]" : "left-[4%]"]),
@@ -15736,27 +15836,27 @@ var KE = {
 						}, [H(f, {
 							name: "i-lucide-message-circle",
 							class: "size-[65%]"
-						})], 10, tD)) : U("", !0),
-						ne(t.who) ? (R(), z("span", {
+						})], 10, aD)) : U("", !0),
+						A(t.who) ? (R(), z("span", {
 							key: 4,
 							"data-resize": "",
 							class: "absolute top-0 left-1/2 size-[2.2cqw] min-h-3 min-w-3 -translate-x-1/2 -translate-y-1/2 cursor-ns-resize touch-none rounded-full border-2 border-white bg-primary shadow",
 							title: I(r)("editor.portrait.resizeHandle"),
-							onPointerdown: (e) => ie(t, e),
-							onPointermove: (e) => j(t, e),
-							onPointerup: (e) => ae(t),
-							onPointercancel: n[5] ||= (e) => T.value = null,
-							onDblclick: us((e) => ue(t), ["stop"]),
+							onPointerdown: (e) => ae(t, e),
+							onPointermove: (e) => oe(t, e),
+							onPointerup: (e) => se(t),
+							onPointercancel: n[5] ||= (e) => D.value = null,
+							onDblclick: us((e) => fe(t), ["stop"]),
 							onClick: n[6] ||= us(() => {}, ["stop"])
-						}, null, 40, nD)) : U("", !0)
-					], 46, QE))), 128))]),
+						}, null, 40, oD)) : U("", !0)
+					], 46, nD))), 128))]),
 					_: 1
 				}, 8, [
 					"name",
 					"duration",
 					"data-enter-delayed"
 				]),
-				(R(!0), z(L, null, Nr(I(fe), (e) => (R(), z("div", {
+				(R(!0), z(L, null, Nr(I(me), (e) => (R(), z("div", {
 					key: e.pos,
 					class: N(["pointer-events-none absolute inset-y-0 z-40 w-[10%] -translate-x-1/2 border-x border-dashed transition-colors", e.near ? "border-primary bg-primary/20" : "border-white/30"]),
 					style: M({ left: `${e.x * 100}%` })
@@ -15766,7 +15866,7 @@ var KE = {
 					tag: "div",
 					class: "pointer-events-none absolute inset-0"
 				}, {
-					default: Nn(() => [(R(!0), z(L, null, Nr(I(he), (e) => (R(), z("div", {
+					default: Nn(() => [(R(!0), z(L, null, Nr(I(_e), (e) => (R(), z("div", {
 						key: e.id,
 						class: N(["pointer-events-auto absolute -translate-x-1/2 -translate-y-1/2", s({
 							kind: "object",
@@ -15780,38 +15880,38 @@ var KE = {
 					}, [H(a, {
 						url: e.url,
 						label: e.label
-					}, null, 8, ["url", "label"])], 14, rD))), 128))]),
+					}, null, 8, ["url", "label"])], 14, sD))), 128))]),
 					_: 1
 				})
 			], 4)], 6);
 		};
 	}
-}), cD = {
+}), pD = {
 	class: "pointer-events-none absolute inset-0",
 	style: {
 		"background-color": "#26262c",
 		"background-image": "repeating-conic-gradient(#33333b 0% 25%, #26262c 0% 50%)",
 		"background-size": "4cqw 4cqw"
 	}
-}, lD = {
+}, mD = {
 	key: 0,
 	class: "absolute top-[3cqw] left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-[2cqw] py-[0.6cqw] text-[1.8cqw] whitespace-nowrap text-white/80"
-}, uD = /* @__PURE__ */ sr({
+}, hD = /* @__PURE__ */ sr({
 	__name: "Checkerboard",
 	props: { label: { type: String } },
 	setup(e) {
-		return (t, n) => (R(), z("div", cD, [e.label ? (R(), z("p", lD, P(e.label), 1)) : U("", !0)]));
+		return (t, n) => (R(), z("div", pD, [e.label ? (R(), z("p", mD, P(e.label), 1)) : U("", !0)]));
 	}
 });
 //#endregion
 //#region ../../apps/studio/app/utils/portrait.ts
-function dD(e, t, n) {
+function gD(e, t, n) {
 	let r = e.characters.find((e) => e.id === t.speaker), i = t.portrait?.faceSide ?? r?.faceSide ?? $g(e.story.settings?.portraits).faceSide;
 	if (i !== "follow") return i;
 	let a = t.speaker ? n?.portraits[t.speaker] : void 0;
-	return (a?.pos ? a.pos.x : a?.slot ? UT[a.slot] : .5) > .6 ? "right" : "left";
+	return (a?.pos ? a.pos.x : a?.slot ? qT[a.slot] : .5) > .6 ? "right" : "left";
 }
-function fD(e, t, n) {
+function _D(e, t, n) {
 	if (t.kind !== "line" || !t.speaker) return;
 	let r = t.portrait?.show ?? $g(e.story.settings?.portraits).show;
 	if (r === "stage" || r === "none") return;
@@ -15819,11 +15919,11 @@ function fD(e, t, n) {
 	if (o) return {
 		url: e.assets.assets[o]?.url,
 		label: o,
-		side: dD(e, t, n),
+		side: gD(e, t, n),
 		...a && i?.faceCrops?.[a.expression] ? { crop: i.faceCrops[a.expression] } : {}
 	};
 }
-function pD(e) {
+function vD(e) {
 	return e?.kind === "line" ? {
 		speaker: e.speaker,
 		toneDown: e.portrait?.toneDown
@@ -15832,7 +15932,7 @@ function pD(e) {
 		toneDown: void 0
 	};
 }
-function mD(e, t) {
+function yD(e, t) {
 	let n = $g(e.story.settings?.portraits).animation;
 	if (!t) return n;
 	let r = e.story.scenes.flatMap((e) => e.steps).find((e) => e.id === t);
@@ -15841,13 +15941,13 @@ function mD(e, t) {
 	for (let e of [...r.stage ?? []].reverse()) if ((e.op === "enter" || e.op === "exit" || e.op === "clear") && e.animation) return e.animation;
 	return n;
 }
-function hD(e, t, n) {
+function bD(e, t, n) {
 	let r = e.characters.find((e) => e.id === t.speaker), i = t.speaker ? n?.portraits[t.speaker] : void 0;
-	return i?.pos?.x ?? t.portrait?.pos?.x ?? UT[i?.slot ?? t.portrait?.slot ?? r?.home ?? "left"];
+	return i?.pos?.x ?? t.portrait?.pos?.x ?? qT[i?.slot ?? t.portrait?.slot ?? r?.home ?? "left"];
 }
 //#endregion
 //#region ../../apps/studio/app/utils/storyProgress.ts
-function gD(e) {
+function xD(e) {
 	let t = sb(e).filter((t) => !e.scenes.find((e) => e.id === t.sceneId)?.trigger), n = new Map(t.map((e, t) => [e.step.id, t])), r = new Set(t.filter(({ step: e }) => !e.hidden && (e.type === "line" || e.type === "narration")).map(({ step: e }) => e.id));
 	return (e) => {
 		let i = e.stepId ? n.get(e.stepId) : void 0, a = e.history ? e.history.filter((e) => r.has(e)).length : i === void 0 ? 0 : t.slice(0, i + 1).filter(({ step: e }) => r.has(e.id)).length;
@@ -15913,7 +16013,7 @@ function gD(e) {
 }
 //#endregion
 //#region ../story-edit/src/handover/games.ts
-var _D = [{
+var SD = [{
 	id: "game",
 	name: "Any game",
 	icon: "i-lucide-gamepad-2",
@@ -15965,21 +16065,21 @@ var _D = [{
 		default: "sent",
 		card: "Sends the game a message: {signal}"
 	}]
-}], vD = (e) => _D.find((t) => t.id === e);
+}], CD = (e) => SD.find((t) => t.id === e);
 //#endregion
 //#region ../story-edit/src/handover/describe.ts
-function yD(e, t) {
+function wD(e, t) {
 	if (!e.actionKey) return e.actions[0];
 	let n = t.params?.[e.actionKey] ?? e.actionWhenUnset;
 	return e.actions.find((e) => e.id === n);
 }
 //#endregion
 //#region ../story-edit/src/handover/span.ts
-function bD(e) {
-	let t = vD(e.name), n = t ? yD(t, e) : void 0;
+function TD(e) {
+	let t = CD(e.name), n = t ? wD(t, e) : void 0;
 	return n?.overlay ? n.overlay === "leave" ? "leave" : (e.params?.presentation ?? n.fixed?.presentation) === "overlay" ? "enter" : null : null;
 }
-function xD(e) {
+function ED(e) {
 	let t = /* @__PURE__ */ new Map(), n = "story";
 	for (let r of e) {
 		if (r.trigger !== void 0) {
@@ -15989,14 +16089,14 @@ function xD(e) {
 		let e = n === "story" ? "story" : "unsure";
 		for (let n of r.steps) {
 			if (n.hidden || (e !== "story" && t.set(n.id, e), n.type !== "event")) continue;
-			let r = bD(n);
+			let r = TD(n);
 			r && (e = n.inRoute ? "unsure" : r === "enter" ? "over" : "story");
 		}
 		n = e;
 	}
 	return t;
 }
-function SD(e, t) {
+function DD(e, t) {
 	let n = (t) => `vns:save:${e}:${t}`, r = (r) => {
 		try {
 			let i = t?.getItem(n(r));
@@ -16032,7 +16132,7 @@ function SD(e, t) {
 }
 //#endregion
 //#region ../../apps/studio/app/utils/audio.ts
-var CD = .35, wD = 200, TD = 600, ED = class {
+var OD = .35, kD = 200, AD = 600, jD = class {
 	resolve;
 	create;
 	music = null;
@@ -16131,11 +16231,11 @@ var CD = .35, wD = 200, TD = 600, ED = class {
 	}
 	syncDuck() {
 		let e = [...this.voices].some((e) => e.ducking);
-		this.rampDuck(e ? CD : 1);
+		this.rampDuck(e ? OD : 1);
 	}
 	rampDuck(e) {
 		this.duckTimer && clearInterval(this.duckTimer);
-		let t = this.duck, n = e < t ? wD : TD, r = Date.now(), i = () => {
+		let t = this.duck, n = e < t ? kD : AD, r = Date.now(), i = () => {
 			this.music && (this.music.el.volume = this.musicVolume(this.music));
 		};
 		t !== e && (this.duckTimer = setInterval(() => {
@@ -16221,24 +16321,24 @@ var CD = .35, wD = 200, TD = 600, ED = class {
 	dispose(e) {
 		e.timer && clearInterval(e.timer), this.fading.delete(e), e.el.pause(), e.el.currentTime = 0;
 	}
-}, DD = 2600, OD = 400, kD = "vns.muted";
-function AD(e, t, n = {}) {
-	let r = n.engine !== void 0, i = n.engine ?? vb(), a = n.persist ?? !0, o = SD(e.story.id, a ? jD() : null), s = n.audio ?? new ED((t) => e.assets.assets[t]?.url), c = /* @__PURE__ */ F(!1), l = /* @__PURE__ */ F(r ? "playing" : "title"), u = /* @__PURE__ */ Jt(null), d = /* @__PURE__ */ Jt(cb()), f = /* @__PURE__ */ F(OD), p = /* @__PURE__ */ F("fade"), m = /* @__PURE__ */ F(null), h = /* @__PURE__ */ F(null), g = /* @__PURE__ */ F(null), _ = /* @__PURE__ */ F([]), v = /* @__PURE__ */ F([]), y = /* @__PURE__ */ F([]), b = /* @__PURE__ */ F(null), x = /* @__PURE__ */ Jt({}), S = a ? jD() : null, C = /* @__PURE__ */ F(t ?? (a ? Vy(e.story.languages, (() => {
+}, MD = 2600, ND = 400, PD = "vns.muted";
+function FD(e, t, n = {}) {
+	let r = n.engine !== void 0, i = n.engine ?? vb(), a = n.persist ?? !0, o = DD(e.story.id, a ? ID() : null), s = n.audio ?? new jD((t) => e.assets.assets[t]?.url), c = /* @__PURE__ */ F(!1), l = /* @__PURE__ */ F(r ? "playing" : "title"), u = /* @__PURE__ */ Jt(null), d = /* @__PURE__ */ Jt(cb()), f = /* @__PURE__ */ F(ND), p = /* @__PURE__ */ F("fade"), m = /* @__PURE__ */ F(null), h = /* @__PURE__ */ F(null), g = /* @__PURE__ */ F(null), _ = /* @__PURE__ */ F([]), v = /* @__PURE__ */ F([]), y = /* @__PURE__ */ F([]), b = /* @__PURE__ */ F(null), x = /* @__PURE__ */ Jt({}), S = a ? ID() : null, C = /* @__PURE__ */ F(t ?? (a ? Vy(e.story.languages, (() => {
 		try {
 			return S?.getItem(zy(e.story.id)) ?? null;
 		} catch {
 			return null;
 		}
-	})(), navigator.languages ?? []) : e.story.languages.source)), w = n.mute ? null : jD(), T = /* @__PURE__ */ F(n.mute?.current() ?? !1), E = n.mute?.subscribe((e) => T.value = e);
+	})(), navigator.languages ?? []) : e.story.languages.source)), w = n.mute ? null : ID(), T = /* @__PURE__ */ F(n.mute?.current() ?? !1), E = n.mute?.subscribe((e) => T.value = e);
 	try {
-		n.mute || (T.value = w?.getItem(kD) === "1");
+		n.mute || (T.value = w?.getItem(PD) === "1");
 	} catch {}
 	!n.audio && !n.mute && s.setMuted(T.value);
-	let D = /* @__PURE__ */ F([]), O = /* @__PURE__ */ F(!1), ee = /* @__PURE__ */ F(null), te = /* @__PURE__ */ F(o.slots()), ne = 1, k = [], A = !1, re, ie = !0;
+	let D = /* @__PURE__ */ F([]), O = /* @__PURE__ */ F(!1), ee = /* @__PURE__ */ F(null), te = /* @__PURE__ */ F(o.slots()), k = 1, ne = [], A = !1, re, ie = !0;
 	function j() {
 		clearTimeout(re);
 		let e = m.value;
-		e && !e.corner && (ie || e.durationMs === void 0) && (re = setTimeout(() => m.value = null, e.durationMs ?? DD));
+		e && !e.corner && (ie || e.durationMs === void 0) && (re = setTimeout(() => m.value = null, e.durationMs ?? MD));
 	}
 	let ae = null;
 	r || (D.value = i.load(e, {
@@ -16247,7 +16347,7 @@ function AD(e, t, n = {}) {
 		...n.stopAtBranchingEvents ? { hostEventSteps: Ay(e.story) } : {}
 	}).warnings), C.value = i.lang, x.value = i.getFlags(), O.value = o.auto() !== void 0;
 	function oe(e, t) {
-		let n = ne++, r = Ug(e);
+		let n = k++, r = Ug(e);
 		_.value = [..._.value, {
 			id: n,
 			...r,
@@ -16258,7 +16358,7 @@ function AD(e, t, n = {}) {
 	}
 	function se(t) {
 		if (t.kind !== "line" && t.kind !== "narration") return;
-		let n = t.kind === "line" ? fD(e, t, d.value) : void 0, r = {
+		let n = t.kind === "line" ? _D(e, t, d.value) : void 0, r = {
 			stepId: t.stepId,
 			...t.kind === "line" ? {
 				speaker: t.speakerName,
@@ -16282,7 +16382,7 @@ function AD(e, t, n = {}) {
 	}
 	let ue = (e) => {
 		let t = e.flatMap((e) => "fadeMs" in e && e.fadeMs !== void 0 ? [e.fadeMs] : []);
-		return t.length ? Math.max(...t) : OD;
+		return t.length ? Math.max(...t) : ND;
 	}, de = (e) => e.filter((e) => e.op === "bg").at(-1)?.style ?? "fade";
 	function N(e) {
 		let t = e.veil;
@@ -16345,15 +16445,15 @@ function AD(e, t, n = {}) {
 		view(t, n, r) {
 			if (t.kind === "transition") ae?.stepId === t.stepId ? u.value = t : pe(t, n, r);
 			else {
-				if (N(n), m.value?.durationMs !== void 0 && (t.kind !== "delay" || !t.stepId.startsWith("scene-title:")) && (clearTimeout(re), m.value = null), u.value = t, d.value = n, (t.kind === "line" || t.kind === "narration" || t.kind === "choice" || t.kind === "delay") && k[k.length - 1]?.stepId !== t.stepId) {
+				if (N(n), m.value?.durationMs !== void 0 && (t.kind !== "delay" || !t.stepId.startsWith("scene-title:")) && (clearTimeout(re), m.value = null), u.value = t, d.value = n, (t.kind === "line" || t.kind === "narration" || t.kind === "choice" || t.kind === "delay") && ne[ne.length - 1]?.stepId !== t.stepId) {
 					let n = e.story.scenes.find((e) => e.steps.some((e) => e.id === t.stepId))?.id;
-					n && k.push({
+					n && ne.push({
 						sceneId: n,
 						stepId: t.stepId
 					});
 				}
 				if (f.value = ue(r), p.value = de(r), le(n, r), (t.kind === "line" || t.kind === "narration") && (t.voice ? s.playVoice(t.voice, { duck: t.duckMusic !== !1 }) : s.stopVoice({ keepLayered: !0 })), t.kind === "sequence" && !t.blocking && (v.value = [...v.value, {
-					id: ne++,
+					id: k++,
 					sequenceId: t.sequenceId,
 					sequence: t.sequence,
 					stepId: t.stepId,
@@ -16411,8 +16511,16 @@ function AD(e, t, n = {}) {
 			played: !0
 		} : t), t.endAfterMs !== null && ve([e], t.endAfterMs));
 	}
-	function P() {
-		fe(), _.value = [], v.value = [], b.value = null, m.value = null;
+	let P = null, xe;
+	function Se(e) {
+		let t = v.value.find((t) => t.id === e);
+		t && t.ready === !1 && (v.value = v.value.map((t) => t.id === e ? {
+			...t,
+			ready: !0
+		} : t)), P === e && (P = null, clearTimeout(xe), i.sequenceDone());
+	}
+	function Ce() {
+		P = null, clearTimeout(xe), fe(), _.value = [], v.value = [], b.value = null, m.value = null;
 	}
 	return {
 		engine: i,
@@ -16449,7 +16557,7 @@ function AD(e, t, n = {}) {
 			ie = e, j();
 		},
 		begin(e, t = {}) {
-			P(), y.value = [], k = [], ee.value = null, A = !!t.ignoreConditions, l.value = "playing", i.start({
+			Ce(), y.value = [], ne = [], ee.value = null, A = !!t.ignoreConditions, l.value = "playing", i.start({
 				...e ? {
 					from: e,
 					...t.withOpening ? { withOpening: !0 } : {}
@@ -16459,7 +16567,7 @@ function AD(e, t, n = {}) {
 		},
 		continueGame() {
 			let e = o.auto();
-			return e ? (P(), l.value = "playing", C.value = e.snapshot.lang, i.restore(e.snapshot), x.value = i.getFlags(), !0) : !1;
+			return e ? (Ce(), l.value = "playing", C.value = e.snapshot.lang, i.restore(e.snapshot), x.value = i.getFlags(), !0) : !1;
 		},
 		advance: () => i.advance(),
 		speaking: () => s.speaking,
@@ -16468,10 +16576,10 @@ function AD(e, t, n = {}) {
 		},
 		transitionDone: me,
 		back() {
-			let e = u.value && "stepId" in u.value ? u.value.stepId : null, t = k[k.length - 1]?.stepId === e ? k.pop() : void 0, n = k.pop();
-			if (!n) return t && k.push(t), !1;
+			let e = u.value && "stepId" in u.value ? u.value.stepId : null, t = ne[ne.length - 1]?.stepId === e ? ne.pop() : void 0, n = ne.pop();
+			if (!n) return t && ne.push(t), !1;
 			let r = y.value.findIndex((e) => e.stepId === n.stepId);
-			return r >= 0 && (y.value = y.value.slice(0, r)), P(), s.stopVoice(), ee.value = null, i.start({
+			return r >= 0 && (y.value = y.value.slice(0, r)), Ce(), s.stopVoice(), ee.value = null, i.start({
 				from: n,
 				...A ? { ignoreConditions: !0 } : {}
 			}), u.value?.kind === "delay" && (ee.value = u.value.stepId), !0;
@@ -16482,19 +16590,24 @@ function AD(e, t, n = {}) {
 		},
 		sequenceDone() {
 			let e = u.value;
-			e?.kind === "sequence" && e.hold && e.blocking && (v.value = [...v.value, {
-				id: ne++,
-				sequenceId: e.sequenceId,
-				sequence: e.sequence,
-				stepId: e.stepId,
-				layer: e.layer,
-				hold: !0,
-				leavingMs: null,
-				played: !0,
-				frozen: !0,
-				endAfterMs: null
-			}]), i.sequenceDone();
+			if (e?.kind === "sequence" && e.hold && e.blocking) {
+				let t = k++;
+				P = t, clearTimeout(xe), xe = setTimeout(() => Se(t), 2e3), v.value = [...v.value, {
+					id: t,
+					sequenceId: e.sequenceId,
+					sequence: e.sequence,
+					stepId: e.stepId,
+					layer: e.layer,
+					hold: !0,
+					leavingMs: null,
+					played: !0,
+					frozen: !0,
+					endAfterMs: null,
+					ready: !1
+				}];
+			} else i.sequenceDone();
 		},
+		overlayReady: Se,
 		resume(e) {
 			b.value = null, i.resume(e);
 		},
@@ -16513,7 +16626,7 @@ function AD(e, t, n = {}) {
 			else {
 				T.value = !T.value, s.setMuted(T.value);
 				try {
-					w?.setItem(kD, T.value ? "1" : "0");
+					w?.setItem(PD, T.value ? "1" : "0");
 				} catch {}
 			}
 		},
@@ -16527,10 +16640,10 @@ function AD(e, t, n = {}) {
 		},
 		load(e) {
 			let t = o.read(`slot${e}`);
-			return t ? (P(), l.value = "playing", C.value = t.snapshot.lang, i.restore(t.snapshot), x.value = i.getFlags(), !0) : !1;
+			return t ? (Ce(), l.value = "playing", C.value = t.snapshot.lang, i.restore(t.snapshot), x.value = i.getFlags(), !0) : !1;
 		},
 		toTitle() {
-			s.stopAll(), P(), h.value = null, d.value = cb(), u.value = null, l.value = "title", O.value = o.auto() !== void 0;
+			s.stopAll(), Ce(), h.value = null, d.value = cb(), u.value = null, l.value = "title", O.value = o.auto() !== void 0;
 		},
 		watchVisibility() {
 			if (n.audio) return () => void 0;
@@ -16544,7 +16657,7 @@ function AD(e, t, n = {}) {
 		}
 	};
 }
-function jD() {
+function ID() {
 	try {
 		return window.localStorage;
 	} catch {
@@ -16553,29 +16666,29 @@ function jD() {
 }
 //#endregion
 //#region ../../apps/studio/app/utils/autoplay.ts
-var MD = [
+var LD = [
 	"slow",
 	"normal",
 	"fast"
-], ND = {
+], RD = {
 	slow: 1.6,
 	normal: 1,
 	fast: .55
 };
-function PD(e) {
-	return MD[(MD.indexOf(e) + 1) % MD.length];
+function zD(e) {
+	return LD[(LD.indexOf(e) + 1) % LD.length];
 }
-function FD(e, t = "normal") {
+function BD(e, t = "normal") {
 	let n = Math.min(7e3, Math.max(1400, 900 + e * 45));
-	return Math.round(Math.max(700, n * ND[t]));
+	return Math.round(Math.max(700, n * RD[t]));
 }
 //#endregion
 //#region ../../apps/studio/app/components/player/Player.vue?vue&type=script&setup=true&lang.ts
-var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
+var VD = ["lang"], HD = ["data-stage-layout", "data-text-style"], UD = {
 	key: 4,
 	class: "pointer-events-none absolute top-[1.2cqw] left-1/2 z-50 -translate-x-1/2 rounded-full bg-red-600/90 px-[1.4cqw] py-[0.4cqw] text-[1.4cqw] leading-none font-semibold tracking-wide text-white uppercase",
 	role: "status"
-}, zD = { class: "sr-only" }, BD = "vns.autoplaySpeed", VD = 320, HD = 220, UD = 200, WD = 1e3, GD = /*#__PURE__*/ ((e, t) => {
+}, WD = { class: "sr-only" }, GD = "vns.autoplaySpeed", KD = 320, qD = 220, JD = 200, YD = 1e3, XD = /*#__PURE__*/ ((e, t) => {
 	let n = e.__vccOpts || e;
 	for (let [e, r] of t) n[e] = r;
 	return n;
@@ -16647,7 +16760,7 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 		"gameplay"
 	],
 	setup(e, { emit: t }) {
-		let n = e, r = t, i = n.engine !== void 0, a = AD(n.bundle, n.lang, {
+		let n = e, r = t, i = n.engine !== void 0, a = FD(n.bundle, n.lang, {
 			persist: !n.embedded && !i,
 			stopAtBranchingEvents: !!n.embedded,
 			...n.engine ? { engine: n.engine } : {},
@@ -16669,9 +16782,9 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 		function s() {
 			(!a.sceneCard.value || a.sceneCard.value.corner) && (o.value = !1);
 		}
-		let c = W(() => xD(n.bundle.story.scenes)), l = AE("preview-show-every-step", () => !1), u = W(() => !!n.embedded && l.value);
+		let c = W(() => ED(n.bundle.story.scenes)), l = PE("preview-show-every-step", () => !1), u = W(() => !!n.embedded && l.value);
 		Fn(Ky, a.lang);
-		let { t: d } = Jy(a.lang), f = /* @__PURE__ */ F(!1), p = ME(), m = lr("root"), h = lr("stageEl"), g = Vw({
+		let { t: d } = Jy(a.lang), f = /* @__PURE__ */ F(!1), p = IE(), m = lr("root"), h = lr("stageEl"), g = Vw({
 			slots: {
 				outer: "grid w-full place-items-center bg-black",
 				stage: "vn-player @container relative aspect-video overflow-hidden bg-black text-white outline-none"
@@ -16702,170 +16815,193 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 		let b = W(() => g({
 			embedded: (!!n.embedded || i) && !_.value,
 			overlay: i && n.mode === "overlay"
-		})), x = () => void 0;
+		})), x = () => void 0, S = /* @__PURE__ */ F(!!n.from);
 		Cr(() => {
-			x = a.watchVisibility(), n.from && a.begin(n.from, {
-				ignoreConditions: u.value,
-				withOpening: n.withOpening
-			}), n.embedded && setTimeout(() => h.value?.focus({ preventScroll: !0 }), 80), document.addEventListener("fullscreenchange", v);
-		}), Er(() => {
-			document.removeEventListener("fullscreenchange", v), document.fullscreenElement === m.value && document.exitFullscreen(), x(), a.dispose();
+			if (x = a.watchVisibility(), n.from) {
+				let e = n.from;
+				MT(te(e.stepId)).then(() => {
+					C || (a.begin(e, {
+						ignoreConditions: u.value,
+						withOpening: n.withOpening
+					}), S.value = !1);
+				});
+			}
+			n.embedded && setTimeout(() => h.value?.focus({ preventScroll: !0 }), 80), document.addEventListener("fullscreenchange", v);
 		});
-		let S = W(() => {
+		let C = !1;
+		Er(() => {
+			C = !0, document.removeEventListener("fullscreenchange", v), document.fullscreenElement === m.value && document.exitFullscreen(), x(), a.dispose();
+		});
+		let w = W(() => {
 			let e = a.view.value;
 			return e && "stepId" in e ? e.stepId : void 0;
-		}), C = W(() => i ? n.mode === "overlay" : !!S.value && c.value.get(S.value) === "over");
-		function w(e) {
+		}), T = W(() => i ? n.mode === "overlay" : !!w.value && c.value.get(w.value) === "over");
+		function E(e) {
 			if (!e.startsWith("scene-in:")) return !1;
 			let t = n.bundle.story, r = t.scenes.findIndex((t) => `scene-in:${t.id}` === e), i = t.scenes[r];
 			return !!i && r > 0 && Fy(i, t.settings).people;
 		}
-		let T = /* @__PURE__ */ F(!1), E;
+		let D = /* @__PURE__ */ F(!1), O;
 		Bn(() => a.stage.value, (e, t) => {
-			let r = S.value;
-			if (!r || !t || E) return;
-			let i = n.bundle.story.scenes.flatMap((e) => e.steps).find((e) => e.id === r)?.stage?.some((e) => e.op === "clear" && e.what !== "objects" && e.when === "before") || w(r), o = Object.keys(t.portraits).length > Object.keys(e.portraits).length;
-			i && o && mD(n.bundle, r) !== "cut" && (T.value = !0, E = setTimeout(() => {
-				T.value = !1, E = void 0;
+			let r = w.value;
+			if (!r || !t || O) return;
+			let i = n.bundle.story.scenes.flatMap((e) => e.steps).find((e) => e.id === r)?.stage?.some((e) => e.op === "clear" && e.what !== "objects" && e.when === "before") || E(r), o = Object.keys(t.portraits).length > Object.keys(e.portraits).length;
+			i && o && yD(n.bundle, r) !== "cut" && (D.value = !0, O = setTimeout(() => {
+				D.value = !1, O = void 0;
 			}, a.fadeMs.value));
-		}), Er(() => clearTimeout(E));
-		let D = /* @__PURE__ */ new Set(), O = /* @__PURE__ */ F(null), ee = [];
-		Er(() => ee.forEach(clearTimeout));
-		function te(e, t = !1) {
-			if (O.value) return;
-			let r = n.bundle.story.settings, i = r?.sceneFadeOutMs ?? 500, a = r?.sceneFadeInMs ?? 500, o = r?.sceneGapMs ?? 1500, s = (e, t) => void ee.push(setTimeout(t, e));
-			O.value = {
+		}), Er(() => clearTimeout(O));
+		let ee = /* @__PURE__ */ new Set();
+		function te(e) {
+			let t = [...NT(n.bundle, e), ...AT(n.bundle, e)];
+			for (let { url: r, width: i } of ET(n.bundle, e)) {
+				let e = Yb(r, i);
+				e && t.push(e);
+			}
+			for (let e of t) ee.add(e);
+			return t;
+		}
+		let k = /* @__PURE__ */ F(null), ne = [];
+		Er(() => ne.forEach(clearTimeout));
+		function A(e, t = !1) {
+			if (k.value) return;
+			let r = n.bundle.story.settings, i = r?.sceneFadeOutMs ?? 500, a = r?.sceneFadeInMs ?? 500, o = r?.sceneGapMs ?? 1500, s = (e, t) => void ne.push(setTimeout(t, e));
+			k.value = {
 				opacity: 0,
 				ms: 0
-			}, s(30, () => O.value = {
+			}, s(30, () => k.value = {
 				opacity: 1,
 				ms: i
 			}), s(30 + i + o, () => {
-				e(), t ? (O.value = {
+				e(), t ? (k.value = {
 					opacity: 0,
 					ms: a
-				}, s(a + 50, () => O.value = null)) : s(120, () => O.value = null);
+				}, s(a + 50, () => k.value = null)) : s(120, () => k.value = null);
 			});
 		}
-		let ne = [];
+		let re = [];
 		Er(() => {
-			for (let e of ne) e.removeAttribute("src"), e.load();
-			ne.length = 0;
-		}), Bn(S, (e) => {
+			for (let e of re) e.removeAttribute("src"), e.load();
+			re.length = 0;
+		}), Bn(w, (e) => {
 			if (e) {
-				for (let { url: t, width: r } of TT(n.bundle, e)) {
+				for (let { url: t, width: r } of ET(n.bundle, e)) {
 					let e = Yb(t, r);
-					e && !D.has(e) && (D.add(e), new Image().src = e);
+					e && !ee.has(e) && (ee.add(e), MT([e]));
 				}
-				for (let t of kT(n.bundle, e)) D.has(t) || (D.add(t), new Image().src = t);
-				for (let t of DT(n.bundle, e)) {
-					if (D.has(t)) continue;
-					D.add(t);
+				for (let t of AT(n.bundle, e)) ee.has(t) || (ee.add(t), MT([t]));
+				for (let t of OT(n.bundle, e)) {
+					if (ee.has(t)) continue;
+					ee.add(t);
 					let e = document.createElement("video");
-					e.preload = "auto", e.muted = !0, e.src = t, ne.push(e);
+					e.preload = "auto", e.muted = !0, e.src = t, re.push(e);
 				}
 			}
 		}, { immediate: !0 });
-		let k = lr("dialog"), A = /* @__PURE__ */ F(!1);
-		function re() {
+		let ie = lr("dialog"), j = /* @__PURE__ */ F(!1);
+		function ae() {
 			try {
-				let e = localStorage.getItem(BD);
-				return MD.find((t) => t === e) ?? "normal";
+				let e = localStorage.getItem(GD);
+				return LD.find((t) => t === e) ?? "normal";
 			} catch {
 				return "normal";
 			}
 		}
-		let ie = /* @__PURE__ */ F(re());
-		function j() {
-			ie.value = PD(ie.value);
+		let oe = /* @__PURE__ */ F(ae());
+		function se() {
+			oe.value = zD(oe.value);
 			try {
-				localStorage.setItem(BD, ie.value);
+				localStorage.setItem(GD, oe.value);
 			} catch {}
 		}
-		let ae = /* @__PURE__ */ F(null);
-		function oe() {
-			A.value = !A.value;
+		let ce = /* @__PURE__ */ F(null);
+		function le() {
+			j.value = !j.value;
 		}
-		let se = /* @__PURE__ */ F(!1), ce = /* @__PURE__ */ F(!1), le = /* @__PURE__ */ F(!1), ue = W(() => WE(a.effects.value)), de = W(() => {
+		let ue = /* @__PURE__ */ F(!1), de = /* @__PURE__ */ F(!1), fe = /* @__PURE__ */ F(!1), pe = W(() => JE(a.effects.value)), me = W(() => {
 			let e = a.view.value;
 			return e && (e.kind === "line" || e.kind === "narration") ? e : null;
-		}), fe = W(() => {
-			if (de.value?.kind !== "line") return 0;
-			let e = H_(de.value.presentation, n.bundle.story.settings?.presentation);
-			return e.mode === "bubble" ? 0 : ZT(e.enter).portraitDelay;
-		}), pe = W(() => gD(n.bundle.story)), me = W(() => {
+		}), he = /* @__PURE__ */ F(me.value);
+		Bn(() => [me.value, a.view.value], ([e, t]) => {
+			(e || t && t.kind !== "sequence") && (he.value = e);
+		});
+		let ge = W(() => {
+			if (me.value?.kind !== "line") return 0;
+			let e = H_(me.value.presentation, n.bundle.story.settings?.presentation);
+			return e.mode === "bubble" ? 0 : tE(e.enter).portraitDelay;
+		}), _e = W(() => xD(n.bundle.story)), ve = W(() => {
 			a.view.value, a.flags.value;
 			let e = a.engine.snapshot();
-			return pe.value({
+			return _e.value({
 				stepId: e.cursor?.stepId,
 				history: e.history,
 				flags: e.flags,
 				ended: a.view.value?.kind === "ended",
 				ignoreConditions: u.value
 			});
-		}), he = /* @__PURE__ */ F(!1), ge;
+		}), ye = /* @__PURE__ */ F(!1), be;
 		Cr(() => {
-			ge = setInterval(() => {
-				he.value = a.speaking();
+			be = setInterval(() => {
+				ye.value = a.speaking();
 			}, 50);
-		}), Er(() => clearInterval(ge)), Bn(de, () => {
-			he.value = a.speaking();
+		}), Er(() => clearInterval(be)), Bn(me, () => {
+			ye.value = a.speaking();
 		});
-		let _e = W(() => !!de.value && ae.value === de.value.stepId && !he.value && Ce.value && !T.value && !xe.value && !a.hostEvent.value), ve = W(() => {
+		let xe = W(() => !!me.value && ce.value === me.value.stepId && !ye.value && De.value && !D.value && !Te.value && !a.hostEvent.value), Se = W(() => {
 			let e = a.view.value, t = !!e?.playback?.autoplay && !e.playback.pauseGame && (e.kind !== "sequence" || e.trigger !== "onClick");
 			return i && n.mode === "overlay" && t ? "active" : "paused";
 		});
-		Bn(ve, (e) => r("gameplay", e), { immediate: !0 });
-		let ye = W(() => {
+		Bn(Se, (e) => r("gameplay", e), { immediate: !0 });
+		let Ce = W(() => {
 			let e = a.view.value;
 			return e?.kind === "choice" ? e : null;
-		}), be = W(() => {
+		}), we = W(() => {
 			let e = a.view.value;
 			return e?.kind === "sequence" && e.blocking ? e : null;
-		}), xe = W(() => se.value || ce.value || le.value || f.value);
-		Bn(de, () => {
-			ae.value = null;
+		}), Te = W(() => ue.value || de.value || fe.value || f.value);
+		Bn(me, () => {
+			ce.value = null;
 		}, { flush: "sync" });
-		let Se = W(() => de.value?.playback?.autoplay ?? !1), Ce = W(() => !Se.value || de.value?.playback?.allowManualAdvance !== !1);
+		let Ee = W(() => me.value?.playback?.autoplay ?? !1), De = W(() => !Ee.value || me.value?.playback?.allowManualAdvance !== !1);
 		Bn(() => [
-			de.value,
-			A.value,
-			ie.value
+			me.value,
+			j.value,
+			oe.value
 		], (e, t, r) => {
-			let i = de.value;
-			if (!i || !A.value && !i.playback?.autoplay) return;
-			let o = Vb(FD(iE(i.text, 0).chars.length, Se.value ? "normal" : ie.value), i.playback?.delayMs ?? 600, Se.value ? i.playback?.durationMs : void 0), s = performance.now(), c = () => {
+			let i = me.value;
+			if (!i || !j.value && !i.playback?.autoplay) return;
+			let o = Vb(BD(cE(i.text, 0).chars.length, Ee.value ? "normal" : oe.value), i.playback?.delayMs ?? 600, Ee.value ? i.playback?.durationMs : void 0), s = performance.now(), c = () => {
 				s = performance.now();
 			};
 			document.addEventListener("visibilitychange", c);
 			let l = setInterval(() => {
 				let e = performance.now(), t = e - s;
-				s = e, !(document.hidden || n.paused || xe.value || T.value || a.screen.value !== "playing") && o.tick(t, ae.value === i.stepId, a.speaking()) && (clearInterval(l), a.advance());
+				s = e, !(document.hidden || n.paused || Te.value || D.value || a.screen.value !== "playing") && o.tick(t, ce.value === i.stepId, a.speaking()) && (clearInterval(l), a.advance());
 			}, 50);
 			r(() => {
 				clearInterval(l), document.removeEventListener("visibilitychange", c);
 			});
 		});
-		let we = W(() => {
+		let Oe = W(() => {
 			let e = a.view.value;
 			return e?.kind === "delay" ? e : null;
-		}), Te = 0;
-		Bn(() => we.value?.stepId, (e) => {
-			Te = e ? performance.now() : 0;
+		}), ke = 0;
+		Bn(() => Oe.value?.stepId, (e) => {
+			ke = e ? performance.now() : 0;
 		}, {
 			immediate: !0,
 			flush: "sync"
 		});
-		function Ee() {
-			let e = we.value;
-			return e?.stepId.startsWith("scene-title:") ? performance.now() - Te < Math.min(Hv, e.ms) : !1;
+		function Ae() {
+			if (n.embedded) return !1;
+			let e = Oe.value;
+			return e?.stepId.startsWith("scene-title:") ? performance.now() - ke < Math.min(Hv, e.ms) : !1;
 		}
 		Bn(() => [
-			we.value?.stepId,
-			we.value?.stepId.startsWith("scene-title:") ? n.sceneTitleAutoplay : void 0,
-			we.value?.stepId.startsWith("scene-title-tail:") ? o.value : !1
+			Oe.value?.stepId,
+			Oe.value?.stepId.startsWith("scene-title:") ? n.sceneTitleAutoplay : void 0,
+			Oe.value?.stepId.startsWith("scene-title-tail:") ? o.value : !1
 		], ([e], t, r) => {
-			let i = we.value;
+			let i = Oe.value;
 			if (!e || !i || e.startsWith("scene-title:") && n.sceneTitleAutoplay === !1 || e.startsWith("scene-title-tail:") && o.value) return;
 			if (!i.playback?.autoplay) {
 				let e = setTimeout(() => a.delayDone(), i.ms);
@@ -16878,43 +17014,43 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 			document.addEventListener("visibilitychange", l);
 			let u = setInterval(() => {
 				let e = performance.now(), t = e - c;
-				c = e, !(document.hidden || xe.value || T.value) && s.tick(t, !0, !1) && (clearInterval(u), a.delayDone());
+				c = e, !(document.hidden || Te.value || D.value) && s.tick(t, !0, !1) && (clearInterval(u), a.delayDone());
 			}, 50);
 			r(() => {
 				clearInterval(u), document.removeEventListener("visibilitychange", l);
 			});
 		}, { immediate: !0 });
-		let De = W(() => {
+		let je = W(() => {
 			let e = a.view.value;
 			return e?.kind === "transition" ? e : null;
-		}), Oe = W(() => {
+		}), Me = W(() => {
 			let e = a.view.value;
 			return e?.kind === "ended" && a.overlays.value.length === 0 ? e : null;
-		}), ke = /* @__PURE__ */ Jt(null);
+		}), Ne = /* @__PURE__ */ Jt(null);
 		Bn(() => a.view.value, (e) => {
-			e?.kind === "line" || e?.kind === "narration" ? ke.value = e : e && e.kind !== "sequence" && e.kind !== "hold-end" && e.kind !== "transition" && (ke.value = null);
+			e?.kind === "line" || e?.kind === "narration" ? Ne.value = e : e && e.kind !== "sequence" && e.kind !== "hold-end" && e.kind !== "transition" && (Ne.value = null);
 		});
-		let Ae = W(() => be.value?.keepDialog || De.value && a.dialogFade.value ? ke.value : null), je = W(() => {
-			let e = De.value ? a.dialogFade.value : null;
+		let Pe = W(() => we.value?.keepDialog || je.value && a.dialogFade.value ? Ne.value : null), Fe = W(() => {
+			let e = je.value ? a.dialogFade.value : null;
 			return e ? {
 				opacity: e.opacity,
 				transition: e.ms > 0 ? `opacity ${e.ms}ms linear` : "none"
 			} : void 0;
-		}), Me = W(() => {
+		}), Ie = W(() => {
 			let e = a.veil.value;
 			return e?.affects.includes("picture") ? {
 				opacity: 1 - e.opacity,
 				transition: e.ms > 0 ? `opacity ${e.ms}ms linear` : "none"
 			} : void 0;
 		});
-		function Ne() {
+		function Le() {
 			if (!window.matchMedia("(pointer: coarse)").matches) {
 				let e = window.getSelection();
 				if (e && !e.isCollapsed && e.toString().trim()) return;
 			}
-			De.value && (De.value.skippable || n.embedded) ? a.transitionDone() : we.value && (we.value.skippable || n.embedded) ? Ee() || a.delayDone() : de.value && k.value?.activate();
+			je.value && (je.value.skippable || n.embedded) ? a.transitionDone() : Oe.value && (Oe.value.skippable || n.embedded) ? Ae() || a.delayDone() : me.value && ie.value?.activate();
 		}
-		function Pe(e) {
+		function Re(e) {
 			let t = n.bundle.story.scenes.flatMap((e) => e.steps.map((t) => ({
 				sceneId: e.id,
 				step: t
@@ -16930,7 +17066,7 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 				"line",
 				"choice",
 				"sequence"
-			]), i = S.value, o = -1;
+			]), i = w.value, o = -1;
 			if (!i && a.view.value?.kind === "ended") {
 				if (e > 0 || (i = a.log.value[a.log.value.length - 1]?.stepId ?? t.filter((e) => r.has(e.step.type)).pop()?.step.id, o = t.findIndex((e) => e.step.id === i), o < 0)) return !1;
 				o -= e;
@@ -16947,14 +17083,14 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 			}
 			return !1;
 		}
-		let Fe = /* @__PURE__ */ F(!1), Ie = typeof navigator < "u" && /Mac|iPhone|iPad/.test(navigator.platform);
-		function Le(e) {
-			return e.code !== "KeyD" || !e.ctrlKey || e.metaKey ? !1 : Ie ? !e.altKey : e.altKey;
+		let ze = /* @__PURE__ */ F(!1), Be = typeof navigator < "u" && /Mac|iPhone|iPad/.test(navigator.platform);
+		function Ve(e) {
+			return e.code !== "KeyD" || !e.ctrlKey || e.metaKey ? !1 : Be ? !e.altKey : e.altKey;
 		}
-		function Re(e) {
-			!n.embedded && !Fe.value && e.preventDefault();
+		function He(e) {
+			!n.embedded && !ze.value && e.preventDefault();
 		}
-		function ze(e) {
+		function Ue(e) {
 			if (!n.active) return;
 			let t = e.target instanceof HTMLElement ? e.target : null;
 			if (!t?.closest("input, textarea, select, button, [contenteditable=\"true\"]")) {
@@ -16962,54 +17098,54 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 					let e = m.value?.closest("[role=\"dialog\"]") ?? m.value;
 					if (!(t && e?.contains(t))) return;
 				}
-				if (!n.embedded && Le(e)) e.preventDefault(), Fe.value = !Fe.value;
-				else if (!(a.screen.value !== "playing" || se.value || ce.value || le.value)) {
-					if (e.key === " " || e.key === "Enter" || e.key === "ArrowRight" || e.key === "ArrowDown") De.value && (De.value.skippable || n.embedded) ? (e.preventDefault(), a.transitionDone()) : we.value && (we.value.skippable || n.embedded) ? (e.preventDefault(), Ee() || a.delayDone()) : de.value ? (i && ve.value !== "active" && e.stopPropagation(), e.preventDefault(), i && ve.value === "active" || k.value?.activate()) : n.embedded && !e.altKey && (e.key === "ArrowRight" || e.key === "ArrowDown") && Pe(1) && e.preventDefault();
+				if (!n.embedded && Ve(e)) e.preventDefault(), ze.value = !ze.value;
+				else if (!(a.screen.value !== "playing" || ue.value || de.value || fe.value)) {
+					if (e.key === " " || e.key === "Enter" || e.key === "ArrowRight" || e.key === "ArrowDown") je.value && (je.value.skippable || n.embedded) ? (e.preventDefault(), a.transitionDone()) : Oe.value && (Oe.value.skippable || n.embedded) ? (e.preventDefault(), Ae() || a.delayDone()) : me.value ? (i && Se.value !== "active" && e.stopPropagation(), e.preventDefault(), i && Se.value === "active" || ie.value?.activate()) : n.embedded && !e.altKey && (e.key === "ArrowRight" || e.key === "ArrowDown") && Re(1) && e.preventDefault();
 					else if (e.key === "ArrowLeft") {
-						if (!n.embedded && !Fe.value) return;
-						e.altKey && n.embedded ? Pe(-1) && e.preventDefault() : a.back() && e.preventDefault();
-					} else if (!i && (e.key === "a" || e.key === "A") && !e.altKey && !e.ctrlKey && !e.metaKey) e.preventDefault(), oe();
+						if (!n.embedded && !ze.value) return;
+						e.altKey && n.embedded ? Re(-1) && e.preventDefault() : a.back() && e.preventDefault();
+					} else if (!i && (e.key === "a" || e.key === "A") && !e.altKey && !e.ctrlKey && !e.metaKey) e.preventDefault(), le();
 					else if (!i && (e.key === "f" || e.key === "F") && !e.altKey && !e.ctrlKey && !e.metaKey) e.preventDefault(), y();
-					else if (ye.value && /^[1-9]$/.test(e.key)) {
-						let t = ye.value.options[Number(e.key) - 1];
-						t && Ue(t.id);
+					else if (Ce.value && /^[1-9]$/.test(e.key)) {
+						let t = Ce.value.options[Number(e.key) - 1];
+						t && qe(t.id);
 					}
 				}
 			}
 		}
-		let Be = {
-			"--vn-choice-hold": `${VD}ms`,
-			"--vn-choice-fade": `${HD}ms`,
-			"--vn-choice-others": `${UD}ms`
-		}, Ve = /* @__PURE__ */ F(!1), He;
-		function Ue(e) {
-			if (Ve.value) return;
+		let We = {
+			"--vn-choice-hold": `${KD}ms`,
+			"--vn-choice-fade": `${qD}ms`,
+			"--vn-choice-others": `${JD}ms`
+		}, Ge = /* @__PURE__ */ F(!1), Ke;
+		function qe(e) {
+			if (Ge.value) return;
 			let t = m.value?.querySelector(`.vn-question [data-option="${CSS.escape(e)}"]`);
-			!t || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? a.choose(e) : (t.setAttribute("data-chosen", "true"), Ve.value = !0, He = setTimeout(() => {
-				Ve.value = !1, a.choose(e);
-			}, WD));
+			!t || window.matchMedia("(prefers-reduced-motion: reduce)").matches ? a.choose(e) : (t.setAttribute("data-chosen", "true"), Ge.value = !0, Ke = setTimeout(() => {
+				Ge.value = !1, a.choose(e);
+			}, YD));
 		}
-		Er(() => clearTimeout(He)), Cr(() => {
-			window.addEventListener("keydown", ze, i), window.addEventListener("contextmenu", Re);
+		Er(() => clearTimeout(Ke)), Cr(() => {
+			window.addEventListener("keydown", Ue, i), window.addEventListener("contextmenu", He);
 		}), Er(() => {
-			window.removeEventListener("keydown", ze, i), window.removeEventListener("contextmenu", Re);
+			window.removeEventListener("keydown", Ue, i), window.removeEventListener("contextmenu", He);
 		});
-		function We() {
+		function Je() {
 			i ? r("restart") : a.begin(void 0, { ignoreConditions: u.value });
 		}
-		function Ge() {
+		function Ye() {
 			l.value = !l.value;
-			let e = S.value, t = e ? n.bundle.story.scenes.find((t) => t.steps.some((t) => t.id === e)) : null;
+			let e = w.value, t = e ? n.bundle.story.scenes.find((t) => t.steps.some((t) => t.id === e)) : null;
 			a.begin(t && e ? {
 				sceneId: t.id,
 				stepId: e
 			} : n.from, { ignoreConditions: u.value });
 		}
-		function Ke(e) {
-			a.load(e) && (ce.value = !1);
+		function Xe(e) {
+			a.load(e) && (de.value = !1);
 		}
 		return (t, n) => {
-			let c = uD, u = sD, g = qE, v = HE, x = EE, w = VE, E = gE, D = LT, ee = NT, ne = eT, re = Mx, pe = Ex, he = bx, ge = ax, ve = ex, xe = Jb, we = Zy;
+			let c = hD, u = fD, g = ZE, v = KE, x = AE, C = GE, E = bE, O = VT, ee = LT, te = eT, ne = Mx, re = Ex, ae = bx, _e = ax, ye = ex, be = Jb, Se = Zy;
 			return R(), z("div", {
 				ref_key: "root",
 				ref: m,
@@ -17024,23 +17160,23 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 					"data-stage-layout": I(p),
 					"data-text-style": e.bundle.story.settings?.textStyle ?? "serif",
 					tabindex: "-1",
-					onClick: Ne
+					onClick: Le
 				}, [
-					I(C) && !i ? (R(), B(c, {
+					I(T) && !i ? (R(), B(c, {
 						key: 0,
 						label: e.embedded ? void 0 : I(d)("player.gameHere")
 					}, null, 8, ["label"])) : U("", !0),
 					H(u, ba({
 						stage: I(a).stage.value,
-						"see-through": I(C),
-						"no-tint": i && I(C),
+						"see-through": I(T),
+						"no-tint": i && I(T),
 						bundle: e.bundle,
 						"fade-ms": I(a).fadeMs.value,
 						"bg-style": I(a).bgStyle.value,
-						"world-style": I(ue),
-						animation: ("portraitAnimationOf" in t ? t.portraitAnimationOf : I(mD))(e.bundle, I(S)),
-						"enter-delay-ms": I(fe)
-					}, ("stageLook" in t ? t.stageLook : I(pD))(I(de))), null, 16, [
+						"world-style": I(pe),
+						animation: ("portraitAnimationOf" in t ? t.portraitAnimationOf : I(yD))(e.bundle, I(w)),
+						"enter-delay-ms": I(ge)
+					}, ("stageLook" in t ? t.stageLook : I(vD))(I(he))), null, 16, [
 						"stage",
 						"see-through",
 						"no-tint",
@@ -17066,13 +17202,13 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 						"autoplay"
 					]),
 					I(a).screen.value === "playing" ? (R(), z(L, { key: 1 }, [
-						H(w, {
-							"continue-only": i && I(C),
+						H(C, {
+							"continue-only": i && I(T),
 							bundle: e.bundle,
 							lang: I(a).lang.value,
-							"step-id": I(S),
-							progress: I(me),
-							ready: I(_e),
+							"step-id": I(w),
+							progress: I(ve),
+							ready: I(xe),
 							"opening-card": I(o),
 							veil: I(a).veil.value
 						}, null, 8, [
@@ -17085,20 +17221,20 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"opening-card",
 							"veil"
 						]),
-						I(de) && !I(T) ? (R(), B(E, {
+						I(me) && !I(D) ? (R(), B(E, {
 							key: 0,
 							ref_key: "dialog",
-							ref: k,
-							view: I(de),
-							face: ("dialogFace" in t ? t.dialogFace : I(fD))(e.bundle, I(de), I(a).stage.value),
-							"bubble-x": ("bubbleOriginX" in t ? t.bubbleOriginX : I(hD))(e.bundle, I(de), I(a).stage.value),
+							ref: ie,
+							view: I(me),
+							face: ("dialogFace" in t ? t.dialogFace : I(_D))(e.bundle, I(me), I(a).stage.value),
+							"bubble-x": ("bubbleOriginX" in t ? t.bubbleOriginX : I(bD))(e.bundle, I(me), I(a).stage.value),
 							cps: I(Vv)(e.bundle.story.settings?.textSpeed),
 							settings: e.bundle.story.settings,
-							"allow-advance": I(Ce),
+							"allow-advance": I(De),
 							"hide-continue": "",
-							"data-dialog-playback": I(Se) ? "automatic" : "interactive",
+							"data-dialog-playback": I(Ee) ? "automatic" : "interactive",
 							onAdvance: I(a).advance,
-							onFinished: n[0] ||= (e) => ae.value = I(de)?.stepId ?? null
+							onFinished: n[0] ||= (e) => ce.value = I(me)?.stepId ?? null
 						}, null, 8, [
 							"view",
 							"face",
@@ -17110,24 +17246,24 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"onAdvance"
 						])) : U("", !0),
 						H(no, { name: "vn-question" }, {
-							default: Nn(() => [I(ye) && !I(T) ? (R(), B(D, {
+							default: Nn(() => [I(Ce) && !I(D) ? (R(), B(O, {
 								key: 0,
-								view: I(ye),
-								"data-leaving": I(Ve) || void 0,
-								style: Be,
-								onChoose: Ue
+								view: I(Ce),
+								"data-leaving": I(Ge) || void 0,
+								style: We,
+								onChoose: qe
 							}, null, 8, ["view", "data-leaving"])) : U("", !0)]),
 							_: 1
 						}),
-						I(Ae) ? (R(), B(E, {
-							key: `kept-${I(Ae).stepId}`,
+						I(Pe) ? (R(), B(E, {
+							key: `kept-${I(Pe).stepId}`,
 							class: "pointer-events-none",
-							view: I(Ae),
-							face: ("dialogFace" in t ? t.dialogFace : I(fD))(e.bundle, I(Ae), I(a).stage.value),
-							"bubble-x": ("bubbleOriginX" in t ? t.bubbleOriginX : I(hD))(e.bundle, I(Ae), I(a).stage.value),
+							view: I(Pe),
+							face: ("dialogFace" in t ? t.dialogFace : I(_D))(e.bundle, I(Pe), I(a).stage.value),
+							"bubble-x": ("bubbleOriginX" in t ? t.bubbleOriginX : I(bD))(e.bundle, I(Pe), I(a).stage.value),
 							cps: 0,
 							settings: e.bundle.story.settings,
-							style: M(I(je)),
+							style: M(I(Fe)),
 							"hide-continue": ""
 						}, null, 8, [
 							"view",
@@ -17136,21 +17272,21 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"settings",
 							"style"
 						])) : U("", !0),
-						I(be) && !I(T) ? (R(), B(ee, {
-							key: I(be).stepId,
-							hold: I(be).hold,
-							"fade-in-ms": I(be).fadeInMs,
-							behind: !!I(Ae),
-							sequence: I(be).sequence,
+						I(we) && !I(D) ? (R(), B(ee, {
+							key: I(we).stepId,
+							hold: I(we).hold,
+							"fade-in-ms": I(we).fadeInMs,
+							behind: !!I(Pe),
+							sequence: I(we).sequence,
 							bundle: e.bundle,
 							audio: I(a).audio,
 							"host-paused": I(a).paused.value,
-							skippable: I(be).skippable,
-							trigger: I(be).trigger,
-							"skip-prompt": I(be).skipPrompt,
+							skippable: I(we).skippable,
+							trigger: I(we).trigger,
+							"skip-prompt": I(we).skipPrompt,
 							lang: I(a).lang.value,
-							onEffect: n[1] ||= (e) => I(a).triggerEffect(e, I(be)?.stepId),
-							onSkipped: n[2] ||= (e) => I(be) && I(a).sequenceSkipped(I(be).stepId),
+							onEffect: n[1] ||= (e) => I(a).triggerEffect(e, I(we)?.stepId),
+							onSkipped: n[2] ||= (e) => I(we) && I(a).sequenceSkipped(I(we).stepId),
 							onDone: I(a).sequenceDone
 						}, null, 8, [
 							"hold",
@@ -17178,9 +17314,10 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							behind: t.layer === "behind",
 							lang: I(a).lang.value,
 							"leaving-ms": t.leavingMs,
-							style: M(t.layer === "front" ? I(Me) : void 0),
+							style: M(t.ready === !1 ? { opacity: 0 } : t.layer === "front" ? I(Ie) : void 0),
 							onEffect: I(a).triggerEffect,
 							onPlayed: (e) => I(a).holdPlayed(t.id),
+							onReady: (e) => I(a).overlayReady(t.id),
 							onDone: (e) => I(a).finishOverlay(t.id)
 						}, null, 8, [
 							"sequence",
@@ -17195,9 +17332,10 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"style",
 							"onEffect",
 							"onPlayed",
+							"onReady",
 							"onDone"
 						]))), 128)),
-						I(a).hostEvent.value ? (R(), B(ne, {
+						I(a).hostEvent.value ? (R(), B(te, {
 							key: 3,
 							event: I(a).hostEvent.value,
 							testing: !!e.embedded,
@@ -17207,14 +17345,14 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"testing",
 							"onResume"
 						])) : U("", !0),
-						I(Oe) ? (R(), B(re, {
+						I(Me) ? (R(), B(ne, {
 							key: 4,
-							exit: I(Oe).exit,
+							exit: I(Me).exit,
 							flags: I(a).flags.value,
-							onRestart: We,
+							onRestart: Je,
 							onTitle: n[3] ||= (e) => i ? r("exit") : I(a).toTitle()
 						}, null, 8, ["exit", "flags"])) : U("", !0),
-						e.controls ? (R(), B(pe, {
+						e.controls ? (R(), B(re, {
 							key: 5,
 							minimal: i,
 							"can-copy": (e.copyProjects?.length ?? 0) > 0 && !!e.slug,
@@ -17222,18 +17360,18 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							languages: e.bundle.story.languages.available,
 							lang: I(a).lang.value,
 							fullscreen: I(_),
-							autoplay: I(A),
+							autoplay: I(j),
 							testing: !!e.embedded,
 							"show-every-step": I(l),
-							speed: I(ie),
-							onConditions: Ge,
+							speed: I(oe),
+							onConditions: Ye,
 							onLanguage: I(a).setLanguage,
-							onAutoplay: oe,
-							onSpeed: j,
+							onAutoplay: le,
+							onSpeed: se,
 							onFullscreen: y,
-							onLog: n[4] ||= (e) => se.value = !0,
-							onSaves: n[5] ||= (e) => ce.value = !0,
-							onFlags: n[6] ||= (e) => le.value = !0,
+							onLog: n[4] ||= (e) => ue.value = !0,
+							onSaves: n[5] ||= (e) => de.value = !0,
+							onFlags: n[6] ||= (e) => fe.value = !0,
 							onMute: I(a).toggleMute,
 							onTitle: I(a).toTitle,
 							onCopy: n[7] ||= (e) => f.value = !0
@@ -17251,14 +17389,14 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 							"onMute",
 							"onTitle"
 						])) : U("", !0)
-					], 64)) : (R(), B(he, {
+					], 64)) : I(S) ? U("", !0) : (R(), B(ae, {
 						key: 2,
 						bundle: e.bundle,
 						lang: I(a).lang.value,
 						"can-continue": I(a).hasAutosave.value,
 						warnings: I(a).warnings.value,
-						onStart: n[8] ||= (e) => te(() => I(a).begin()),
-						onContinue: n[9] ||= (e) => te(() => I(a).continueGame(), !0),
+						onStart: n[8] ||= (e) => A(() => I(a).begin()),
+						onContinue: n[9] ||= (e) => A(() => I(a).continueGame(), !0),
 						onLanguage: I(a).setLanguage
 					}, null, 8, [
 						"bundle",
@@ -17267,18 +17405,18 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 						"warnings",
 						"onLanguage"
 					])),
-					I(O) ? (R(), z("div", {
+					I(k) ? (R(), z("div", {
 						key: 3,
 						class: "absolute inset-0 z-[60] bg-black",
 						"aria-hidden": "true",
 						style: M({
-							opacity: I(O).opacity,
-							transition: I(O).ms > 0 ? `opacity ${I(O).ms}ms linear` : "none"
+							opacity: I(k).opacity,
+							transition: I(k).ms > 0 ? `opacity ${I(k).ms}ms linear` : "none"
 						})
 					}, null, 4)) : U("", !0),
-					I(Fe) ? (R(), z("div", RD, " Debug mode ")) : U("", !0)
-				], 10, LD),
-				e.slug && e.copyProjects?.length ? (R(), B(ge, {
+					I(ze) ? (R(), z("div", UD, " Debug mode ")) : U("", !0)
+				], 10, HD),
+				e.slug && e.copyProjects?.length ? (R(), B(_e, {
 					key: 0,
 					open: I(f),
 					"onUpdate:open": n[10] ||= (e) => /* @__PURE__ */ qt(f) ? f.value = e : null,
@@ -17289,32 +17427,32 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 					"slug",
 					"projects"
 				])) : U("", !0),
-				H(ve, {
-					open: I(se),
-					"onUpdate:open": n[11] ||= (e) => /* @__PURE__ */ qt(se) ? se.value = e : null,
+				H(ye, {
+					open: I(ue),
+					"onUpdate:open": n[11] ||= (e) => /* @__PURE__ */ qt(ue) ? ue.value = e : null,
 					entries: I(a).log.value
 				}, null, 8, ["open", "entries"]),
-				H(xe, {
-					open: I(ce),
-					"onUpdate:open": n[12] ||= (e) => /* @__PURE__ */ qt(ce) ? ce.value = e : null,
+				H(be, {
+					open: I(de),
+					"onUpdate:open": n[12] ||= (e) => /* @__PURE__ */ qt(de) ? de.value = e : null,
 					slots: I(a).slots.value,
 					onSave: I(a).save,
-					onLoad: Ke
+					onLoad: Xe
 				}, null, 8, [
 					"open",
 					"slots",
 					"onSave"
 				]),
-				H(we, {
-					open: I(le),
-					"onUpdate:open": n[13] ||= (e) => /* @__PURE__ */ qt(le) ? le.value = e : null,
+				H(Se, {
+					open: I(fe),
+					"onUpdate:open": n[13] ||= (e) => /* @__PURE__ */ qt(fe) ? fe.value = e : null,
 					flags: I(a).flags.value
 				}, null, 8, ["open", "flags"]),
-				V("span", zD, P(I(d)("player.hint")), 1)
-			], 10, ID);
+				V("span", WD, P(I(d)("player.hint")), 1)
+			], 10, VD);
 		};
 	}
-}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-dd1acacf]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-dd1acacf"]]), KD = {
+}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-c0b4d762]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-c0b4d762"]]), ZD = {
 	en: {
 		progress: "Story progress",
 		progressExact: "{current} / {total}",
@@ -17484,7 +17622,7 @@ var ID = ["lang"], LD = ["data-stage-layout", "data-text-style"], RD = {
 		}
 	}
 };
-function qD(e, t) {
+function QD(e, t) {
 	let n = e;
 	for (let e of t) {
 		if (n === void 0 || typeof n == "string") return;
@@ -17492,33 +17630,33 @@ function qD(e, t) {
 	}
 	return typeof n == "string" ? n : void 0;
 }
-function JD(e = /* @__PURE__ */ F({})) {
+function $D(e = /* @__PURE__ */ F({})) {
 	return {
 		ready: W(() => !0),
 		t(t, n = {}, r) {
 			let i = r ? Hy(r) ?? "en" : "en", a = t.replace(/^player\./, "").split(".");
-			return (e.value[t] ?? qD(KD[i], a) ?? qD(KD.en, a) ?? t).replace(/\{(\w+)\}/g, (e, t) => String(n[t] ?? `{${t}}`));
+			return (e.value[t] ?? QD(ZD[i], a) ?? QD(ZD.en, a) ?? t).replace(/\{(\w+)\}/g, (e, t) => String(n[t] ?? `{${t}}`));
 		}
 	};
 }
 //#endregion
 //#region src/contract.ts
-var YD = 1, XD = "/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */\n@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-outline-style:solid;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-duration:initial;--tw-ease:initial}}}@layer theme{:root,:host{--font-sans:system-ui, -apple-system, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif;--font-serif:Georgia, \"Times New Roman\", \"Songti SC\", \"Noto Serif SC\", \"Source Han Serif SC\", serif;--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;--color-red-600:oklch(57.7% .245 27.325);--color-amber-300:oklch(87.9% .169 91.605);--color-black:#000;--color-white:#fff;--spacing:.25rem;--text-xs:.75rem;--text-xs--line-height:calc(1 / .75);--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--tracking-wide:.025em;--leading-tight:1.25;--radius-sm:.25rem;--radius-md:.375rem;--ease-out:cubic-bezier(0, 0, .2, 1);--ease-in-out:cubic-bezier(.4, 0, .2, 1);--aspect-video:16 / 9;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono);--color-tone-dawn:#ffaa7833;--color-tone-day:#fff0;--color-tone-dusk:#ff6e3c3d;--color-tone-night:#0a145080;--color-tone-storm:#0f192d8c;--color-tone-dream:#a078ff42;--color-fx-rain:#c8dcff8c;--color-fx-snow:#ffffffd9;--color-fx-ember:#ff963ce6;--color-fx-flash-white:#fff;--color-fx-flash-red:#dc1e1e;--color-fx-black:#000;--color-fx-glow:#ffe6ff80;--font-story-sans:Arial, sans-serif;--color-brand-400:#d9bc88;--color-brand-700:#8e6c3c}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components{@keyframes vn-shake{0%,to{translate:0;rotate:0deg}15%{translate:calc(var(--vn-i-shake,.7) * -4%) calc(var(--vn-i-shake,.7) * 1.6%);rotate:calc(var(--vn-i-shake,.7) * -.5deg)}35%{translate:calc(var(--vn-i-shake,.7) * 3.6%) calc(var(--vn-i-shake,.7) * -2%);rotate:calc(var(--vn-i-shake,.7) * .4deg)}55%{translate:calc(var(--vn-i-shake,.7) * -2.8%) calc(var(--vn-i-shake,.7) * 2.4%);rotate:calc(var(--vn-i-shake,.7) * -.3deg)}75%{translate:calc(var(--vn-i-shake,.7) * 2%) calc(var(--vn-i-shake,.7) * -1.2%);rotate:calc(var(--vn-i-shake,.7) * .2deg)}}@keyframes vn-zoom{0%,to{scale:1}50%{scale:calc(1 + var(--vn-i-zoom,.6) * .2)}}@keyframes vn-blur{0%,to{filter:blur()}40%,60%{filter:blur(calc(var(--vn-i-blur,.6) * 16px))}}@keyframes vn-glitch{0%,to{filter:none;translate:0}15%{translate:calc(var(--vn-i-glitch,.7) * 3%) 0;filter:hue-rotate(90deg)saturate(2)}30%{translate:calc(var(--vn-i-glitch,.7) * -3.4%) 0;filter:hue-rotate(-60deg)contrast(1.4)}45%{translate:0 calc(var(--vn-i-glitch,.7) * 1.4%);filter:invert(.2)saturate(3)}60%{translate:calc(var(--vn-i-glitch,.7) * 2.4%) 0;filter:hue-rotate(180deg)}80%{translate:calc(var(--vn-i-glitch,.7) * -1.2%) 0;filter:none}}.vn-fx{pointer-events:none;position:absolute;inset:0;overflow:hidden}.vn-fx:before{content:\"\";position:absolute;inset:-10%}@keyframes vn-flash{0%{opacity:0}12%{opacity:var(--vn-i,.9)}to{opacity:0}}@keyframes vn-fade-black{0%{opacity:0}40%,60%{opacity:1}to{opacity:0}}@keyframes vn-ambient{0%{opacity:0}10%,85%{opacity:var(--vn-i,.8)}to{opacity:0}}.vn-fx-flash-white{background:var(--color-fx-flash-white);animation:vn-flash var(--vn-ms,.4s) ease-out forwards}.vn-fx-flash-red{background:var(--color-fx-flash-red);animation:vn-flash var(--vn-ms,.5s) ease-out forwards}.vn-fx-fade-black{background:var(--color-fx-black);animation:vn-fade-black var(--vn-ms,2s) ease-in-out forwards}@keyframes vn-rain-fall{to{background-position:calc(-42px * var(--vn-size,1)) calc(180px * var(--vn-size,1)), calc(-71px * var(--vn-size,1)) calc(260px * var(--vn-size,1))}}.vn-fx-rain{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-rain:before{background-image:linear-gradient(105deg, transparent 47%, var(--color-fx-rain) 50%, transparent 53%), linear-gradient(105deg, transparent 48%, var(--color-fx-rain) 50%, transparent 52%);background-size:calc(42px * var(--vn-size,1)) calc(90px * var(--vn-size,1)), calc(71px * var(--vn-size,1)) calc(130px * var(--vn-size,1));animation:vn-rain-fall calc(.45s / var(--vn-speed,1)) linear infinite}@keyframes vn-snow-fall{to{background-position:calc(90px * var(--vn-size,1)) calc(440px * var(--vn-size,1)), calc(-160px * var(--vn-size,1)) calc(570px * var(--vn-size,1))}}.vn-fx-snow{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-snow:before{background-image:radial-gradient(circle, var(--color-fx-snow) 0 calc(2px * var(--vn-size,1)), transparent calc(3px * var(--vn-size,1))), radial-gradient(circle, var(--color-fx-snow) 0 calc(3px * var(--vn-size,1)), transparent calc(4px * var(--vn-size,1)));background-size:calc(90px * var(--vn-size,1)) calc(110px * var(--vn-size,1)), calc(160px * var(--vn-size,1)) calc(190px * var(--vn-size,1));animation:vn-snow-fall calc(6s / var(--vn-speed,1)) linear infinite}@keyframes vn-ember-rise{to{background-position:calc(120px * var(--vn-size,1)) calc(-420px * var(--vn-size,1)), calc(-230px * var(--vn-size,1)) calc(-690px * var(--vn-size,1))}}.vn-fx-embers{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-embers:before{background-image:radial-gradient(circle, var(--color-fx-ember) 0 calc(2px * var(--vn-size,1)), transparent calc(4px * var(--vn-size,1))), radial-gradient(circle, var(--color-fx-ember) 0 calc(3px * var(--vn-size,1)), transparent calc(5px * var(--vn-size,1)));background-size:calc(120px * var(--vn-size,1)) calc(140px * var(--vn-size,1)), calc(230px * var(--vn-size,1)) calc(230px * var(--vn-size,1));animation:vn-ember-rise calc(5s / var(--vn-speed,1)) linear infinite}@keyframes vn-glow-pulse{50%{opacity:.7;transform:scale(1.12)}}.vn-fx-dream-glow{animation:vn-ambient var(--vn-ms,4s) ease-in-out forwards;mix-blend-mode:screen}.vn-fx-dream-glow:before{background:radial-gradient(circle at 50% 40%, var(--color-fx-glow), transparent calc(65% * var(--vn-size,1)));animation:vn-glow-pulse calc(2.4s / var(--vn-speed,1)) ease-in-out infinite}@keyframes vn-film-flicker{0%,to{opacity:.55}30%{opacity:.85}60%{opacity:.4}}.vn-fx-old-film{animation:vn-ambient var(--vn-ms,6s) linear forwards;-webkit-backdrop-filter:sepia(.8)contrast(1.1)brightness(.95);backdrop-filter:sepia(.8)contrast(1.1)brightness(.95)}.vn-fx-old-film:before{animation:vn-film-flicker calc(.18s / var(--vn-speed,1)) steps(2) infinite;background:repeating-linear-gradient(0deg,#0000001a 0 1px,#0000 1px 4px)}.vn-fx-vignette{animation:vn-ambient var(--vn-ms,3s) linear forwards;background:radial-gradient(ellipse at center, transparent max(0%, calc(70% - var(--vn-size,1) * 25%)), #000000d9 100%)}@keyframes vn-text-shake{25%{translate:1px -1px}50%{translate:-1px 1px}75%{translate:1px 1px}}@keyframes vn-text-wave{50%{translate:0 -.25em}}.vn-text-shake{animation:.12s linear infinite vn-text-shake;display:inline-block}.vn-text-wave{animation:1s ease-in-out infinite vn-text-wave;animation-delay:calc(var(--vn-char,0) * 70ms);display:inline-block}.vn-text-whisper{opacity:.75;font-size:max(18px,.82em);font-style:italic}.vn-text-loud{font-size:1.25em;font-weight:700}.vn-ui-button{color:var(--ui-text);background:var(--ui-bg-accented);border-radius:.375rem;justify-content:center;align-items:center;gap:.375rem;padding:.375rem .625rem;font-size:.875rem;font-weight:500;line-height:1.25;display:inline-flex}@supports (color:color-mix(in lab, red, red)){.vn-ui-button{background:color-mix(in srgb, var(--ui-bg-accented) 60%, transparent)}}.vn-ui-button{box-shadow:inset 0 0 0 1px var(--ui-border-accented);cursor:pointer}.vn-ui-button:hover{background:var(--ui-bg-accented)}.vn-ui-button:focus-visible{outline:2px solid var(--ui-primary);outline-offset:2px}.vn-ui-button[data-icon-only]{padding:.375rem}.vn-ui-button[data-size=lg]{padding:.625rem 1.25rem;font-size:1rem}.vn-ui-button[data-color=primary][data-variant=solid],.vn-ui-button:not([data-color]):not([data-variant]),.vn-ui-button[data-color=primary]:not([data-variant=soft]):not([data-variant=subtle]){color:var(--ui-text-inverted);background:var(--ui-primary);box-shadow:none}.vn-ui-button[data-color=primary][data-variant=soft]{color:var(--ui-primary);background:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.vn-ui-button[data-color=primary][data-variant=soft]{background:color-mix(in srgb, var(--ui-primary) 15%, transparent)}}.vn-ui-button[data-color=primary][data-variant=soft]{box-shadow:none}}@layer utilities{.\\@container,.\\[container-type\\:inline-size\\]{container-type:inline-size}.\\[container-type\\:size\\]{container-type:size}.pointer-events-auto{pointer-events:auto}.pointer-events-none{pointer-events:none}.collapse{visibility:collapse}.invisible{visibility:hidden}.visible{visibility:visible}.sr-only{clip-path:inset(50%);white-space:nowrap;border-width:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.static{position:static}.inset-0{inset:0}.inset-y-0{inset-block:0}.top-0{top:0}.top-\\[1\\.2cqw\\]{top:1.2cqw}.top-\\[2\\%\\]{top:2%}.top-\\[2cqw\\]{top:2cqw}.top-\\[3cqw\\]{top:3cqw}.right-0{right:0}.right-\\[1\\.4cqw\\]{right:1.4cqw}.right-\\[4\\%\\]{right:4%}.bottom-\\[1\\.4cqw\\]{bottom:1.4cqw}.bottom-\\[max\\(16px\\,2\\.5\\%\\)\\]{bottom:max(16px,2.5%)}.bottom-full{bottom:100%}.left-0{left:0}.left-1\\/2{left:50%}.left-\\[4\\%\\]{left:4%}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.z-\\[15\\]{z-index:15}.z-\\[36\\]{z-index:36}.z-\\[60\\]{z-index:60}.col-start-1{grid-column-start:1}.row-start-1{grid-row-start:1}.container{width:100%}@media (width>=40rem){.container{max-width:40rem}}@media (width>=48rem){.container{max-width:48rem}}@media (width>=64rem){.container{max-width:64rem}}@media (width>=80rem){.container{max-width:80rem}}@media (width>=96rem){.container{max-width:96rem}}.mt-1{margin-top:var(--spacing)}.mr-2{margin-right:calc(var(--spacing) * 2)}.mb-1{margin-bottom:var(--spacing)}.line-clamp-3{-webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;overflow:hidden}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline{display:inline}.inline-flex{display:inline-flex}.table{display:table}.aspect-square{aspect-ratio:1}.aspect-video{aspect-ratio:var(--aspect-video)}.size-3\\.5{width:calc(var(--spacing) * 3.5);height:calc(var(--spacing) * 3.5)}.size-8{width:calc(var(--spacing) * 8);height:calc(var(--spacing) * 8)}.size-\\[1\\.6cqw\\]{width:1.6cqw;height:1.6cqw}.size-\\[2\\.2cqw\\]{width:2.2cqw;height:2.2cqw}.size-\\[2\\.4cqw\\]{width:2.4cqw;height:2.4cqw}.size-\\[3\\.2cqw\\]{width:3.2cqw;height:3.2cqw}.size-\\[65\\%\\]{width:65%;height:65%}.size-full{width:100%;height:100%}.h-0\\.5{height:calc(var(--spacing) * .5)}.h-auto{height:auto}.h-dvh{height:100dvh}.h-full{height:100%}.max-h-\\[60vh\\]{max-height:60vh}.max-h-none{max-height:none}.min-h-2\\.5{min-height:calc(var(--spacing) * 2.5)}.min-h-3{min-height:calc(var(--spacing) * 3)}.min-h-4{min-height:calc(var(--spacing) * 4)}.min-h-6{min-height:calc(var(--spacing) * 6)}.min-h-screen{min-height:100vh}.w-1\\/3{width:33.3333%}.w-40{width:calc(var(--spacing) * 40)}.w-\\[10\\%\\]{width:10%}.w-\\[min\\(34rem\\,90\\%\\)\\]{width:min(34rem,90%)}.w-\\[min\\(100vw\\,calc\\(100dvh\\*16\\/9\\)\\)\\]{width:min(100vw,177.778dvh)}.w-auto{width:auto}.w-full{width:100%}.max-w-\\[calc\\(100\\%-24px\\)\\]{max-width:calc(100% - 24px)}.max-w-none{max-width:none}.min-w-0{min-width:0}.min-w-2\\.5{min-width:calc(var(--spacing) * 2.5)}.min-w-3{min-width:calc(var(--spacing) * 3)}.min-w-4{min-width:calc(var(--spacing) * 4)}.min-w-full{min-width:100%}.shrink{flex-shrink:1}.shrink-0{flex-shrink:0}.grow{flex-grow:1}.origin-top-left{transform-origin:0 0}.-translate-x-1\\/2{--tw-translate-x:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.-translate-y-1\\/2{--tw-translate-y:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-grab{cursor:grab}.cursor-move{cursor:move}.cursor-nesw-resize{cursor:nesw-resize}.cursor-ns-resize{cursor:ns-resize}.cursor-nwse-resize{cursor:nwse-resize}.cursor-pointer{cursor:pointer}.touch-none{touch-action:none}.resize{resize:both}.grid-cols-\\[auto_1fr\\]{grid-template-columns:auto 1fr}.grid-rows-\\[100\\%\\]{grid-template-rows:100%}.flex-wrap{flex-wrap:wrap}.place-content-center{place-content:center}.place-items-center{place-items:center}.items-center{align-items:center}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.gap-1{gap:var(--spacing)}.gap-1\\.5{gap:calc(var(--spacing) * 1.5)}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-4{gap:calc(var(--spacing) * 4)}.gap-\\[0\\.6cqw\\]{gap:.6cqw}.gap-\\[1\\.4cqw\\]{gap:1.4cqw}.gap-\\[1cqw\\]{gap:1cqw}.gap-px{gap:1px}.gap-x-6{column-gap:calc(var(--spacing) * 6)}.gap-y-1{row-gap:var(--spacing)}.self-end{align-self:flex-end}.justify-self-center{justify-self:center}.truncate{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.rounded{border-radius:.25rem}.rounded-\\[1cqw\\]{border-radius:1cqw}.rounded-full{border-radius:2147483647px}.rounded-md{border-radius:var(--radius-md)}.rounded-sm{border-radius:var(--radius-sm)}.border{border-style:var(--tw-border-style);border-width:1px}.border-2{border-style:var(--tw-border-style);border-width:2px}.border-x{border-inline-style:var(--tw-border-style);border-inline-width:1px}.border-dashed{--tw-border-style:dashed;border-style:dashed}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-border-accented\\)_40\\%\\,white\\)\\]{border-color:var(--ui-border-accented)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-border-accented\\)_40\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-border-accented) 40%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-error\\)_55\\%\\,white\\)\\]{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-error\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-error) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-info\\)_55\\%\\,white\\)\\]{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-info\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-info) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-success\\)_55\\%\\,white\\)\\]{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-success\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-success) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-warning\\)_55\\%\\,white\\)\\]{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-warning\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-warning) 55%,white)}}.border-accented{border-color:var(--ui-border-accented);border-color:var(--ui-bg-accented)}.border-amber-300{border-color:var(--color-amber-300)}.border-default{border-color:var(--ui-border)}.border-error\\/40{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-error\\/40{border-color:color-mix(in oklab, var(--ui-error) 40%, transparent)}}.border-error\\/60{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-error\\/60{border-color:color-mix(in oklab, var(--ui-error) 60%, transparent)}}.border-info\\/40{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-info\\/40{border-color:color-mix(in oklab, var(--ui-info) 40%, transparent)}}.border-info\\/60{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-info\\/60{border-color:color-mix(in oklab, var(--ui-info) 60%, transparent)}}.border-primary{border-color:var(--ui-primary)}.border-success\\/40{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-success\\/40{border-color:color-mix(in oklab, var(--ui-success) 40%, transparent)}}.border-success\\/60{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-success\\/60{border-color:color-mix(in oklab, var(--ui-success) 60%, transparent)}}.border-warning\\/40{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-warning\\/40{border-color:color-mix(in oklab, var(--ui-warning) 40%, transparent)}}.border-warning\\/60{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-warning\\/60{border-color:color-mix(in oklab, var(--ui-warning) 60%, transparent)}}.border-white{border-color:var(--color-white)}.border-white\\/30{border-color:#ffffff4d}@supports (color:color-mix(in lab, red, red)){.border-white\\/30{border-color:color-mix(in oklab, var(--color-white) 30%, transparent)}}.border-white\\/40{border-color:#fff6}@supports (color:color-mix(in lab, red, red)){.border-white\\/40{border-color:color-mix(in oklab, var(--color-white) 40%, transparent)}}.bg-accented{background-color:var(--ui-bg-accented)}.bg-amber-300\\/10{background-color:#ffd2361a}@supports (color:color-mix(in lab, red, red)){.bg-amber-300\\/10{background-color:color-mix(in oklab, var(--color-amber-300) 10%, transparent)}}.bg-amber-300\\/25{background-color:#ffd23640}@supports (color:color-mix(in lab, red, red)){.bg-amber-300\\/25{background-color:color-mix(in oklab, var(--color-amber-300) 25%, transparent)}}.bg-black{background-color:var(--color-black)}.bg-black\\/50{background-color:#00000080}@supports (color:color-mix(in lab, red, red)){.bg-black\\/50{background-color:color-mix(in oklab, var(--color-black) 50%, transparent)}}.bg-black\\/60{background-color:#0009}@supports (color:color-mix(in lab, red, red)){.bg-black\\/60{background-color:color-mix(in oklab, var(--color-black) 60%, transparent)}}.bg-black\\/70{background-color:#000000b3}@supports (color:color-mix(in lab, red, red)){.bg-black\\/70{background-color:color-mix(in oklab, var(--color-black) 70%, transparent)}}.bg-default{background-color:var(--ui-bg)}.bg-elevated,.bg-elevated\\/40{background-color:var(--ui-bg-elevated)}@supports (color:color-mix(in lab, red, red)){.bg-elevated\\/40{background-color:color-mix(in oklab, var(--ui-bg-elevated) 40%, transparent)}}.bg-error,.bg-error\\/20{background-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.bg-error\\/20{background-color:color-mix(in oklab, var(--ui-error) 20%, transparent)}}.bg-error\\/45{background-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.bg-error\\/45{background-color:color-mix(in oklab, var(--ui-error) 45%, transparent)}}.bg-info\\/20{background-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.bg-info\\/20{background-color:color-mix(in oklab, var(--ui-info) 20%, transparent)}}.bg-info\\/45{background-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.bg-info\\/45{background-color:color-mix(in oklab, var(--ui-info) 45%, transparent)}}.bg-primary,.bg-primary\\/10{background-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.bg-primary\\/10{background-color:color-mix(in oklab, var(--ui-primary) 10%, transparent)}}.bg-primary\\/20{background-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.bg-primary\\/20{background-color:color-mix(in oklab, var(--ui-primary) 20%, transparent)}}.bg-red-600\\/90{background-color:#e40014e6}@supports (color:color-mix(in lab, red, red)){.bg-red-600\\/90{background-color:color-mix(in oklab, var(--color-red-600) 90%, transparent)}}.bg-success\\/10{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/10{background-color:color-mix(in oklab, var(--ui-success) 10%, transparent)}}.bg-success\\/20{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/20{background-color:color-mix(in oklab, var(--ui-success) 20%, transparent)}}.bg-success\\/45{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/45{background-color:color-mix(in oklab, var(--ui-success) 45%, transparent)}}.bg-tone-dawn{background-color:var(--color-tone-dawn)}.bg-tone-day{background-color:var(--color-tone-day)}.bg-tone-dream{background-color:var(--color-tone-dream)}.bg-tone-dusk{background-color:var(--color-tone-dusk)}.bg-tone-night{background-color:var(--color-tone-night)}.bg-tone-storm{background-color:var(--color-tone-storm)}.bg-transparent{background-color:#0000}.bg-warning\\/20{background-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.bg-warning\\/20{background-color:color-mix(in oklab, var(--ui-warning) 20%, transparent)}}.bg-warning\\/45{background-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.bg-warning\\/45{background-color:color-mix(in oklab, var(--ui-warning) 45%, transparent)}}.bg-white{background-color:var(--color-white)}.bg-white\\/10{background-color:#ffffff1a}@supports (color:color-mix(in lab, red, red)){.bg-white\\/10{background-color:color-mix(in oklab, var(--color-white) 10%, transparent)}}.bg-\\[repeating-linear-gradient\\(-45deg\\,var\\(--ui-bg-accented\\)_0_12px\\,var\\(--ui-border-accented\\)_12px_24px\\)\\]{background-image:repeating-linear-gradient(-45deg,var(--ui-bg-accented) 0 12px,var(--ui-border-accented) 12px 24px)}.bg-\\[repeating-linear-gradient\\(-45deg\\,var\\(--ui-bg-elevated\\)_0_12px\\,var\\(--ui-bg-accented\\)_12px_24px\\)\\]{background-image:repeating-linear-gradient(-45deg,var(--ui-bg-elevated) 0 12px,var(--ui-bg-accented) 12px 24px)}.object-contain{object-fit:contain}.object-cover{object-fit:cover}.p-0{padding:0}.p-1{padding:var(--spacing)}.p-2{padding:calc(var(--spacing) * 2)}.p-3{padding:calc(var(--spacing) * 3)}.p-6{padding:calc(var(--spacing) * 6)}.p-\\[1\\.5cqw\\]{padding:1.5cqw}.p-\\[2\\.4cqw\\]{padding:2.4cqw}.p-\\[3cqw\\]{padding:3cqw}.px-2{padding-inline:calc(var(--spacing) * 2)}.px-2\\.5{padding-inline:calc(var(--spacing) * 2.5)}.px-\\[1\\.4cqw\\]{padding-inline:1.4cqw}.px-\\[2cqw\\]{padding-inline:2cqw}.py-0\\.5{padding-block:calc(var(--spacing) * .5)}.py-1{padding-block:var(--spacing)}.py-\\[0\\.4cqw\\]{padding-block:.4cqw}.py-\\[0\\.6cqw\\]{padding-block:.6cqw}.pr-1{padding-right:var(--spacing)}.text-center{text-align:center}.text-left{text-align:left}.font-mono{font-family:var(--font-mono)}.font-sans{font-family:var(--font-sans)}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xs{font-size:var(--text-xs);line-height:var(--tw-leading,var(--text-xs--line-height))}.text-\\[1\\.4cqw\\]{font-size:1.4cqw}.text-\\[1\\.6cqw\\]{font-size:1.6cqw}.text-\\[1\\.8cqw\\]{font-size:1.8cqw}.text-\\[2\\.2cqw\\]{font-size:2.2cqw}.text-\\[2\\.6cqw\\]{font-size:2.6cqw}.leading-none{--tw-leading:1;line-height:1}.leading-tight{--tw-leading:var(--leading-tight);line-height:var(--leading-tight)}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.font-semibold{--tw-font-weight:var(--font-weight-semibold);font-weight:var(--font-weight-semibold)}.tracking-wide{--tw-tracking:var(--tracking-wide);letter-spacing:var(--tracking-wide)}.break-words{overflow-wrap:break-word}.whitespace-nowrap{white-space:nowrap}.whitespace-pre{white-space:pre}.whitespace-pre-wrap{white-space:pre-wrap}.text-default{color:var(--ui-text)}.text-highlighted{color:var(--ui-text-highlighted)}.text-muted{color:var(--ui-text-muted)}.text-primary{color:var(--ui-primary)}.text-success{color:var(--ui-success)}.text-white{color:var(--color-white)}.text-white\\/70{color:#ffffffb3}@supports (color:color-mix(in lab, red, red)){.text-white\\/70{color:color-mix(in oklab, var(--color-white) 70%, transparent)}}.text-white\\/80{color:#fffc}@supports (color:color-mix(in lab, red, red)){.text-white\\/80{color:color-mix(in oklab, var(--color-white) 80%, transparent)}}.lowercase{text-transform:lowercase}.uppercase{text-transform:uppercase}.italic{font-style:italic}.opacity-75{opacity:.75}.opacity-80{opacity:.8}.opacity-100{opacity:1}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-\\[0_0_0_1px_rgb\\(0_0_0\\/0\\.45\\)\\]{--tw-shadow:0 0 0 1px var(--tw-shadow-color,#00000073);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a), 0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring,.ring-1{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-2{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-primary\\/30{--tw-ring-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.ring-primary\\/30{--tw-ring-color:color-mix(in oklab, var(--ui-primary) 30%, transparent)}}.ring-success\\/30{--tw-ring-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.ring-success\\/30{--tw-ring-color:color-mix(in oklab, var(--ui-success) 30%, transparent)}}.ring-white{--tw-ring-color:var(--color-white)}.outline{outline-style:var(--tw-outline-style);outline-width:1px}.outline-3{outline-style:var(--tw-outline-style);outline-width:3px}.outline-primary{outline-color:var(--ui-primary)}.blur{--tw-blur:blur(8px);filter:var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,)}.filter{filter:var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,)}.transition{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,opacity,box-shadow,transform,translate,scale,rotate,filter,-webkit-backdrop-filter,backdrop-filter,display,content-visibility,overlay,pointer-events;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-\\[left\\,bottom\\,height\\,filter\\]{transition-property:left,bottom,height,filter;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-colors{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-opacity{transition-property:opacity;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.duration-300{--tw-duration:.3s;transition-duration:.3s}.duration-1000{--tw-duration:1s;transition-duration:1s}.ease-in-out{--tw-ease:var(--ease-in-out);transition-timing-function:var(--ease-in-out)}.ease-out{--tw-ease:var(--ease-out);transition-timing-function:var(--ease-out)}.will-change-transform{will-change:transform}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}.\\[pause\\:800\\]{pause:800}.\\[pause\\:N\\]{pause:N}.\\[pause\\:ms\\]{pause:ms}.ring-inset{--tw-ring-inset:inset}@media (hover:hover){.hover\\:bg-white\\/10:hover{background-color:#ffffff1a}@supports (color:color-mix(in lab, red, red)){.hover\\:bg-white\\/10:hover{background-color:color-mix(in oklab, var(--color-white) 10%, transparent)}}.hover\\:outline-2:hover{outline-style:var(--tw-outline-style);outline-width:2px}.hover\\:outline-primary:hover,.hover\\:outline-primary\\/60:hover{outline-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.hover\\:outline-primary\\/60:hover{outline-color:color-mix(in oklab, var(--ui-primary) 60%, transparent)}}}.active\\:cursor-grabbing:active{cursor:grabbing}@media (width>=40rem){.sm\\:flex{display:flex}.sm\\:items-center{align-items:center}.sm\\:justify-between{justify-content:space-between}.sm\\:gap-3{gap:calc(var(--spacing) * 3)}}}.vn-bg-cut-enter-active,.vn-bg-cut-leave-active{transition:none}.vn-bg-cut-leave-active{opacity:0}.vn-bg-blur-enter-active,.vn-bg-blur-leave-active{transition:opacity var(--vn-fade,.4s) ease, filter var(--vn-fade,.4s) ease, transform var(--vn-fade,.4s) ease}.vn-bg-blur-enter-from,.vn-bg-blur-leave-to{opacity:0;filter:blur(1.4cqw);transform:scale(1.06)}.vn-portrait-cut-enter-active,.vn-portrait-cut-leave-active{transition:none}.vn-portrait-fade-leave-active{transition:opacity var(--vn-fade,.4s) ease}.vn-portrait-fade-enter-active{transition:opacity var(--vn-fade,.4s) ease var(--vn-portrait-enter-delay,0s)}.vn-portrait-fade-enter-from,.vn-portrait-fade-leave-to{opacity:0}.vn-portrait-slide-leave-active{transition:opacity var(--vn-fade,.4s) ease, transform var(--vn-fade,.4s) ease}.vn-portrait-slide-enter-active{transition:opacity var(--vn-fade,.4s) ease var(--vn-portrait-enter-delay,0s), transform var(--vn-fade,.4s) ease var(--vn-portrait-enter-delay,0s)}[data-enter-delayed=true]>.vn-portrait-cut-enter-from{opacity:0}[data-enter-delayed=true]>.vn-portrait-cut-enter-active{transition:opacity 0s linear var(--vn-portrait-enter-delay,0s)}.vn-portrait-slide-enter-from,.vn-portrait-slide-leave-to{opacity:0;transform:translateX(var(--vn-slide,0%))}.vn-expr-enter-active,.vn-expr-leave-active{transition:opacity .25s}.vn-expr-enter-from,.vn-expr-leave-to{opacity:0}.vn-expr-inout-enter-active{transition:opacity .25s}.vn-expr-inout-enter-from{opacity:0}@media (prefers-reduced-motion:reduce){.vn-expr-inout-enter-active{transition:none}}.vn-fade-enter-active,.vn-fade-leave-active{transition:opacity var(--vn-fade,.4s) ease}.vn-fade-enter-from,.vn-fade-leave-to{opacity:0}.vn-backdrop{transition:filter var(--vn-fade,.4s) ease, transform var(--vn-fade,.4s) ease}@media (prefers-reduced-motion:reduce){.vn-backdrop{transition:none}}.vn-story-panel{--vn-story-font:var(--font-serif);z-index:20;font-family:var(--vn-story-font);overflow-wrap:anywhere;text-align:var(--vn-text-align,left);scrollbar-width:thin;max-height:74%;position:absolute;overflow:clip auto}.vn-story-panel--line{text-wrap:pretty;width:63.4%;min-height:5.98cqw;padding:2.27cqw 1.675cqw 1.675cqw;font-size:clamp(20px,1.5354cqw,32px);line-height:1.4;left:50%;overflow:visible;transform:translate(-50%)}.vn-story-panel--line[data-position=top]{top:8.18%}.vn-story-panel--line[data-position=bottom]{bottom:max(9.5%,3.6cqw)}.vn-story-panel--framed{--vn-border-width:max(2px, .119617cqw);border:var(--vn-border-width) solid;box-shadow:0 1.435cqw .718cqw -1.136cqw #000000a8,0 .897cqw 1.495cqw #0003,0 1.495cqw .598cqw #0003,inset 0 .239cqw .239cqw #00000040}.vn-story-panel--framed[data-gradient-border=true]{background-clip:padding-box;overflow:visible}.vn-story-panel--framed[data-gradient-border=true]:before{content:\"\";inset:calc(-1 * var(--vn-border-width));border-radius:inherit;padding:var(--vn-border-width);pointer-events:none;-webkit-mask-composite:xor;-webkit-mask-source-type:auto,auto;-webkit-mask-composite:xor;-webkit-mask-source-type:auto,auto;background:linear-gradient(#eec68bcc 0%,#f2d09ecc 19.714%,#fff1dccc 32.695%,#f2cf9ccc 44.233%,#9c8768cc 100%);position:absolute;-webkit-mask-image:linear-gradient(#fff 0 0),linear-gradient(#fff 0 0);mask-image:linear-gradient(#fff 0 0),linear-gradient(#fff 0 0);-webkit-mask-position:0 0,0 0;mask-position:0 0,0 0;-webkit-mask-size:auto,auto;mask-size:auto,auto;-webkit-mask-repeat:repeat,repeat;mask-repeat:repeat,repeat;-webkit-mask-clip:content-box,border-box;mask-clip:content-box,border-box;-webkit-mask-origin:content-box,border-box;mask-origin:content-box,border-box;-webkit-mask-composite:xor;mask-composite:exclude;-webkit-mask-source-type:auto,auto;mask-mode:match-source,match-source}.vn-story-panel--rounded{border-radius:max(4px,.359cqw)}.vn-story-panel--square{border-radius:0}.vn-story-panel--round{border-radius:1.2cqw}.vn-dialog-content{align-items:flex-start;gap:1.435cqw;display:flex}.vn-dialog-content--right{flex-direction:row-reverse}.vn-story-text{min-width:0;font:inherit;line-height:inherit;text-align:inherit;flex:1}.vn-story-text p{margin:0}.vn-dialog-face{aspect-ratio:1;background:#12151ad9;border:1px solid #9c876866;border-radius:.239cqw;flex:0 0 clamp(32px,6.58cqw,110px);width:clamp(32px,6.58cqw,110px);overflow:hidden}.vn-speaker-badge{overflow-wrap:anywhere;border:max(2px,.16cqw) solid;border-radius:.239cqw;max-width:calc(100% - 3.35cqw);padding:.24cqw .598cqw;font-size:clamp(16px,1.316cqw,26px);font-weight:600;line-height:1.2;position:absolute;top:-1.316cqw;left:1.675cqw}.vn-speaker-badge--plain{background:0 0!important;border-color:#0000!important}.vn-speaker-badge[data-corners=square]{border-radius:0}.vn-speaker-badge[data-corners=round]{border-radius:1.2cqw}.vn-story-panel--line .vn-story-text{scrollbar-width:thin;max-height:32cqw;overflow-y:auto}.vn-continue-arrow{opacity:.7;font-size:max(16px,.9em);position:absolute;bottom:.3cqw;right:.6cqw}.vn-story-panel--narration{text-shadow:0 .299cqw .239cqw #00000040;text-wrap:pretty;width:59.81%;font-size:clamp(20px,1.7746cqw,36px);line-height:1.6;left:20.095%}.vn-story-panel--narration[data-mode=standard][data-position=top]{top:10.52%}.vn-story-panel--narration[data-mode=standard][data-position=bottom]{bottom:max(15.3%,40px)}.vn-story-panel--narration[data-mode=long]{transform:translateY(-50%)}.vn-story-panel--narration[data-mode=long][data-position=top]{top:43.9%}.vn-story-panel--narration[data-mode=long][data-position=bottom]{top:56.1%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=left]{left:7.18%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=right]{left:auto;right:7.18%}.vn-story-panel--narration.vn-story-panel--framed{padding:1.675cqw}.vn-narration-treatment{--vn-treatment-direction:to bottom;--vn-treatment-blur:.457536cqw;--vn-treatment-dark:.8;--vn-treatment-mid:.63;--vn-treatment-mid-stop:16.8292%;--vn-treatment-clear-stop:82.6955%;pointer-events:none;z-index:19;width:100%;height:31.46%;position:absolute;top:0;left:0}.vn-narration-treatment[data-position=bottom]{--vn-treatment-direction:to top;top:auto;bottom:0}.vn-narration-treatment[data-mode=standard][data-position=bottom]{--vn-treatment-mid-stop:19.1647%;--vn-treatment-clear-stop:90%}.vn-narration-treatment[data-mode=long]{height:76.09%}.vn-narration-treatment[data-mode=long][data-horizontal-align=left],.vn-narration-treatment[data-mode=long][data-horizontal-align=right]{--vn-treatment-dark:.6;--vn-treatment-mid:.5;width:76.5%;height:100%;top:0;bottom:0}.vn-narration-treatment[data-mode=long][data-horizontal-align=left]{--vn-treatment-direction:to right}.vn-narration-treatment[data-mode=long][data-horizontal-align=right]{--vn-treatment-direction:to left;left:auto;right:0}.vn-narration-blur-band,.vn-narration-shade{position:absolute;inset:0}.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{opacity:1;transition:opacity .9s ease-in-out}.vn-narration-shade{transition-delay:.2s}@starting-style{.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{opacity:0}}@media (prefers-reduced-motion:reduce){.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{transition:none}}.vn-narration-shade{background:linear-gradient(var(--vn-treatment-direction), rgb(0 0 0/var(--vn-treatment-dark)) 0%, rgb(0 0 0/var(--vn-treatment-mid)) var(--vn-treatment-mid-stop), #0000 var(--vn-treatment-clear-stop))}@container (width<=640px){.vn-story-panel--narration[data-mode=long][data-position=top]{max-height:60%;top:calc(44% - 17.6px)}.vn-story-panel--narration[data-mode=long][data-position=bottom]{max-height:60%;top:calc(56% - 22.4px)}.vn-story-panel--line{width:88%;padding:3cqw 2cqw 2cqw}.vn-story-panel--narration{width:82%;left:9%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=left]{left:7.18%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=right]{right:7.18%}}.vn-background-selection{pointer-events:none;z-index:50;outline-offset:-3px;position:absolute;inset:0}.vn-editor-stage:has([data-stage-background]:hover)>.vn-background-selection:not([data-selected=true]){outline:2px solid var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.vn-editor-stage:has([data-stage-background]:hover)>.vn-background-selection:not([data-selected=true]){outline:2px solid color-mix(in srgb, var(--ui-primary) 60%, transparent)}}.vn-editor-stage>.vn-background-selection[data-selected=true]{outline:3px solid var(--ui-primary)}.vn-story-panel--line[data-mode=bubble]{flex-direction:column;gap:max(6px,.4785cqw);width:max-content;min-width:min(max(180px,16.746cqw),100% - 32px);max-width:min(max(240px,24.82cqw),100% - 32px);min-height:0;max-height:calc(100% - min(40px,18cqh) - 32px);padding:max(10px,1.316cqw) max(12px,1.495cqw);font-size:clamp(18px,1.1962cqw,24px);line-height:1.3;display:flex;bottom:auto;transform:translate(0)}.vn-story-panel--line[data-mode=bubble] .vn-speaker-badge{color:#9c8768;background:0 0;border:0;border-radius:0;flex:none;max-width:100%;padding:0;font-size:clamp(16px,1.0766cqw,22px);position:static}.vn-story-panel--line[data-mode=bubble] .vn-dialog-content{scrollbar-width:thin;min-height:0;overflow-y:auto}.vn-story-panel--line[data-mode=bubble] .vn-story-text{max-height:none;overflow:visible}.vn-bubble-tail{inset:calc(-1 * var(--vn-border-width));width:calc(100% + 2 * var(--vn-border-width));height:calc(100% + 2 * var(--vn-border-width));pointer-events:none;fill:var(--vn-panel-border);fill-opacity:.6;stroke:none;stroke-linejoin:round;position:absolute;overflow:visible}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=waiting]{opacity:0;pointer-events:none;transition:none;translate:0 6px}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=entering]{opacity:1;transition:opacity var(--vn-bubble-enter-duration) ease-out, translate var(--vn-bubble-enter-duration) ease-out;translate:0}@media (prefers-reduced-motion:reduce){.vn-story-panel--line[data-mode=bubble][data-bubble-entrance]{opacity:1;transition:none;translate:none}}.vn-story-panel[data-box-entrance][data-position=top]{--vn-box-from:calc(max(10px, 1.2cqw) * -1)}.vn-story-panel[data-box-entrance][data-position=bottom]{--vn-box-from:max(10px, 1.2cqw)}.vn-story-panel[data-box-entrance=waiting]{opacity:0;translate:0 var(--vn-box-from,0);pointer-events:none;transition:none}.vn-story-panel[data-box-entrance=entering]{opacity:1;transition:opacity calc(var(--vn-box-enter-duration) * .7) ease-out, translate var(--vn-box-enter-duration) ease-out;translate:0}@media (prefers-reduced-motion:reduce){.vn-story-panel[data-box-entrance]{opacity:1;transition:none;translate:none}}.vn-story-panel--line[data-mode=bubble].vn-story-panel--framed{--vn-border-width:max(2px, .0598cqw)}.vn-story-panel--line[data-mode=bubble][data-gradient-border=true]:before{background:linear-gradient(#ffe8c599,#eec68b99)}.vn-story-panel--line[data-mode=bubble] .vn-story-text{opacity:.9}.vn-story-panel--line[data-mode=bubble] .vn-speaker-badge{color:#eec68bcc}.vn-story-panel--line[data-mode=bubble].vn-story-panel--rounded{border-radius:max(4px,.359cqw)}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=ready],.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=skipped]{opacity:1;transition:none;translate:none}.vn-stage-heading{pointer-events:none;z-index:35;white-space:nowrap;text-overflow:ellipsis;max-width:calc(100% - 140px);font:.7177cqw/1.25 var(--font-story-sans);letter-spacing:.2em;text-transform:uppercase;color:#ffffff80;text-shadow:0 1px 4px #000;position:absolute;top:max(12px,1.675cqw);left:max(12px,1.914cqw);overflow:hidden}.vn-stage-progress{z-index:40;box-sizing:border-box;cursor:help;background:#181e28;border:0;border-radius:999px;place-items:center;width:5.20335cqw;height:1.01675cqw;padding:0;display:grid;position:absolute;top:1.3744cqw;right:1.555cqw;box-shadow:inset 0 0 0 .0598cqw #00000080}.vn-stage-progress:focus-visible{outline-offset:3px;outline:2px solid #eec68b}.vn-stage-progress-track{background:#3e4650;border-radius:999px;width:4.36603cqw;height:.35885cqw;display:block;overflow:hidden;box-shadow:inset 0 1px 1px #0000004d}.vn-stage-progress-track>span{border-radius:inherit;background:linear-gradient(90deg,#bbb,#999);height:100%;transition:width .35s ease-out;display:block;box-shadow:inset 0 0 0 .0598cqw #d1d1d1}.vn-stage-progress-track>span[data-complete=true]{background:linear-gradient(90deg,#eec68b,#ffe9cb);box-shadow:inset 0 0 0 .0598cqw #fff1de}.vn-stage-progress-details{background:var(--ui-bg);width:max-content;max-width:min(300px,80cqw);box-shadow:0 0 0 1px var(--ui-border);color:var(--ui-text-highlighted);font:var(--text-xs)/var(--text-xs--line-height) var(--font-sans);border-radius:4px;padding:6px 10px;position:absolute;top:calc(100% + 8px);right:0}.vn-scene-corner{pointer-events:none;z-index:30;text-align:left;color:#fff;opacity:.7;border-left:.2392cqw solid #9c8768;row-gap:.42cqw;max-width:min(30%,360px);padding:.7177cqw 0 .7177cqw 1.1354cqw;display:grid;position:absolute;bottom:max(16px,1.555cqw);left:max(12px,1.435cqw)}.vn-scene-corner-label{font:600 .5981cqw/1.2 var(--font-story-sans);letter-spacing:.34em;text-transform:uppercase;color:#eec68b;opacity:.8}.vn-scene-corner-title{overflow-wrap:anywhere;min-width:0;max-width:min(100%,13.5167cqw);font:1.546cqw/1.143 var(--vn-scene-title-font,var(--font-serif));opacity:.8}.vn-scene-corner-subtitle{font:.7775cqw/1.231 var(--font-story-sans);color:#fffc;opacity:.8}.vn-stage-continue{pointer-events:none;z-index:35;text-align:center;-webkit-backdrop-filter:blur(12px);color:#fff3e2c4;max-width:40%;font:600 11px/1.3 var(--font-story-sans);letter-spacing:.16em;text-transform:uppercase;opacity:0;transform-origin:50%;--vn-continue-cycle:1.1s;--vn-continue-delay:.9s;background:#080a0e33;border-radius:6px;padding:7px 12px;transition:opacity .3s ease-out;position:absolute;bottom:max(22px,4%);left:50%;transform:translate(-50%)}.vn-stage-continue:after{content:\"\";border-inline:7px solid #0000;border-top:7px solid #f4efe5;margin-left:-7px;position:absolute;top:calc(100% + 2px);left:50%}.vn-stage-continue[data-ready=true]{opacity:1;animation:vn-continue-pulse var(--vn-continue-cycle) ease-in-out var(--vn-continue-delay) infinite;transition-duration:.9s;transition-timing-function:ease-in-out}.vn-stage-continue[data-ready=true]:after{animation:vn-continue-bob var(--vn-continue-cycle) ease-in-out var(--vn-continue-delay) infinite}@keyframes vn-continue-pulse{0%,to{opacity:1;transform:scale(1)translate(-50%)}50%{opacity:.9;color:#fff;transform:scale(1)translate(-50%)}}@keyframes vn-continue-bob{0%,to{transform:translateY(0)}50%{transform:translateY(3px)}}.vn-stage-continue-compact{display:none}@container (width<=1000px){.vn-scene-corner-subtitle{display:none}}@container (width<=640px){:is(:is(.vn-player,.vn-editor-stage)[data-stage-layout=classic]:has(.vn-stage-heading) .vn-story-panel--narration[data-mode=standard][data-position=top],:is(.vn-player,.vn-editor-stage)[data-stage-layout=classic]:has(.vn-stage-heading) .vn-story-panel--line:not([data-mode=bubble])[data-position=top]){top:max(10.52%,28px)}.vn-stage-heading{letter-spacing:.06em;max-width:calc(100% - 120px);top:12px}.vn-scene-corner{max-width:30%;padding-left:8px}.vn-scene-corner-label{display:none}.vn-scene-corner-title{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.vn-stage-continue-full{display:none}.vn-stage-continue-compact{display:inline}.vn-stage-continue{max-width:30%}}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-scene-corner{top:max(12px,1.675cqw);bottom:auto}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-toolbar{top:1.4cqw;bottom:auto}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-heading{max-width:28%;top:auto;bottom:max(16px,1.255cqw);left:max(12px,1.435cqw)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-progress{top:auto;bottom:max(16px,1.155cqw);right:max(12px,1.335cqw)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-progress-details{top:auto;bottom:calc(100% + 8px)}@container (width<=640px){:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-heading{bottom:12px}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-story-panel--narration[data-mode=standard][data-position=top]{top:max(10.52%,44px)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-story-panel--line:not([data-mode=bubble])[data-position=top]{top:max(8.18%,44px)}}@media (prefers-reduced-motion:reduce){.vn-stage-progress-track>span,.vn-stage-continue,.vn-stage-continue[data-ready=true],.vn-stage-continue[data-ready=true]:after{transition:none;animation:none}}.vn-scene-opening{pointer-events:none;z-index:25;place-items:center;display:grid;position:absolute;inset:0}.vn-scene-opening-blur,.vn-scene-opening-shade{position:absolute;inset:0}.vn-scene-opening-blur{-webkit-backdrop-filter:blur(.35885cqw);transition:backdrop-filter var(--vn-scene-enter) ease-in-out}.vn-scene-opening-shade{opacity:1;transition:opacity var(--vn-scene-enter) ease-in-out var(--vn-scene-shade-delay);background:#0000004d}.vn-scene-opening-copy{text-align:center;color:#fff;opacity:1;filter:blur();width:100%;max-width:38cqw;max-height:80%;transition:opacity var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay), transform var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay), filter var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay);justify-items:center;margin-top:-5cqh;display:grid;position:relative;overflow-y:auto;transform:translateY(0)}.vn-scene-opening-label{font:600 max(10px, .7177cqw)/1.25 var(--font-story-sans);letter-spacing:.34em;text-transform:uppercase;color:#eec68b;opacity:.8;margin-bottom:2.25cqw;font-weight:600}.vn-scene-opening-title{overflow-wrap:anywhere;width:100%;font:max(28px, 5.0239cqw)/.95238 var(--vn-scene-title-font,var(--font-serif));padding-bottom:.14em}.vn-scene-opening-subtitle{font:max(14px, .95694cqw)/1.1875 var(--font-story-sans);color:#fff9;margin-top:1.9139cqw}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-blur{-webkit-backdrop-filter:blur()}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-shade{opacity:0}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-copy{opacity:0;filter:blur(1.5px);transform:translateY(3px)}.vn-scene-opening[data-shown=false]>*,.vn-scene-opening.vn-scene-opening-leave-active>*{transition-duration:var(--vn-scene-exit);transition-delay:0s}.vn-scene-opening[data-instant=true]>*{transition:none}.vn-scene-corner-enter-active{transition:opacity .7s ease-in-out}.vn-scene-corner-leave-active{transition:opacity .3s ease-out}.vn-scene-corner-enter-from,.vn-scene-corner-leave-to{opacity:0}.vn-question{z-index:35;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);background:#0006;place-items:center;padding:4cqw;animation:.5s ease-in-out both vn-question-shade-in;display:grid;position:absolute;inset:0;overflow-y:auto}@keyframes vn-question-shade-in{0%{background-color:#0000}to{background-color:#0009}}.vn-question[data-static=true]{animation:none}.vn-question-prompt,.vn-question-answer{animation:vn-question-rise var(--vn-choice-in,.4s) ease-out calc(var(--vn-choice-in-delay,.2s) + var(--vn-choice-in-step,.1s) * var(--i,0)) both}@keyframes vn-question-rise{0%{opacity:0;transform:translateY(1.2cqw)}}.vn-question[data-static=true] .vn-question-prompt,.vn-question[data-static=true] .vn-question-answer{animation:none}.vn-question-leave-active,.vn-question[data-leaving=true]{pointer-events:none;animation:vn-question-shade-out var(--vn-choice-fade,.25s) ease-in-out var(--vn-choice-hold,.15s) both}.vn-question-leave-active .vn-question-prompt,.vn-question-leave-active .vn-question-answer:not([data-chosen=true]),.vn-question[data-leaving=true] .vn-question-prompt,.vn-question[data-leaving=true] .vn-question-answer:not([data-chosen=true]){animation:vn-question-content-out var(--vn-choice-others,.2s) ease-in-out both}.vn-question-leave-active .vn-question-answer[data-chosen=true],.vn-question[data-leaving=true] .vn-question-answer[data-chosen=true]{animation:vn-answer-grow calc(var(--vn-choice-hold,.15s) + var(--vn-choice-fade,.25s)) ease-out both, vn-question-content-out var(--vn-choice-fade,.25s) ease-in var(--vn-choice-hold,.15s) both}@keyframes vn-question-shade-out{0%{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);background-color:#0009}to{-webkit-backdrop-filter:blur();backdrop-filter:blur();background-color:#0000}}@keyframes vn-question-content-out{to{opacity:0}}@keyframes vn-answer-grow{to{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){.vn-question,.vn-question *,.vn-question-leave-active,.vn-question-leave-active *{animation:none}}.vn-question-content{justify-items:center;row-gap:4cqw;width:100%;margin:auto;display:grid;transform:translateY(-2cqh)}.vn-question-prompt{color:#fff3e2;text-align:center;max-width:85%;font:max(18px, 2.8708cqw)/1.2 var(--font-serif);text-shadow:0 2px 8px #000000b3;overflow-wrap:anywhere}.vn-question-answers{gap:max(10px,1.4354cqw);width:min(80cqw,max(240px,21.5311cqw));display:grid}.vn-question-answer{color:#fff3e2cc;min-height:max(40px,4.3062cqw);font:max(18px, 1.4746cqw)/1.2 var(--font-serif);white-space:normal;overflow-wrap:anywhere;text-align:center;background:linear-gradient(#49576acc,#2f3a4acc);border:max(1px,.1196cqw) solid #7e91a980;border-radius:max(5px,.7177cqw);justify-content:center;padding:max(8px,.8373cqw) max(12px,1.1962cqw);transition:background .18s,border-color .18s,color .18s,box-shadow .18s;box-shadow:0 4px 12px #0003,inset 0 1px #ffffff0f}@media (hover:hover){.vn-question-answer:hover{color:#fff3e2;background:linear-gradient(#6b7787e6,#404d60e6);border-color:#eee3d0b3}}.vn-question-answer:focus-visible{outline-offset:3px;outline:2px solid #eec68b}.vn-question-answer:active{color:#eec68b;background:linear-gradient(#8c8b86f2,#444f60f2);border-color:#c7ae87}.vn-question-answer.vn-answer-secondary{color:#fff3e2a6;background:linear-gradient(#1a202ad9,#0d1118d9);border-color:#7e91a980;box-shadow:0 4px 12px #0003,inset 0 1px #ffffff0f}@media (hover:hover){.vn-question-answer.vn-answer-secondary:hover{color:#fff3e2e6;background:linear-gradient(#28313fe6,#151b25e6);border-color:#eee3d0b3}}.vn-question-answer.vn-answer-secondary:active{color:#eec68b;background:linear-gradient(#343a42f2,#151b25f2);border-color:#c7ae87}@media (prefers-reduced-motion:reduce){.vn-scene-opening>*,.vn-scene-corner-enter-active,.vn-scene-corner-leave-active,.vn-question-answer{transition:none}}:is(.vn-player,.vn-editor-stage)[data-text-style=default]{--vn-scene-title-font:var(--font-story-sans)}.vn-title-screen{z-index:50;color:#fff;text-align:center;background:radial-gradient(at 50% 30%,#1b2938,#080a0d 75%);place-items:safe center;padding:max(20px,3cqw);display:grid;position:absolute;inset:0;overflow-y:auto}.vn-title-art,.vn-title-treatment{pointer-events:none;width:100%;height:100%;position:absolute;inset:0}.vn-title-art{object-fit:cover;filter:blur(6px);opacity:.6}.vn-title-treatment{background:linear-gradient(#080a0d4d,#080a0dcc)}.vn-title-content{justify-items:center;gap:max(18px,1.9139cqw);width:100%;max-width:70cqw;margin:auto;padding-block:1cqw;display:grid;position:relative}.vn-title-episode{font:600 max(12px, 1cqw)/1.3 var(--font-story-sans);letter-spacing:.3em;text-transform:uppercase;color:#eec68bcc}.vn-title-heading{max-width:100%;font:max(32px, 5.0239cqw)/1.08 var(--vn-scene-title-font,var(--font-serif));color:#ffffffe6;overflow-wrap:anywhere;font-weight:400}.vn-title-summary{max-width:54cqw;font:max(16px, 1.0766cqw)/1.6 var(--font-story-sans);color:#fff9}.vn-title-actions{flex-wrap:wrap;justify-content:center;gap:max(10px,.7177cqw);margin-top:.6cqw;display:flex}.vn-title-actions .vn-question-answer{min-width:max(100px,7.177cqw);min-height:max(36px,2.3923cqw);font:max(16px, 1.0766cqw)/1.2 var(--vn-scene-title-font,var(--font-serif));border-width:1px;border-radius:max(5px,.3589cqw);padding:max(8px,.4785cqw) max(20px,1.4354cqw)}.vn-title-languages{font-family:var(--font-story-sans);border:1px solid #7e91a940;border-radius:max(5px,.3589cqw);flex-wrap:wrap;justify-content:center;gap:0;display:flex;overflow:hidden}.vn-title-languages button{box-shadow:none;border-radius:0}.vn-title-languages .is-active{color:#fff;background-color:#7e91a966}.vn-title-warnings{text-align:left;max-width:54cqw;font:12px/1.5 var(--font-sans);color:var(--ui-text-muted)}@container (width<=640px){.vn-title-screen{place-items:start center}.vn-title-content,.vn-title-summary,.vn-title-warnings{max-width:100%}}.vn-end-screen{z-index:30;color:#fff;text-align:center;background:radial-gradient(at 50% 40%,#1b2938d1,#080a0df0 75%);place-items:safe center;padding:max(20px,3cqw);animation:.7s ease-out both vn-end-fade;display:grid;position:absolute;inset:0;overflow-y:auto}.vn-end-content{justify-items:center;gap:max(16px,1.6cqw);width:100%;max-width:60cqw;margin:auto;display:grid}.vn-end-heading{font:max(40px, 6cqw)/1.05 var(--vn-scene-title-font,var(--font-serif));letter-spacing:.02em;color:#ffffffeb;font-weight:400;animation:.8s ease-out .2s both vn-end-rise}.vn-end-rule{background:linear-gradient(90deg,#0000,#eec68b,#0000);width:max(48px,5cqw);height:1px;animation:.8s ease-out .35s both vn-end-rise;display:block}.vn-end-flags{width:min(30rem,100%);font:12px/1.5 var(--font-sans);text-align:left;color:#ffffff8c;background:#ffffff08;border:1px solid #7e91a938;border-radius:6px;margin-top:.6cqw;padding:8px 12px;animation:.8s ease-out .75s both vn-end-rise}.vn-end-flags summary{cursor:pointer;opacity:.8;letter-spacing:.12em;text-transform:uppercase}.vn-end-flags summary:hover{opacity:1}.vn-end-flags[open] summary{margin-bottom:8px}.vn-end-flags h3{color:#ffffffb3;margin:10px 0 2px;font-weight:600}.vn-end-flags h3+p{color:#fff6;margin-bottom:6px;font-size:11px}.vn-end-exit{font-family:var(--font-mono);color:#fffc;gap:16px;display:flex}.vn-end-exit span:first-child{color:#ffffff80}.vn-end-flags dl{max-height:10rem;font-family:var(--font-mono);grid-template-columns:auto 1fr;gap:2px 16px;display:grid;overflow:auto}.vn-end-flags dd{color:#ffffffd9}@keyframes vn-end-fade{0%{opacity:0}}@keyframes vn-end-rise{0%{opacity:0;transform:translateY(1cqw)}}@media (prefers-reduced-motion:reduce){.vn-end-screen,.vn-end-heading,.vn-end-rule,.vn-end-screen .vn-title-actions,.vn-end-flags{animation:none}}:host{--ui-primary:var(--color-brand-400);--ui-bg:#0e1219;--ui-bg-muted:#121821;--ui-bg-elevated:#151b25;--ui-bg-accented:#1e2633;--ui-border:#232b39;--ui-border-accented:#3b4659;--ui-text-dimmed:#6b7585;--ui-text-muted:#98a2b3;--ui-text-toned:#bcc3cf;--ui-text:#e6e1d6;--ui-text-highlighted:#f4efe5;--ui-text-inverted:#0e1219;--ui-error:#e07a7e;--ui-success:#76c99f;--ui-warning:#e2b86b;--ui-info:#7aa7e0;--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;display:block}.vn-ui-icon{flex:none;width:1.25rem;height:1.25rem}:host{pointer-events:auto}:host([data-gameplay=active]){pointer-events:none}:host([data-gameplay=active]) :is(.vn-story-panel,.vn-toolbar){pointer-events:auto}@property --tw-translate-x{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-y{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-z{syntax:\"*\";inherits:false;initial-value:0}@property --tw-rotate-x{syntax:\"*\";inherits:false}@property --tw-rotate-y{syntax:\"*\";inherits:false}@property --tw-rotate-z{syntax:\"*\";inherits:false}@property --tw-skew-x{syntax:\"*\";inherits:false}@property --tw-skew-y{syntax:\"*\";inherits:false}@property --tw-border-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-leading{syntax:\"*\";inherits:false}@property --tw-font-weight{syntax:\"*\";inherits:false}@property --tw-tracking{syntax:\"*\";inherits:false}@property --tw-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:\"*\";inherits:false}@property --tw-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:\"*\";inherits:false}@property --tw-inset-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:\"*\";inherits:false}@property --tw-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:\"*\";inherits:false}@property --tw-inset-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:\"*\";inherits:false}@property --tw-ring-offset-width{syntax:\"<length>\";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:\"*\";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-outline-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-blur{syntax:\"*\";inherits:false}@property --tw-brightness{syntax:\"*\";inherits:false}@property --tw-contrast{syntax:\"*\";inherits:false}@property --tw-grayscale{syntax:\"*\";inherits:false}@property --tw-hue-rotate{syntax:\"*\";inherits:false}@property --tw-invert{syntax:\"*\";inherits:false}@property --tw-opacity{syntax:\"*\";inherits:false}@property --tw-saturate{syntax:\"*\";inherits:false}@property --tw-sepia{syntax:\"*\";inherits:false}@property --tw-drop-shadow{syntax:\"*\";inherits:false}@property --tw-drop-shadow-color{syntax:\"*\";inherits:false}@property --tw-drop-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:\"*\";inherits:false}@property --tw-duration{syntax:\"*\";inherits:false}@property --tw-ease{syntax:\"*\";inherits:false}", ZD = /* @__PURE__ */ Yo({
-	...GD,
+var eO = 1, tO = "/*! tailwindcss v4.3.3 | MIT License | https://tailwindcss.com */\n@layer properties{@supports (((-webkit-hyphens:none)) and (not (margin-trim:inline))) or ((-moz-orient:inline) and (not (color:rgb(from red r g b)))){*,:before,:after,::backdrop{--tw-translate-x:0;--tw-translate-y:0;--tw-translate-z:0;--tw-rotate-x:initial;--tw-rotate-y:initial;--tw-rotate-z:initial;--tw-skew-x:initial;--tw-skew-y:initial;--tw-border-style:solid;--tw-leading:initial;--tw-font-weight:initial;--tw-tracking:initial;--tw-shadow:0 0 #0000;--tw-shadow-color:initial;--tw-shadow-alpha:100%;--tw-inset-shadow:0 0 #0000;--tw-inset-shadow-color:initial;--tw-inset-shadow-alpha:100%;--tw-ring-color:initial;--tw-ring-shadow:0 0 #0000;--tw-inset-ring-color:initial;--tw-inset-ring-shadow:0 0 #0000;--tw-ring-inset:initial;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-offset-shadow:0 0 #0000;--tw-outline-style:solid;--tw-blur:initial;--tw-brightness:initial;--tw-contrast:initial;--tw-grayscale:initial;--tw-hue-rotate:initial;--tw-invert:initial;--tw-opacity:initial;--tw-saturate:initial;--tw-sepia:initial;--tw-drop-shadow:initial;--tw-drop-shadow-color:initial;--tw-drop-shadow-alpha:100%;--tw-drop-shadow-size:initial;--tw-duration:initial;--tw-ease:initial}}}@layer theme{:root,:host{--font-sans:system-ui, -apple-system, \"Segoe UI\", \"PingFang SC\", \"Microsoft YaHei\", \"Noto Sans SC\", sans-serif;--font-serif:Georgia, \"Times New Roman\", \"Songti SC\", \"Noto Serif SC\", \"Source Han Serif SC\", serif;--font-mono:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace;--color-red-600:oklch(57.7% .245 27.325);--color-amber-300:oklch(87.9% .169 91.605);--color-black:#000;--color-white:#fff;--spacing:.25rem;--text-xs:.75rem;--text-xs--line-height:calc(1 / .75);--text-sm:.875rem;--text-sm--line-height:calc(1.25 / .875);--font-weight-medium:500;--font-weight-semibold:600;--font-weight-bold:700;--tracking-wide:.025em;--leading-tight:1.25;--radius-sm:.25rem;--radius-md:.375rem;--ease-out:cubic-bezier(0, 0, .2, 1);--ease-in-out:cubic-bezier(.4, 0, .2, 1);--aspect-video:16 / 9;--default-transition-duration:.15s;--default-transition-timing-function:cubic-bezier(.4, 0, .2, 1);--default-font-family:var(--font-sans);--default-mono-font-family:var(--font-mono);--color-tone-dawn:#ffaa7833;--color-tone-day:#fff0;--color-tone-dusk:#ff6e3c3d;--color-tone-night:#0a145080;--color-tone-storm:#0f192d8c;--color-tone-dream:#a078ff42;--color-fx-rain:#c8dcff8c;--color-fx-snow:#ffffffd9;--color-fx-ember:#ff963ce6;--color-fx-flash-white:#fff;--color-fx-flash-red:#dc1e1e;--color-fx-black:#000;--color-fx-glow:#ffe6ff80;--font-story-sans:Arial, sans-serif;--color-brand-400:#d9bc88;--color-brand-700:#8e6c3c}}@layer base{*,:after,:before,::backdrop{box-sizing:border-box;border:0 solid;margin:0;padding:0}::file-selector-button{box-sizing:border-box;border:0 solid;margin:0;padding:0}html,:host{-webkit-text-size-adjust:100%;tab-size:4;line-height:1.5;font-family:var(--default-font-family,-apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", \"Noto Sans\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\");font-feature-settings:var(--default-font-feature-settings,normal);font-variation-settings:var(--default-font-variation-settings,normal);-webkit-tap-highlight-color:transparent}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-family:var(--default-mono-font-family,ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace);font-feature-settings:var(--default-mono-font-feature-settings,normal);font-variation-settings:var(--default-mono-font-variation-settings,normal);font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}:-moz-focusring:where(:not(iframe)){outline:auto}progress{vertical-align:baseline}summary{display:list-item}ol,ul,menu{list-style:none}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}button,input,select,optgroup,textarea{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}::file-selector-button{font:inherit;font-feature-settings:inherit;font-variation-settings:inherit;letter-spacing:inherit;color:inherit;opacity:1;background-color:#0000;border-radius:0}:where(select:is([multiple],[size])) optgroup{font-weight:bolder}:where(select:is([multiple],[size])) optgroup option{padding-inline-start:20px}::file-selector-button{margin-inline-end:4px}::placeholder{opacity:1}@supports (not ((-webkit-appearance:-apple-pay-button))) or (contain-intrinsic-size:1px){::placeholder{color:currentColor}@supports (color:color-mix(in lab, red, red)){::placeholder{color:color-mix(in oklab, currentcolor 50%, transparent)}}}textarea{resize:vertical}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-date-and-time-value{min-height:1lh;text-align:inherit}::-webkit-datetime-edit{display:inline-flex}::-webkit-datetime-edit-fields-wrapper{padding:0}::-webkit-datetime-edit{padding-block:0}::-webkit-datetime-edit-year-field{padding-block:0}::-webkit-datetime-edit-month-field{padding-block:0}::-webkit-datetime-edit-day-field{padding-block:0}::-webkit-datetime-edit-hour-field{padding-block:0}::-webkit-datetime-edit-minute-field{padding-block:0}::-webkit-datetime-edit-second-field{padding-block:0}::-webkit-datetime-edit-millisecond-field{padding-block:0}::-webkit-datetime-edit-meridiem-field{padding-block:0}::-webkit-calendar-picker-indicator{line-height:1}:-moz-ui-invalid{box-shadow:none}button,input:where([type=button],[type=reset],[type=submit]){appearance:button}::file-selector-button{appearance:button}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[hidden]:where(:not([hidden=until-found])){display:none!important}}@layer components{@keyframes vn-shake{0%,to{translate:0;rotate:0deg}15%{translate:calc(var(--vn-i-shake,.7) * -4%) calc(var(--vn-i-shake,.7) * 1.6%);rotate:calc(var(--vn-i-shake,.7) * -.5deg)}35%{translate:calc(var(--vn-i-shake,.7) * 3.6%) calc(var(--vn-i-shake,.7) * -2%);rotate:calc(var(--vn-i-shake,.7) * .4deg)}55%{translate:calc(var(--vn-i-shake,.7) * -2.8%) calc(var(--vn-i-shake,.7) * 2.4%);rotate:calc(var(--vn-i-shake,.7) * -.3deg)}75%{translate:calc(var(--vn-i-shake,.7) * 2%) calc(var(--vn-i-shake,.7) * -1.2%);rotate:calc(var(--vn-i-shake,.7) * .2deg)}}@keyframes vn-zoom{0%,to{scale:1}50%{scale:calc(1 + var(--vn-i-zoom,.6) * .2)}}@keyframes vn-blur{0%,to{filter:blur()}40%,60%{filter:blur(calc(var(--vn-i-blur,.6) * 16px))}}@keyframes vn-glitch{0%,to{filter:none;translate:0}15%{translate:calc(var(--vn-i-glitch,.7) * 3%) 0;filter:hue-rotate(90deg)saturate(2)}30%{translate:calc(var(--vn-i-glitch,.7) * -3.4%) 0;filter:hue-rotate(-60deg)contrast(1.4)}45%{translate:0 calc(var(--vn-i-glitch,.7) * 1.4%);filter:invert(.2)saturate(3)}60%{translate:calc(var(--vn-i-glitch,.7) * 2.4%) 0;filter:hue-rotate(180deg)}80%{translate:calc(var(--vn-i-glitch,.7) * -1.2%) 0;filter:none}}.vn-fx{pointer-events:none;position:absolute;inset:0;overflow:hidden}.vn-fx:before{content:\"\";position:absolute;inset:-10%}@keyframes vn-flash{0%{opacity:0}12%{opacity:var(--vn-i,.9)}to{opacity:0}}@keyframes vn-fade-black{0%{opacity:0}40%,60%{opacity:1}to{opacity:0}}@keyframes vn-ambient{0%{opacity:0}10%,85%{opacity:var(--vn-i,.8)}to{opacity:0}}.vn-fx-flash-white{background:var(--color-fx-flash-white);animation:vn-flash var(--vn-ms,.4s) ease-out forwards}.vn-fx-flash-red{background:var(--color-fx-flash-red);animation:vn-flash var(--vn-ms,.5s) ease-out forwards}.vn-fx-fade-black{background:var(--color-fx-black);animation:vn-fade-black var(--vn-ms,2s) ease-in-out forwards}@keyframes vn-rain-fall{to{background-position:calc(-42px * var(--vn-size,1)) calc(180px * var(--vn-size,1)), calc(-71px * var(--vn-size,1)) calc(260px * var(--vn-size,1))}}.vn-fx-rain{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-rain:before{background-image:linear-gradient(105deg, transparent 47%, var(--color-fx-rain) 50%, transparent 53%), linear-gradient(105deg, transparent 48%, var(--color-fx-rain) 50%, transparent 52%);background-size:calc(42px * var(--vn-size,1)) calc(90px * var(--vn-size,1)), calc(71px * var(--vn-size,1)) calc(130px * var(--vn-size,1));animation:vn-rain-fall calc(.45s / var(--vn-speed,1)) linear infinite}@keyframes vn-snow-fall{to{background-position:calc(90px * var(--vn-size,1)) calc(440px * var(--vn-size,1)), calc(-160px * var(--vn-size,1)) calc(570px * var(--vn-size,1))}}.vn-fx-snow{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-snow:before{background-image:radial-gradient(circle, var(--color-fx-snow) 0 calc(2px * var(--vn-size,1)), transparent calc(3px * var(--vn-size,1))), radial-gradient(circle, var(--color-fx-snow) 0 calc(3px * var(--vn-size,1)), transparent calc(4px * var(--vn-size,1)));background-size:calc(90px * var(--vn-size,1)) calc(110px * var(--vn-size,1)), calc(160px * var(--vn-size,1)) calc(190px * var(--vn-size,1));animation:vn-snow-fall calc(6s / var(--vn-speed,1)) linear infinite}@keyframes vn-ember-rise{to{background-position:calc(120px * var(--vn-size,1)) calc(-420px * var(--vn-size,1)), calc(-230px * var(--vn-size,1)) calc(-690px * var(--vn-size,1))}}.vn-fx-embers{animation:vn-ambient var(--vn-ms,5s) linear forwards}.vn-fx-embers:before{background-image:radial-gradient(circle, var(--color-fx-ember) 0 calc(2px * var(--vn-size,1)), transparent calc(4px * var(--vn-size,1))), radial-gradient(circle, var(--color-fx-ember) 0 calc(3px * var(--vn-size,1)), transparent calc(5px * var(--vn-size,1)));background-size:calc(120px * var(--vn-size,1)) calc(140px * var(--vn-size,1)), calc(230px * var(--vn-size,1)) calc(230px * var(--vn-size,1));animation:vn-ember-rise calc(5s / var(--vn-speed,1)) linear infinite}@keyframes vn-glow-pulse{50%{opacity:.7;transform:scale(1.12)}}.vn-fx-dream-glow{animation:vn-ambient var(--vn-ms,4s) ease-in-out forwards;mix-blend-mode:screen}.vn-fx-dream-glow:before{background:radial-gradient(circle at 50% 40%, var(--color-fx-glow), transparent calc(65% * var(--vn-size,1)));animation:vn-glow-pulse calc(2.4s / var(--vn-speed,1)) ease-in-out infinite}@keyframes vn-film-flicker{0%,to{opacity:.55}30%{opacity:.85}60%{opacity:.4}}.vn-fx-old-film{animation:vn-ambient var(--vn-ms,6s) linear forwards;-webkit-backdrop-filter:sepia(.8)contrast(1.1)brightness(.95);backdrop-filter:sepia(.8)contrast(1.1)brightness(.95)}.vn-fx-old-film:before{animation:vn-film-flicker calc(.18s / var(--vn-speed,1)) steps(2) infinite;background:repeating-linear-gradient(0deg,#0000001a 0 1px,#0000 1px 4px)}.vn-fx-vignette{animation:vn-ambient var(--vn-ms,3s) linear forwards;background:radial-gradient(ellipse at center, transparent max(0%, calc(70% - var(--vn-size,1) * 25%)), #000000d9 100%)}@keyframes vn-text-shake{25%{translate:1px -1px}50%{translate:-1px 1px}75%{translate:1px 1px}}@keyframes vn-text-wave{50%{translate:0 -.25em}}.vn-text-shake{animation:.12s linear infinite vn-text-shake;display:inline-block}.vn-text-wave{animation:1s ease-in-out infinite vn-text-wave;animation-delay:calc(var(--vn-char,0) * 70ms);display:inline-block}.vn-text-whisper{opacity:.75;font-size:max(18px,.82em);font-style:italic}.vn-text-loud{font-size:1.25em;font-weight:700}.vn-ui-button{color:var(--ui-text);background:var(--ui-bg-accented);border-radius:.375rem;justify-content:center;align-items:center;gap:.375rem;padding:.375rem .625rem;font-size:.875rem;font-weight:500;line-height:1.25;display:inline-flex}@supports (color:color-mix(in lab, red, red)){.vn-ui-button{background:color-mix(in srgb, var(--ui-bg-accented) 60%, transparent)}}.vn-ui-button{box-shadow:inset 0 0 0 1px var(--ui-border-accented);cursor:pointer}.vn-ui-button:hover{background:var(--ui-bg-accented)}.vn-ui-button:focus-visible{outline:2px solid var(--ui-primary);outline-offset:2px}.vn-ui-button[data-icon-only]{padding:.375rem}.vn-ui-button[data-size=lg]{padding:.625rem 1.25rem;font-size:1rem}.vn-ui-button[data-color=primary][data-variant=solid],.vn-ui-button:not([data-color]):not([data-variant]),.vn-ui-button[data-color=primary]:not([data-variant=soft]):not([data-variant=subtle]){color:var(--ui-text-inverted);background:var(--ui-primary);box-shadow:none}.vn-ui-button[data-color=primary][data-variant=soft]{color:var(--ui-primary);background:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.vn-ui-button[data-color=primary][data-variant=soft]{background:color-mix(in srgb, var(--ui-primary) 15%, transparent)}}.vn-ui-button[data-color=primary][data-variant=soft]{box-shadow:none}}@layer utilities{.\\@container,.\\[container-type\\:inline-size\\]{container-type:inline-size}.\\[container-type\\:size\\]{container-type:size}.pointer-events-auto{pointer-events:auto}.pointer-events-none{pointer-events:none}.collapse{visibility:collapse}.invisible{visibility:hidden}.visible{visibility:visible}.sr-only{clip-path:inset(50%);white-space:nowrap;border-width:0;width:1px;height:1px;margin:-1px;padding:0;position:absolute;overflow:hidden}.absolute{position:absolute}.fixed{position:fixed}.relative{position:relative}.static{position:static}.inset-0{inset:0}.inset-y-0{inset-block:0}.top-0{top:0}.top-\\[1\\.2cqw\\]{top:1.2cqw}.top-\\[2\\%\\]{top:2%}.top-\\[2cqw\\]{top:2cqw}.top-\\[3cqw\\]{top:3cqw}.right-0{right:0}.right-\\[1\\.4cqw\\]{right:1.4cqw}.right-\\[4\\%\\]{right:4%}.bottom-\\[1\\.4cqw\\]{bottom:1.4cqw}.bottom-\\[max\\(16px\\,2\\.5\\%\\)\\]{bottom:max(16px,2.5%)}.bottom-full{bottom:100%}.left-0{left:0}.left-1\\/2{left:50%}.left-\\[4\\%\\]{left:4%}.z-10{z-index:10}.z-20{z-index:20}.z-30{z-index:30}.z-40{z-index:40}.z-50{z-index:50}.z-\\[15\\]{z-index:15}.z-\\[36\\]{z-index:36}.z-\\[60\\]{z-index:60}.col-start-1{grid-column-start:1}.row-start-1{grid-row-start:1}.container{width:100%}@media (width>=40rem){.container{max-width:40rem}}@media (width>=48rem){.container{max-width:48rem}}@media (width>=64rem){.container{max-width:64rem}}@media (width>=80rem){.container{max-width:80rem}}@media (width>=96rem){.container{max-width:96rem}}.mt-1{margin-top:var(--spacing)}.mr-2{margin-right:calc(var(--spacing) * 2)}.mb-1{margin-bottom:var(--spacing)}.line-clamp-3{-webkit-line-clamp:3;-webkit-box-orient:vertical;display:-webkit-box;overflow:hidden}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.inline{display:inline}.inline-flex{display:inline-flex}.table{display:table}.aspect-square{aspect-ratio:1}.aspect-video{aspect-ratio:var(--aspect-video)}.size-3\\.5{width:calc(var(--spacing) * 3.5);height:calc(var(--spacing) * 3.5)}.size-8{width:calc(var(--spacing) * 8);height:calc(var(--spacing) * 8)}.size-\\[1\\.6cqw\\]{width:1.6cqw;height:1.6cqw}.size-\\[2\\.2cqw\\]{width:2.2cqw;height:2.2cqw}.size-\\[2\\.4cqw\\]{width:2.4cqw;height:2.4cqw}.size-\\[3\\.2cqw\\]{width:3.2cqw;height:3.2cqw}.size-\\[65\\%\\]{width:65%;height:65%}.size-full{width:100%;height:100%}.h-0\\.5{height:calc(var(--spacing) * .5)}.h-auto{height:auto}.h-dvh{height:100dvh}.h-full{height:100%}.max-h-\\[60vh\\]{max-height:60vh}.max-h-none{max-height:none}.min-h-2\\.5{min-height:calc(var(--spacing) * 2.5)}.min-h-3{min-height:calc(var(--spacing) * 3)}.min-h-4{min-height:calc(var(--spacing) * 4)}.min-h-6{min-height:calc(var(--spacing) * 6)}.min-h-screen{min-height:100vh}.w-1\\/3{width:33.3333%}.w-40{width:calc(var(--spacing) * 40)}.w-\\[10\\%\\]{width:10%}.w-\\[min\\(34rem\\,90\\%\\)\\]{width:min(34rem,90%)}.w-\\[min\\(100vw\\,calc\\(100dvh\\*16\\/9\\)\\)\\]{width:min(100vw,177.778dvh)}.w-auto{width:auto}.w-full{width:100%}.max-w-\\[calc\\(100\\%-24px\\)\\]{max-width:calc(100% - 24px)}.max-w-none{max-width:none}.min-w-0{min-width:0}.min-w-2\\.5{min-width:calc(var(--spacing) * 2.5)}.min-w-3{min-width:calc(var(--spacing) * 3)}.min-w-4{min-width:calc(var(--spacing) * 4)}.min-w-full{min-width:100%}.shrink{flex-shrink:1}.shrink-0{flex-shrink:0}.grow{flex-grow:1}.origin-top-left{transform-origin:0 0}.-translate-x-1\\/2{--tw-translate-x:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.-translate-y-1\\/2{--tw-translate-y:calc(calc(1 / 2 * 100%) * -1);translate:var(--tw-translate-x) var(--tw-translate-y)}.transform{transform:var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,)}.cursor-grab{cursor:grab}.cursor-move{cursor:move}.cursor-nesw-resize{cursor:nesw-resize}.cursor-ns-resize{cursor:ns-resize}.cursor-nwse-resize{cursor:nwse-resize}.cursor-pointer{cursor:pointer}.touch-none{touch-action:none}.resize{resize:both}.grid-cols-\\[auto_1fr\\]{grid-template-columns:auto 1fr}.grid-rows-\\[100\\%\\]{grid-template-rows:100%}.flex-wrap{flex-wrap:wrap}.place-content-center{place-content:center}.place-items-center{place-items:center}.items-center{align-items:center}.items-start{align-items:flex-start}.justify-between{justify-content:space-between}.justify-center{justify-content:center}.justify-end{justify-content:flex-end}.gap-1{gap:var(--spacing)}.gap-1\\.5{gap:calc(var(--spacing) * 1.5)}.gap-2{gap:calc(var(--spacing) * 2)}.gap-3{gap:calc(var(--spacing) * 3)}.gap-4{gap:calc(var(--spacing) * 4)}.gap-\\[0\\.6cqw\\]{gap:.6cqw}.gap-\\[1\\.4cqw\\]{gap:1.4cqw}.gap-\\[1cqw\\]{gap:1cqw}.gap-px{gap:1px}.gap-x-6{column-gap:calc(var(--spacing) * 6)}.gap-y-1{row-gap:var(--spacing)}.self-end{align-self:flex-end}.justify-self-center{justify-self:center}.truncate{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.rounded{border-radius:.25rem}.rounded-\\[1cqw\\]{border-radius:1cqw}.rounded-full{border-radius:2147483647px}.rounded-md{border-radius:var(--radius-md)}.rounded-sm{border-radius:var(--radius-sm)}.border{border-style:var(--tw-border-style);border-width:1px}.border-2{border-style:var(--tw-border-style);border-width:2px}.border-x{border-inline-style:var(--tw-border-style);border-inline-width:1px}.border-dashed{--tw-border-style:dashed;border-style:dashed}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-border-accented\\)_40\\%\\,white\\)\\]{border-color:var(--ui-border-accented)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-border-accented\\)_40\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-border-accented) 40%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-error\\)_55\\%\\,white\\)\\]{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-error\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-error) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-info\\)_55\\%\\,white\\)\\]{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-info\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-info) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-success\\)_55\\%\\,white\\)\\]{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-success\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-success) 55%,white)}}.border-\\[color-mix\\(in_oklab\\,var\\(--ui-warning\\)_55\\%\\,white\\)\\]{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-\\[color-mix\\(in_oklab\\,var\\(--ui-warning\\)_55\\%\\,white\\)\\]{border-color:color-mix(in oklab,var(--ui-warning) 55%,white)}}.border-accented{border-color:var(--ui-border-accented);border-color:var(--ui-bg-accented)}.border-amber-300{border-color:var(--color-amber-300)}.border-default{border-color:var(--ui-border)}.border-error\\/40{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-error\\/40{border-color:color-mix(in oklab, var(--ui-error) 40%, transparent)}}.border-error\\/60{border-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.border-error\\/60{border-color:color-mix(in oklab, var(--ui-error) 60%, transparent)}}.border-info\\/40{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-info\\/40{border-color:color-mix(in oklab, var(--ui-info) 40%, transparent)}}.border-info\\/60{border-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.border-info\\/60{border-color:color-mix(in oklab, var(--ui-info) 60%, transparent)}}.border-primary{border-color:var(--ui-primary)}.border-success\\/40{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-success\\/40{border-color:color-mix(in oklab, var(--ui-success) 40%, transparent)}}.border-success\\/60{border-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.border-success\\/60{border-color:color-mix(in oklab, var(--ui-success) 60%, transparent)}}.border-warning\\/40{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-warning\\/40{border-color:color-mix(in oklab, var(--ui-warning) 40%, transparent)}}.border-warning\\/60{border-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.border-warning\\/60{border-color:color-mix(in oklab, var(--ui-warning) 60%, transparent)}}.border-white{border-color:var(--color-white)}.border-white\\/30{border-color:#ffffff4d}@supports (color:color-mix(in lab, red, red)){.border-white\\/30{border-color:color-mix(in oklab, var(--color-white) 30%, transparent)}}.border-white\\/40{border-color:#fff6}@supports (color:color-mix(in lab, red, red)){.border-white\\/40{border-color:color-mix(in oklab, var(--color-white) 40%, transparent)}}.bg-accented{background-color:var(--ui-bg-accented)}.bg-amber-300\\/10{background-color:#ffd2361a}@supports (color:color-mix(in lab, red, red)){.bg-amber-300\\/10{background-color:color-mix(in oklab, var(--color-amber-300) 10%, transparent)}}.bg-amber-300\\/25{background-color:#ffd23640}@supports (color:color-mix(in lab, red, red)){.bg-amber-300\\/25{background-color:color-mix(in oklab, var(--color-amber-300) 25%, transparent)}}.bg-black{background-color:var(--color-black)}.bg-black\\/50{background-color:#00000080}@supports (color:color-mix(in lab, red, red)){.bg-black\\/50{background-color:color-mix(in oklab, var(--color-black) 50%, transparent)}}.bg-black\\/60{background-color:#0009}@supports (color:color-mix(in lab, red, red)){.bg-black\\/60{background-color:color-mix(in oklab, var(--color-black) 60%, transparent)}}.bg-black\\/70{background-color:#000000b3}@supports (color:color-mix(in lab, red, red)){.bg-black\\/70{background-color:color-mix(in oklab, var(--color-black) 70%, transparent)}}.bg-default{background-color:var(--ui-bg)}.bg-elevated,.bg-elevated\\/40{background-color:var(--ui-bg-elevated)}@supports (color:color-mix(in lab, red, red)){.bg-elevated\\/40{background-color:color-mix(in oklab, var(--ui-bg-elevated) 40%, transparent)}}.bg-error,.bg-error\\/20{background-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.bg-error\\/20{background-color:color-mix(in oklab, var(--ui-error) 20%, transparent)}}.bg-error\\/45{background-color:var(--ui-error)}@supports (color:color-mix(in lab, red, red)){.bg-error\\/45{background-color:color-mix(in oklab, var(--ui-error) 45%, transparent)}}.bg-info\\/20{background-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.bg-info\\/20{background-color:color-mix(in oklab, var(--ui-info) 20%, transparent)}}.bg-info\\/45{background-color:var(--ui-info)}@supports (color:color-mix(in lab, red, red)){.bg-info\\/45{background-color:color-mix(in oklab, var(--ui-info) 45%, transparent)}}.bg-primary,.bg-primary\\/10{background-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.bg-primary\\/10{background-color:color-mix(in oklab, var(--ui-primary) 10%, transparent)}}.bg-primary\\/20{background-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.bg-primary\\/20{background-color:color-mix(in oklab, var(--ui-primary) 20%, transparent)}}.bg-red-600\\/90{background-color:#e40014e6}@supports (color:color-mix(in lab, red, red)){.bg-red-600\\/90{background-color:color-mix(in oklab, var(--color-red-600) 90%, transparent)}}.bg-success\\/10{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/10{background-color:color-mix(in oklab, var(--ui-success) 10%, transparent)}}.bg-success\\/20{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/20{background-color:color-mix(in oklab, var(--ui-success) 20%, transparent)}}.bg-success\\/45{background-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.bg-success\\/45{background-color:color-mix(in oklab, var(--ui-success) 45%, transparent)}}.bg-tone-dawn{background-color:var(--color-tone-dawn)}.bg-tone-day{background-color:var(--color-tone-day)}.bg-tone-dream{background-color:var(--color-tone-dream)}.bg-tone-dusk{background-color:var(--color-tone-dusk)}.bg-tone-night{background-color:var(--color-tone-night)}.bg-tone-storm{background-color:var(--color-tone-storm)}.bg-transparent{background-color:#0000}.bg-warning\\/20{background-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.bg-warning\\/20{background-color:color-mix(in oklab, var(--ui-warning) 20%, transparent)}}.bg-warning\\/45{background-color:var(--ui-warning)}@supports (color:color-mix(in lab, red, red)){.bg-warning\\/45{background-color:color-mix(in oklab, var(--ui-warning) 45%, transparent)}}.bg-white{background-color:var(--color-white)}.bg-white\\/10{background-color:#ffffff1a}@supports (color:color-mix(in lab, red, red)){.bg-white\\/10{background-color:color-mix(in oklab, var(--color-white) 10%, transparent)}}.bg-\\[repeating-linear-gradient\\(-45deg\\,var\\(--ui-bg-accented\\)_0_12px\\,var\\(--ui-border-accented\\)_12px_24px\\)\\]{background-image:repeating-linear-gradient(-45deg,var(--ui-bg-accented) 0 12px,var(--ui-border-accented) 12px 24px)}.bg-\\[repeating-linear-gradient\\(-45deg\\,var\\(--ui-bg-elevated\\)_0_12px\\,var\\(--ui-bg-accented\\)_12px_24px\\)\\]{background-image:repeating-linear-gradient(-45deg,var(--ui-bg-elevated) 0 12px,var(--ui-bg-accented) 12px 24px)}.object-contain{object-fit:contain}.object-cover{object-fit:cover}.p-0{padding:0}.p-1{padding:var(--spacing)}.p-2{padding:calc(var(--spacing) * 2)}.p-3{padding:calc(var(--spacing) * 3)}.p-6{padding:calc(var(--spacing) * 6)}.p-\\[1\\.5cqw\\]{padding:1.5cqw}.p-\\[2\\.4cqw\\]{padding:2.4cqw}.p-\\[3cqw\\]{padding:3cqw}.px-2{padding-inline:calc(var(--spacing) * 2)}.px-2\\.5{padding-inline:calc(var(--spacing) * 2.5)}.px-\\[1\\.4cqw\\]{padding-inline:1.4cqw}.px-\\[2cqw\\]{padding-inline:2cqw}.py-0\\.5{padding-block:calc(var(--spacing) * .5)}.py-1{padding-block:var(--spacing)}.py-\\[0\\.4cqw\\]{padding-block:.4cqw}.py-\\[0\\.6cqw\\]{padding-block:.6cqw}.pr-1{padding-right:var(--spacing)}.text-center{text-align:center}.text-left{text-align:left}.font-mono{font-family:var(--font-mono)}.font-sans{font-family:var(--font-sans)}.text-sm{font-size:var(--text-sm);line-height:var(--tw-leading,var(--text-sm--line-height))}.text-xs{font-size:var(--text-xs);line-height:var(--tw-leading,var(--text-xs--line-height))}.text-\\[1\\.4cqw\\]{font-size:1.4cqw}.text-\\[1\\.6cqw\\]{font-size:1.6cqw}.text-\\[1\\.8cqw\\]{font-size:1.8cqw}.text-\\[2\\.2cqw\\]{font-size:2.2cqw}.text-\\[2\\.6cqw\\]{font-size:2.6cqw}.leading-none{--tw-leading:1;line-height:1}.leading-tight{--tw-leading:var(--leading-tight);line-height:var(--leading-tight)}.font-bold{--tw-font-weight:var(--font-weight-bold);font-weight:var(--font-weight-bold)}.font-medium{--tw-font-weight:var(--font-weight-medium);font-weight:var(--font-weight-medium)}.font-semibold{--tw-font-weight:var(--font-weight-semibold);font-weight:var(--font-weight-semibold)}.tracking-wide{--tw-tracking:var(--tracking-wide);letter-spacing:var(--tracking-wide)}.break-words{overflow-wrap:break-word}.whitespace-nowrap{white-space:nowrap}.whitespace-pre{white-space:pre}.whitespace-pre-wrap{white-space:pre-wrap}.text-default{color:var(--ui-text)}.text-highlighted{color:var(--ui-text-highlighted)}.text-muted{color:var(--ui-text-muted)}.text-primary{color:var(--ui-primary)}.text-success{color:var(--ui-success)}.text-white{color:var(--color-white)}.text-white\\/70{color:#ffffffb3}@supports (color:color-mix(in lab, red, red)){.text-white\\/70{color:color-mix(in oklab, var(--color-white) 70%, transparent)}}.text-white\\/80{color:#fffc}@supports (color:color-mix(in lab, red, red)){.text-white\\/80{color:color-mix(in oklab, var(--color-white) 80%, transparent)}}.lowercase{text-transform:lowercase}.uppercase{text-transform:uppercase}.italic{font-style:italic}.opacity-75{opacity:.75}.opacity-80{opacity:.8}.opacity-100{opacity:1}.shadow{--tw-shadow:0 1px 3px 0 var(--tw-shadow-color,#0000001a), 0 1px 2px -1px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-\\[0_0_0_1px_rgb\\(0_0_0\\/0\\.45\\)\\]{--tw-shadow:0 0 0 1px var(--tw-shadow-color,#00000073);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px var(--tw-shadow-color,#0000001a), 0 4px 6px -4px var(--tw-shadow-color,#0000001a);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring,.ring-1{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-2{--tw-ring-shadow:var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color,currentcolor);box-shadow:var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow)}.ring-primary\\/30{--tw-ring-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.ring-primary\\/30{--tw-ring-color:color-mix(in oklab, var(--ui-primary) 30%, transparent)}}.ring-success\\/30{--tw-ring-color:var(--ui-success)}@supports (color:color-mix(in lab, red, red)){.ring-success\\/30{--tw-ring-color:color-mix(in oklab, var(--ui-success) 30%, transparent)}}.ring-white{--tw-ring-color:var(--color-white)}.outline{outline-style:var(--tw-outline-style);outline-width:1px}.outline-3{outline-style:var(--tw-outline-style);outline-width:3px}.outline-primary{outline-color:var(--ui-primary)}.blur{--tw-blur:blur(8px);filter:var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,)}.filter{filter:var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,)}.transition{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to,opacity,box-shadow,transform,translate,scale,rotate,filter,-webkit-backdrop-filter,backdrop-filter,display,content-visibility,overlay,pointer-events;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-\\[left\\,bottom\\,height\\,filter\\]{transition-property:left,bottom,height,filter;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-colors{transition-property:color,background-color,border-color,outline-color,text-decoration-color,fill,stroke,--tw-gradient-from,--tw-gradient-via,--tw-gradient-to;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.transition-opacity{transition-property:opacity;transition-timing-function:var(--tw-ease,var(--default-transition-timing-function));transition-duration:var(--tw-duration,var(--default-transition-duration))}.duration-1000{--tw-duration:1s;transition-duration:1s}.ease-in-out{--tw-ease:var(--ease-in-out);transition-timing-function:var(--ease-in-out)}.ease-out{--tw-ease:var(--ease-out);transition-timing-function:var(--ease-out)}.will-change-transform{will-change:transform}.outline-none{--tw-outline-style:none;outline-style:none}.select-none{-webkit-user-select:none;user-select:none}.\\[pause\\:800\\]{pause:800}.\\[pause\\:N\\]{pause:N}.\\[pause\\:ms\\]{pause:ms}.ring-inset{--tw-ring-inset:inset}@media (hover:hover){.hover\\:bg-white\\/10:hover{background-color:#ffffff1a}@supports (color:color-mix(in lab, red, red)){.hover\\:bg-white\\/10:hover{background-color:color-mix(in oklab, var(--color-white) 10%, transparent)}}.hover\\:outline-2:hover{outline-style:var(--tw-outline-style);outline-width:2px}.hover\\:outline-primary:hover,.hover\\:outline-primary\\/60:hover{outline-color:var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.hover\\:outline-primary\\/60:hover{outline-color:color-mix(in oklab, var(--ui-primary) 60%, transparent)}}}.active\\:cursor-grabbing:active{cursor:grabbing}@media (width>=40rem){.sm\\:flex{display:flex}.sm\\:items-center{align-items:center}.sm\\:justify-between{justify-content:space-between}.sm\\:gap-3{gap:calc(var(--spacing) * 3)}}}.vn-bg-cut-enter-active,.vn-bg-cut-leave-active{transition:none}.vn-bg-cut-leave-active{opacity:0}.vn-bg-blur-enter-active,.vn-bg-blur-leave-active{transition:opacity var(--vn-fade,.4s) ease, filter var(--vn-fade,.4s) ease, transform var(--vn-fade,.4s) ease}.vn-bg-blur-enter-from,.vn-bg-blur-leave-to{opacity:0;filter:blur(1.4cqw);transform:scale(1.06)}.vn-portrait-cut-enter-active,.vn-portrait-cut-leave-active{transition:none}.vn-portrait-fade-leave-active{transition:opacity var(--vn-fade,.4s) ease-in-out}.vn-portrait-fade-enter-active{transition:opacity var(--vn-fade,.4s) ease-in-out var(--vn-portrait-enter-delay,0s)}.vn-portrait-fade-enter-from,.vn-portrait-fade-leave-to{opacity:0}.vn-portrait-slide-leave-active{transition:opacity var(--vn-fade,.4s) ease-in-out, transform var(--vn-fade,.4s) ease-in-out}.vn-portrait-slide-enter-active{transition:opacity var(--vn-fade,.4s) ease-in-out var(--vn-portrait-enter-delay,0s), transform var(--vn-fade,.4s) ease-in-out var(--vn-portrait-enter-delay,0s)}[data-enter-delayed=true]>.vn-portrait-cut-enter-from{opacity:0}[data-enter-delayed=true]>.vn-portrait-cut-enter-active{transition:opacity 0s linear var(--vn-portrait-enter-delay,0s)}.vn-portrait-slide-enter-from,.vn-portrait-slide-leave-to{opacity:0;transform:translateX(var(--vn-slide,0%))}.vn-expr-enter-active,.vn-expr-leave-active{transition:opacity .25s}.vn-expr-enter-from,.vn-expr-leave-to{opacity:0}.vn-expr-inout-enter-active{transition:opacity .25s}.vn-expr-inout-enter-from{opacity:0}@media (prefers-reduced-motion:reduce){.vn-expr-inout-enter-active{transition:none}}.vn-fade-enter-active,.vn-fade-leave-active{transition:opacity var(--vn-fade,.4s) ease}.vn-fade-enter-from,.vn-fade-leave-to{opacity:0}.vn-backdrop{transition:filter var(--vn-fade,.4s) ease, transform var(--vn-fade,.4s) ease}@media (prefers-reduced-motion:reduce){.vn-backdrop{transition:none}}.vn-story-panel{--vn-story-font:var(--font-serif);z-index:20;font-family:var(--vn-story-font);overflow-wrap:anywhere;text-align:var(--vn-text-align,left);scrollbar-width:thin;max-height:74%;position:absolute;overflow:clip auto}.vn-story-panel--line{text-wrap:pretty;width:63.4%;min-height:5.98cqw;padding:2.27cqw 1.675cqw 1.675cqw;font-size:clamp(20px,1.5354cqw,32px);line-height:1.4;left:50%;overflow:visible;transform:translate(-50%)}.vn-story-panel--line[data-position=top]{top:8.18%}.vn-story-panel--line[data-position=bottom]{bottom:max(9.5%,3.6cqw)}.vn-story-panel--framed{--vn-border-width:max(2px, .119617cqw);border:var(--vn-border-width) solid;box-shadow:0 1.435cqw .718cqw -1.136cqw #000000a8,0 .897cqw 1.495cqw #0003,0 1.495cqw .598cqw #0003,inset 0 .239cqw .239cqw #00000040}.vn-story-panel--framed[data-gradient-border=true]{background-clip:padding-box;overflow:visible}.vn-story-panel--framed[data-gradient-border=true]:before{content:\"\";inset:calc(-1 * var(--vn-border-width));border-radius:inherit;padding:var(--vn-border-width);pointer-events:none;-webkit-mask-composite:xor;-webkit-mask-source-type:auto,auto;-webkit-mask-composite:xor;-webkit-mask-source-type:auto,auto;background:linear-gradient(#eec68bcc 0%,#f2d09ecc 19.714%,#fff1dccc 32.695%,#f2cf9ccc 44.233%,#9c8768cc 100%);position:absolute;-webkit-mask-image:linear-gradient(#fff 0 0),linear-gradient(#fff 0 0);mask-image:linear-gradient(#fff 0 0),linear-gradient(#fff 0 0);-webkit-mask-position:0 0,0 0;mask-position:0 0,0 0;-webkit-mask-size:auto,auto;mask-size:auto,auto;-webkit-mask-repeat:repeat,repeat;mask-repeat:repeat,repeat;-webkit-mask-clip:content-box,border-box;mask-clip:content-box,border-box;-webkit-mask-origin:content-box,border-box;mask-origin:content-box,border-box;-webkit-mask-composite:xor;mask-composite:exclude;-webkit-mask-source-type:auto,auto;mask-mode:match-source,match-source}.vn-story-panel--rounded{border-radius:max(4px,.359cqw)}.vn-story-panel--square{border-radius:0}.vn-story-panel--round{border-radius:1.2cqw}.vn-dialog-content{align-items:flex-start;gap:1.435cqw;display:flex}.vn-dialog-content--right{flex-direction:row-reverse}.vn-story-text{min-width:0;font:inherit;line-height:inherit;text-align:inherit;flex:1}.vn-story-text p{margin:0}.vn-dialog-face{aspect-ratio:1;background:#12151ad9;border:1px solid #9c876866;border-radius:.239cqw;flex:0 0 clamp(32px,6.58cqw,110px);width:clamp(32px,6.58cqw,110px);overflow:hidden}.vn-speaker-badge{overflow-wrap:anywhere;border:max(2px,.16cqw) solid;border-radius:.239cqw;max-width:calc(100% - 3.35cqw);padding:.24cqw .598cqw;font-size:clamp(16px,1.316cqw,26px);font-weight:600;line-height:1.2;position:absolute;top:-1.316cqw;left:1.675cqw}.vn-speaker-badge--plain{background:0 0!important;border-color:#0000!important}.vn-speaker-badge[data-corners=square]{border-radius:0}.vn-speaker-badge[data-corners=round]{border-radius:1.2cqw}.vn-story-panel--line .vn-story-text{scrollbar-width:thin;max-height:32cqw;overflow-y:auto}.vn-continue-arrow{opacity:.7;font-size:max(16px,.9em);position:absolute;bottom:.3cqw;right:.6cqw}.vn-story-panel--narration{text-shadow:0 .299cqw .239cqw #00000040;text-wrap:pretty;width:59.81%;font-size:clamp(20px,1.7746cqw,36px);line-height:1.6;left:20.095%}.vn-story-panel--narration[data-mode=standard][data-position=top]{top:10.52%}.vn-story-panel--narration[data-mode=standard][data-position=bottom]{bottom:max(15.3%,40px)}.vn-story-panel--narration[data-mode=long]{transform:translateY(-50%)}.vn-story-panel--narration[data-mode=long][data-position=top]{top:43.9%}.vn-story-panel--narration[data-mode=long][data-position=bottom]{top:56.1%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=left]{left:7.18%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=right]{left:auto;right:7.18%}.vn-story-panel--narration.vn-story-panel--framed{padding:1.675cqw}.vn-narration-treatment{--vn-treatment-direction:to bottom;--vn-treatment-blur:.457536cqw;--vn-treatment-dark:.8;--vn-treatment-mid:.63;--vn-treatment-mid-stop:16.8292%;--vn-treatment-clear-stop:82.6955%;pointer-events:none;z-index:19;width:100%;height:31.46%;position:absolute;top:0;left:0}.vn-narration-treatment[data-position=bottom]{--vn-treatment-direction:to top;top:auto;bottom:0}.vn-narration-treatment[data-mode=standard][data-position=bottom]{--vn-treatment-mid-stop:19.1647%;--vn-treatment-clear-stop:90%}.vn-narration-treatment[data-mode=long]{height:76.09%}.vn-narration-treatment[data-mode=long][data-horizontal-align=left],.vn-narration-treatment[data-mode=long][data-horizontal-align=right]{--vn-treatment-dark:.6;--vn-treatment-mid:.5;width:76.5%;height:100%;top:0;bottom:0}.vn-narration-treatment[data-mode=long][data-horizontal-align=left]{--vn-treatment-direction:to right}.vn-narration-treatment[data-mode=long][data-horizontal-align=right]{--vn-treatment-direction:to left;left:auto;right:0}.vn-narration-blur-band,.vn-narration-shade{position:absolute;inset:0}.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{opacity:1;transition:opacity .9s ease-in-out}.vn-narration-shade{transition-delay:.2s}@starting-style{.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{opacity:0}}@media (prefers-reduced-motion:reduce){.vn-narration-blur-band,.vn-narration-shade,.vn-story-panel--narration .vn-story-text[data-fade=true]{transition:none}}.vn-narration-shade{background:linear-gradient(var(--vn-treatment-direction), rgb(0 0 0/var(--vn-treatment-dark)) 0%, rgb(0 0 0/var(--vn-treatment-mid)) var(--vn-treatment-mid-stop), #0000 var(--vn-treatment-clear-stop))}@container (width<=640px){.vn-story-panel--narration[data-mode=long][data-position=top]{max-height:60%;top:calc(44% - 17.6px)}.vn-story-panel--narration[data-mode=long][data-position=bottom]{max-height:60%;top:calc(56% - 22.4px)}.vn-story-panel--line{width:88%;padding:3cqw 2cqw 2cqw}.vn-story-panel--narration{width:82%;left:9%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=left]{left:7.18%}.vn-story-panel--narration[data-mode=long][data-horizontal-align=right]{right:7.18%}}.vn-background-selection{pointer-events:none;z-index:50;outline-offset:-3px;position:absolute;inset:0}.vn-editor-stage:has([data-stage-background]:hover)>.vn-background-selection:not([data-selected=true]){outline:2px solid var(--ui-primary)}@supports (color:color-mix(in lab, red, red)){.vn-editor-stage:has([data-stage-background]:hover)>.vn-background-selection:not([data-selected=true]){outline:2px solid color-mix(in srgb, var(--ui-primary) 60%, transparent)}}.vn-editor-stage>.vn-background-selection[data-selected=true]{outline:3px solid var(--ui-primary)}.vn-story-panel--line[data-mode=bubble]{flex-direction:column;gap:max(6px,.4785cqw);width:max-content;min-width:min(max(180px,16.746cqw),100% - 32px);max-width:min(max(240px,24.82cqw),100% - 32px);min-height:0;max-height:calc(100% - min(40px,18cqh) - 32px);padding:max(10px,1.316cqw) max(12px,1.495cqw);font-size:clamp(18px,1.1962cqw,24px);line-height:1.3;display:flex;bottom:auto;transform:translate(0)}.vn-story-panel--line[data-mode=bubble] .vn-speaker-badge{color:#9c8768;background:0 0;border:0;border-radius:0;flex:none;max-width:100%;padding:0;font-size:clamp(16px,1.0766cqw,22px);position:static}.vn-story-panel--line[data-mode=bubble] .vn-dialog-content{scrollbar-width:thin;min-height:0;overflow-y:auto}.vn-story-panel--line[data-mode=bubble] .vn-story-text{max-height:none;overflow:visible}.vn-bubble-tail{inset:calc(-1 * var(--vn-border-width));width:calc(100% + 2 * var(--vn-border-width));height:calc(100% + 2 * var(--vn-border-width));pointer-events:none;fill:var(--vn-panel-border);fill-opacity:.6;stroke:none;stroke-linejoin:round;position:absolute;overflow:visible}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=waiting]{opacity:0;pointer-events:none;transition:none;translate:0 6px}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=entering]{opacity:1;transition:opacity var(--vn-bubble-enter-duration) ease-out, translate var(--vn-bubble-enter-duration) ease-out;translate:0}@media (prefers-reduced-motion:reduce){.vn-story-panel--line[data-mode=bubble][data-bubble-entrance]{opacity:1;transition:none;translate:none}}.vn-story-panel[data-box-entrance][data-position=top]{--vn-box-from:calc(max(10px, 1.2cqw) * -1)}.vn-story-panel[data-box-entrance][data-position=bottom]{--vn-box-from:max(10px, 1.2cqw)}.vn-story-panel[data-box-entrance=waiting]{opacity:0;translate:0 var(--vn-box-from,0);pointer-events:none;transition:none}.vn-story-panel[data-box-entrance=entering]{opacity:1;transition:opacity calc(var(--vn-box-enter-duration) * .7) ease-out, translate var(--vn-box-enter-duration) ease-out;translate:0}@media (prefers-reduced-motion:reduce){.vn-story-panel[data-box-entrance]{opacity:1;transition:none;translate:none}}.vn-story-panel--line[data-mode=bubble].vn-story-panel--framed{--vn-border-width:max(2px, .0598cqw)}.vn-story-panel--line[data-mode=bubble][data-gradient-border=true]:before{background:linear-gradient(#ffe8c599,#eec68b99)}.vn-story-panel--line[data-mode=bubble] .vn-story-text{opacity:.9}.vn-story-panel--line[data-mode=bubble] .vn-speaker-badge{color:#eec68bcc}.vn-story-panel--line[data-mode=bubble].vn-story-panel--rounded{border-radius:max(4px,.359cqw)}.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=ready],.vn-story-panel--line[data-mode=bubble][data-bubble-entrance=skipped]{opacity:1;transition:none;translate:none}.vn-stage-heading{pointer-events:none;z-index:35;white-space:nowrap;text-overflow:ellipsis;max-width:calc(100% - 140px);font:.7177cqw/1.25 var(--font-story-sans);letter-spacing:.2em;text-transform:uppercase;color:#ffffff80;text-shadow:0 1px 4px #000;position:absolute;top:max(12px,1.675cqw);left:max(12px,1.914cqw);overflow:hidden}.vn-stage-progress{z-index:40;box-sizing:border-box;cursor:help;background:#181e28;border:0;border-radius:999px;place-items:center;width:5.20335cqw;height:1.01675cqw;padding:0;display:grid;position:absolute;top:1.3744cqw;right:1.555cqw;box-shadow:inset 0 0 0 .0598cqw #00000080}.vn-stage-progress:focus-visible{outline-offset:3px;outline:2px solid #eec68b}.vn-stage-progress-track{background:#3e4650;border-radius:999px;width:4.36603cqw;height:.35885cqw;display:block;overflow:hidden;box-shadow:inset 0 1px 1px #0000004d}.vn-stage-progress-track>span{border-radius:inherit;background:linear-gradient(90deg,#bbb,#999);height:100%;transition:width .35s ease-out;display:block;box-shadow:inset 0 0 0 .0598cqw #d1d1d1}.vn-stage-progress-track>span[data-complete=true]{background:linear-gradient(90deg,#eec68b,#ffe9cb);box-shadow:inset 0 0 0 .0598cqw #fff1de}.vn-stage-progress-details{background:var(--ui-bg);width:max-content;max-width:min(300px,80cqw);box-shadow:0 0 0 1px var(--ui-border);color:var(--ui-text-highlighted);font:var(--text-xs)/var(--text-xs--line-height) var(--font-sans);border-radius:4px;padding:6px 10px;position:absolute;top:calc(100% + 8px);right:0}.vn-scene-corner{pointer-events:none;z-index:30;text-align:left;color:#fff;opacity:.7;border-left:.2392cqw solid #9c8768;row-gap:.42cqw;max-width:min(30%,360px);padding:.7177cqw 0 .7177cqw 1.1354cqw;display:grid;position:absolute;bottom:max(16px,1.555cqw);left:max(12px,1.435cqw)}.vn-scene-corner-label{font:600 .5981cqw/1.2 var(--font-story-sans);letter-spacing:.34em;text-transform:uppercase;color:#eec68b;opacity:.8}.vn-scene-corner-title{overflow-wrap:anywhere;min-width:0;max-width:min(100%,13.5167cqw);font:1.546cqw/1.143 var(--vn-scene-title-font,var(--font-serif));opacity:.8}.vn-scene-corner-subtitle{font:.7775cqw/1.231 var(--font-story-sans);color:#fffc;opacity:.8}.vn-stage-continue{pointer-events:none;z-index:35;text-align:center;-webkit-backdrop-filter:blur(12px);color:#fff3e2c4;max-width:40%;font:600 11px/1.3 var(--font-story-sans);letter-spacing:.16em;text-transform:uppercase;opacity:0;transform-origin:50%;--vn-continue-cycle:1.1s;--vn-continue-delay:.9s;background:#080a0e33;border-radius:6px;padding:7px 12px;transition:opacity .3s ease-out;position:absolute;bottom:max(22px,4%);left:50%;transform:translate(-50%)}.vn-stage-continue:after{content:\"\";border-inline:7px solid #0000;border-top:7px solid #f4efe5;margin-left:-7px;position:absolute;top:calc(100% + 2px);left:50%}.vn-stage-continue[data-ready=true]{opacity:1;animation:vn-continue-pulse var(--vn-continue-cycle) ease-in-out var(--vn-continue-delay) infinite;transition-duration:.9s;transition-timing-function:ease-in-out}.vn-stage-continue[data-ready=true]:after{animation:vn-continue-bob var(--vn-continue-cycle) ease-in-out var(--vn-continue-delay) infinite}@keyframes vn-continue-pulse{0%,to{opacity:1;transform:scale(1)translate(-50%)}50%{opacity:.9;color:#fff;transform:scale(1)translate(-50%)}}@keyframes vn-continue-bob{0%,to{transform:translateY(0)}50%{transform:translateY(3px)}}.vn-stage-continue-compact{display:none}@container (width<=1000px){.vn-scene-corner-subtitle{display:none}}@container (width<=640px){:is(:is(.vn-player,.vn-editor-stage)[data-stage-layout=classic]:has(.vn-stage-heading) .vn-story-panel--narration[data-mode=standard][data-position=top],:is(.vn-player,.vn-editor-stage)[data-stage-layout=classic]:has(.vn-stage-heading) .vn-story-panel--line:not([data-mode=bubble])[data-position=top]){top:max(10.52%,28px)}.vn-stage-heading{letter-spacing:.06em;max-width:calc(100% - 120px);top:12px}.vn-scene-corner{max-width:30%;padding-left:8px}.vn-scene-corner-label{display:none}.vn-scene-corner-title{white-space:nowrap;text-overflow:ellipsis;overflow:hidden}.vn-stage-continue-full{display:none}.vn-stage-continue-compact{display:inline}.vn-stage-continue{max-width:30%}}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-scene-corner{top:max(12px,1.675cqw);bottom:auto}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-toolbar{top:1.4cqw;bottom:auto}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-heading{max-width:28%;top:auto;bottom:max(16px,1.255cqw);left:max(12px,1.435cqw)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-progress{top:auto;bottom:max(16px,1.155cqw);right:max(12px,1.335cqw)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-progress-details{top:auto;bottom:calc(100% + 8px)}@container (width<=640px){:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-stage-heading{bottom:12px}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-story-panel--narration[data-mode=standard][data-position=top]{top:max(10.52%,44px)}:is(.vn-player,.vn-editor-stage)[data-stage-layout=corners] .vn-story-panel--line:not([data-mode=bubble])[data-position=top]{top:max(8.18%,44px)}}@media (prefers-reduced-motion:reduce){.vn-stage-progress-track>span,.vn-stage-continue,.vn-stage-continue[data-ready=true],.vn-stage-continue[data-ready=true]:after{transition:none;animation:none}}.vn-scene-opening{pointer-events:none;z-index:25;place-items:center;display:grid;position:absolute;inset:0}.vn-scene-opening-blur,.vn-scene-opening-shade{position:absolute;inset:0}.vn-scene-opening-blur{-webkit-backdrop-filter:blur(.35885cqw);transition:backdrop-filter var(--vn-scene-enter) ease-in-out}.vn-scene-opening-shade{opacity:1;transition:opacity var(--vn-scene-enter) ease-in-out var(--vn-scene-shade-delay);background:#0000004d}.vn-scene-opening-copy{text-align:center;color:#fff;opacity:1;filter:blur();width:100%;max-width:38cqw;max-height:80%;transition:opacity var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay), transform var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay), filter var(--vn-scene-text-enter) ease-in-out var(--vn-scene-text-delay);justify-items:center;margin-top:-5cqh;display:grid;position:relative;overflow-y:auto;transform:translateY(0)}.vn-scene-opening-label{font:600 max(10px, .7177cqw)/1.25 var(--font-story-sans);letter-spacing:.34em;text-transform:uppercase;color:#eec68b;opacity:.8;margin-bottom:2.25cqw;font-weight:600}.vn-scene-opening-title{overflow-wrap:anywhere;width:100%;font:max(28px, 5.0239cqw)/.95238 var(--vn-scene-title-font,var(--font-serif));padding-bottom:.14em}.vn-scene-opening-subtitle{font:max(14px, .95694cqw)/1.1875 var(--font-story-sans);color:#fff9;margin-top:1.9139cqw}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-blur{-webkit-backdrop-filter:blur()}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-shade{opacity:0}.vn-scene-opening:is([data-shown=false],.vn-scene-opening-leave-to) .vn-scene-opening-copy{opacity:0;filter:blur(1.5px);transform:translateY(3px)}.vn-scene-opening[data-shown=false]>*,.vn-scene-opening.vn-scene-opening-leave-active>*{transition-duration:var(--vn-scene-exit);transition-delay:0s}.vn-scene-opening[data-instant=true]>*{transition:none}.vn-scene-corner-enter-active{transition:opacity .7s ease-in-out}.vn-scene-corner-leave-active{transition:opacity .3s ease-out}.vn-scene-corner-enter-from,.vn-scene-corner-leave-to{opacity:0}.vn-question{z-index:35;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);background:#0006;place-items:center;padding:4cqw;animation:.5s ease-in-out both vn-question-shade-in;display:grid;position:absolute;inset:0;overflow-y:auto}@keyframes vn-question-shade-in{0%{background-color:#0000}to{background-color:#0009}}.vn-question[data-static=true]{animation:none}.vn-question-prompt,.vn-question-answer{animation:vn-question-rise var(--vn-choice-in,.4s) ease-out calc(var(--vn-choice-in-delay,.2s) + var(--vn-choice-in-step,.1s) * var(--i,0)) both}@keyframes vn-question-rise{0%{opacity:0;transform:translateY(1.2cqw)}}.vn-question[data-static=true] .vn-question-prompt,.vn-question[data-static=true] .vn-question-answer{animation:none}.vn-question-leave-active,.vn-question[data-leaving=true]{pointer-events:none;animation:vn-question-shade-out var(--vn-choice-fade,.25s) ease-in-out var(--vn-choice-hold,.15s) both}.vn-question-leave-active .vn-question-prompt,.vn-question-leave-active .vn-question-answer:not([data-chosen=true]),.vn-question[data-leaving=true] .vn-question-prompt,.vn-question[data-leaving=true] .vn-question-answer:not([data-chosen=true]){animation:vn-question-content-out var(--vn-choice-others,.2s) ease-in-out both}.vn-question-leave-active .vn-question-answer[data-chosen=true],.vn-question[data-leaving=true] .vn-question-answer[data-chosen=true]{animation:vn-answer-grow calc(var(--vn-choice-hold,.15s) + var(--vn-choice-fade,.25s)) ease-out both, vn-question-content-out var(--vn-choice-fade,.25s) ease-in var(--vn-choice-hold,.15s) both}@keyframes vn-question-shade-out{0%{-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);background-color:#0009}to{-webkit-backdrop-filter:blur();backdrop-filter:blur();background-color:#0000}}@keyframes vn-question-content-out{to{opacity:0}}@keyframes vn-answer-grow{to{transform:scale(1.08)}}@media (prefers-reduced-motion:reduce){.vn-question,.vn-question *,.vn-question-leave-active,.vn-question-leave-active *{animation:none}}.vn-question-content{justify-items:center;row-gap:4cqw;width:100%;margin:auto;display:grid;transform:translateY(-2cqh)}.vn-question-prompt{color:#fff3e2;text-align:center;max-width:85%;font:max(18px, 2.8708cqw)/1.2 var(--font-serif);text-shadow:0 2px 8px #000000b3;overflow-wrap:anywhere}.vn-question-answers{gap:max(10px,1.4354cqw);width:min(80cqw,max(240px,21.5311cqw));display:grid}.vn-question-answer{color:#fff3e2cc;min-height:max(40px,4.3062cqw);font:max(18px, 1.4746cqw)/1.2 var(--font-serif);white-space:normal;overflow-wrap:anywhere;text-align:center;background:linear-gradient(#49576acc,#2f3a4acc);border:max(1px,.1196cqw) solid #7e91a980;border-radius:max(5px,.7177cqw);justify-content:center;padding:max(8px,.8373cqw) max(12px,1.1962cqw);transition:background .18s,border-color .18s,color .18s,box-shadow .18s;box-shadow:0 4px 12px #0003,inset 0 1px #ffffff0f}@media (hover:hover){.vn-question-answer:hover{color:#fff3e2;background:linear-gradient(#6b7787e6,#404d60e6);border-color:#eee3d0b3}}.vn-question-answer:focus-visible{outline-offset:3px;outline:2px solid #eec68b}.vn-question-answer:active{color:#eec68b;background:linear-gradient(#8c8b86f2,#444f60f2);border-color:#c7ae87}.vn-question-answer.vn-answer-secondary{color:#fff3e2a6;background:linear-gradient(#1a202ad9,#0d1118d9);border-color:#7e91a980;box-shadow:0 4px 12px #0003,inset 0 1px #ffffff0f}@media (hover:hover){.vn-question-answer.vn-answer-secondary:hover{color:#fff3e2e6;background:linear-gradient(#28313fe6,#151b25e6);border-color:#eee3d0b3}}.vn-question-answer.vn-answer-secondary:active{color:#eec68b;background:linear-gradient(#343a42f2,#151b25f2);border-color:#c7ae87}@media (prefers-reduced-motion:reduce){.vn-scene-opening>*,.vn-scene-corner-enter-active,.vn-scene-corner-leave-active,.vn-question-answer{transition:none}}:is(.vn-player,.vn-editor-stage)[data-text-style=default]{--vn-scene-title-font:var(--font-story-sans)}.vn-title-screen{z-index:50;color:#fff;text-align:center;background:radial-gradient(at 50% 30%,#1b2938,#080a0d 75%);place-items:safe center;padding:max(20px,3cqw);display:grid;position:absolute;inset:0;overflow-y:auto}.vn-title-art,.vn-title-treatment{pointer-events:none;width:100%;height:100%;position:absolute;inset:0}.vn-title-art{object-fit:cover;filter:blur(6px);opacity:.6}.vn-title-treatment{background:linear-gradient(#080a0d4d,#080a0dcc)}.vn-title-content{justify-items:center;gap:max(18px,1.9139cqw);width:100%;max-width:70cqw;margin:auto;padding-block:1cqw;display:grid;position:relative}.vn-title-episode{font:600 max(12px, 1cqw)/1.3 var(--font-story-sans);letter-spacing:.3em;text-transform:uppercase;color:#eec68bcc}.vn-title-heading{max-width:100%;font:max(32px, 5.0239cqw)/1.08 var(--vn-scene-title-font,var(--font-serif));color:#ffffffe6;overflow-wrap:anywhere;font-weight:400}.vn-title-summary{max-width:54cqw;font:max(16px, 1.0766cqw)/1.6 var(--font-story-sans);color:#fff9}.vn-title-actions{flex-wrap:wrap;justify-content:center;gap:max(10px,.7177cqw);margin-top:.6cqw;display:flex}.vn-title-actions .vn-question-answer{min-width:max(100px,7.177cqw);min-height:max(36px,2.3923cqw);font:max(16px, 1.0766cqw)/1.2 var(--vn-scene-title-font,var(--font-serif));border-width:1px;border-radius:max(5px,.3589cqw);padding:max(8px,.4785cqw) max(20px,1.4354cqw)}.vn-title-languages{font-family:var(--font-story-sans);border:1px solid #7e91a940;border-radius:max(5px,.3589cqw);flex-wrap:wrap;justify-content:center;gap:0;display:flex;overflow:hidden}.vn-title-languages button{box-shadow:none;border-radius:0}.vn-title-languages .is-active{color:#fff;background-color:#7e91a966}.vn-title-warnings{text-align:left;max-width:54cqw;font:12px/1.5 var(--font-sans);color:var(--ui-text-muted)}@container (width<=640px){.vn-title-screen{place-items:start center}.vn-title-content,.vn-title-summary,.vn-title-warnings{max-width:100%}}.vn-end-screen{z-index:30;color:#fff;text-align:center;background:radial-gradient(at 50% 40%,#1b2938d1,#080a0df0 75%);place-items:safe center;padding:max(20px,3cqw);animation:.7s ease-out both vn-end-fade;display:grid;position:absolute;inset:0;overflow-y:auto}.vn-end-content{justify-items:center;gap:max(16px,1.6cqw);width:100%;max-width:60cqw;margin:auto;display:grid}.vn-end-heading{font:max(40px, 6cqw)/1.05 var(--vn-scene-title-font,var(--font-serif));letter-spacing:.02em;color:#ffffffeb;font-weight:400;animation:.8s ease-out .2s both vn-end-rise}.vn-end-rule{background:linear-gradient(90deg,#0000,#eec68b,#0000);width:max(48px,5cqw);height:1px;animation:.8s ease-out .35s both vn-end-rise;display:block}.vn-end-flags{width:min(30rem,100%);font:12px/1.5 var(--font-sans);text-align:left;color:#ffffff8c;background:#ffffff08;border:1px solid #7e91a938;border-radius:6px;margin-top:.6cqw;padding:8px 12px;animation:.8s ease-out .75s both vn-end-rise}.vn-end-flags summary{cursor:pointer;opacity:.8;letter-spacing:.12em;text-transform:uppercase}.vn-end-flags summary:hover{opacity:1}.vn-end-flags[open] summary{margin-bottom:8px}.vn-end-flags h3{color:#ffffffb3;margin:10px 0 2px;font-weight:600}.vn-end-flags h3+p{color:#fff6;margin-bottom:6px;font-size:11px}.vn-end-exit{font-family:var(--font-mono);color:#fffc;gap:16px;display:flex}.vn-end-exit span:first-child{color:#ffffff80}.vn-end-flags dl{max-height:10rem;font-family:var(--font-mono);grid-template-columns:auto 1fr;gap:2px 16px;display:grid;overflow:auto}.vn-end-flags dd{color:#ffffffd9}@keyframes vn-end-fade{0%{opacity:0}}@keyframes vn-end-rise{0%{opacity:0;transform:translateY(1cqw)}}@media (prefers-reduced-motion:reduce){.vn-end-screen,.vn-end-heading,.vn-end-rule,.vn-end-screen .vn-title-actions,.vn-end-flags{animation:none}}:host{--ui-primary:var(--color-brand-400);--ui-bg:#0e1219;--ui-bg-muted:#121821;--ui-bg-elevated:#151b25;--ui-bg-accented:#1e2633;--ui-border:#232b39;--ui-border-accented:#3b4659;--ui-text-dimmed:#6b7585;--ui-text-muted:#98a2b3;--ui-text-toned:#bcc3cf;--ui-text:#e6e1d6;--ui-text-highlighted:#f4efe5;--ui-text-inverted:#0e1219;--ui-error:#e07a7e;--ui-success:#76c99f;--ui-warning:#e2b86b;--ui-info:#7aa7e0;--lightningcss-light: ;--lightningcss-dark:initial;color-scheme:dark;display:block}.vn-ui-icon{flex:none;width:1.25rem;height:1.25rem}:host{pointer-events:auto}:host([data-gameplay=active]){pointer-events:none}:host([data-gameplay=active]) :is(.vn-story-panel,.vn-toolbar){pointer-events:auto}@property --tw-translate-x{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-y{syntax:\"*\";inherits:false;initial-value:0}@property --tw-translate-z{syntax:\"*\";inherits:false;initial-value:0}@property --tw-rotate-x{syntax:\"*\";inherits:false}@property --tw-rotate-y{syntax:\"*\";inherits:false}@property --tw-rotate-z{syntax:\"*\";inherits:false}@property --tw-skew-x{syntax:\"*\";inherits:false}@property --tw-skew-y{syntax:\"*\";inherits:false}@property --tw-border-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-leading{syntax:\"*\";inherits:false}@property --tw-font-weight{syntax:\"*\";inherits:false}@property --tw-tracking{syntax:\"*\";inherits:false}@property --tw-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-shadow-color{syntax:\"*\";inherits:false}@property --tw-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-inset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-shadow-color{syntax:\"*\";inherits:false}@property --tw-inset-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-ring-color{syntax:\"*\";inherits:false}@property --tw-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-inset-ring-color{syntax:\"*\";inherits:false}@property --tw-inset-ring-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-ring-inset{syntax:\"*\";inherits:false}@property --tw-ring-offset-width{syntax:\"<length>\";inherits:false;initial-value:0}@property --tw-ring-offset-color{syntax:\"*\";inherits:false;initial-value:#fff}@property --tw-ring-offset-shadow{syntax:\"*\";inherits:false;initial-value:0 0 #0000}@property --tw-outline-style{syntax:\"*\";inherits:false;initial-value:solid}@property --tw-blur{syntax:\"*\";inherits:false}@property --tw-brightness{syntax:\"*\";inherits:false}@property --tw-contrast{syntax:\"*\";inherits:false}@property --tw-grayscale{syntax:\"*\";inherits:false}@property --tw-hue-rotate{syntax:\"*\";inherits:false}@property --tw-invert{syntax:\"*\";inherits:false}@property --tw-opacity{syntax:\"*\";inherits:false}@property --tw-saturate{syntax:\"*\";inherits:false}@property --tw-sepia{syntax:\"*\";inherits:false}@property --tw-drop-shadow{syntax:\"*\";inherits:false}@property --tw-drop-shadow-color{syntax:\"*\";inherits:false}@property --tw-drop-shadow-alpha{syntax:\"<percentage>\";inherits:false;initial-value:100%}@property --tw-drop-shadow-size{syntax:\"*\";inherits:false}@property --tw-duration{syntax:\"*\";inherits:false}@property --tw-ease{syntax:\"*\";inherits:false}", nO = /* @__PURE__ */ Yo({
+	...XD,
 	inheritAttrs: !1,
-	styles: [...GD.styles ?? [], XD]
+	styles: [...XD.styles ?? [], tO]
 }, { configureApp(e) {
-	e.provide(qy, JD());
+	e.provide(qy, $D());
 } });
-function QD() {
+function rO() {
 	if (typeof document > "u" || document.getElementById("vns-player-properties")) return;
-	let e = XD.match(/@property\s+--[\w-]+\s*\{[^}]*\}/g);
+	let e = tO.match(/@property\s+--[\w-]+\s*\{[^}]*\}/g);
 	if (!e?.length) return;
 	let t = document.createElement("style");
 	t.id = "vns-player-properties", t.textContent = e.join("\n"), document.head.append(t);
 }
-function $D(e = "vns-player") {
-	QD(), customElements.get(e) || customElements.define(e, ZD);
+function iO(e = "vns-player") {
+	rO(), customElements.get(e) || customElements.define(e, nO);
 }
 //#endregion
-export { YD as PLAYER_CONTRACT, ZD as PlayerElement, $D as defineVnsPlayer };
+export { eO as PLAYER_CONTRACT, nO as PlayerElement, iO as defineVnsPlayer };

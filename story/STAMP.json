@@ -1,10 +1,10 @@
 {
   "note": "Written by tools/player-sync.mjs in the Studio repository. Do not edit; run `pnpm player:sync` there.",
-  "version": "0.23.0",
-  "commit": "22bcb46",
+  "version": "0.23.1",
+  "commit": "26ed9d7",
   "contract": 1,
-  "outputHash": "55eeb2a617e4241fd746f57e1f2a6665105580d74b5239bd400bcb8f62de9774",
-  "inputsHash": "d3f3923687afe0b15a0a0dc8cafd06f4631d8adf5e77ddfba4cbd8076f3a6b4c",
+  "outputHash": "bb027c230e44bd03bade405086d4d00b4af2c1905958fce00f23aca86da91c01",
+  "inputsHash": "4d1526b9c8de2a4ef407f9824622ec68727ea7b816d3c914ebd0ff5451314c81",
   "inputs": [
     "apps/studio/app/components/characters/PortraitImage.vue",
     "apps/studio/app/components/player/Asset.vue",
@@ -132,6 +132,6 @@
     "packages/story-edit/src/utils/sequenceFades.ts",
     "packages/story-edit/src/utils/storyLanguages.ts"
   ],
-  "engineHash": "c21ed0e15d79b9e389992080a279f78d5bfe1eeecbd03af4f1834db6d72d5e5b",
+  "engineHash": "336cf535a16e2183a6f0a83b474e9b7d791d4616bc9fd8b4bbc63346ca24c244",
   "schemaHash": "3daedc0bbbaaf57b2c70248332cd34469cbf7aa8bc2fbb98cb7573c314667b6c"
 }

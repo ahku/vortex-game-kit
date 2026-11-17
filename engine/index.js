@@ -515,7 +515,7 @@ function applyLinePortrait(stage, step, context) {
 		}
 	});
 	const byDefault = p?.show !== void 0 ? showsStage(p.show) : context.stageByDefault !== false;
-	const ownSide = p?.faceSide === "left" || p?.faceSide === "right" ? p.faceSide : void 0;
+	const ownSide = !(step.stage ?? []).some((op) => op.op === "enter" && op.who === who && (op.slot !== void 0 || op.pos !== void 0)) && (p?.faceSide === "left" || p?.faceSide === "right") ? p.faceSide : void 0;
 	const picture = p?.picture ?? (cur || byDefault && (step.expr || context.defaultExpression?.(who) || context.hasPicture?.(who)) ? "temporary" : "face");
 	if (picture === "face") return stage;
 	if (picture === "leave") {
@@ -544,7 +544,8 @@ function applyLinePortrait(stage, step, context) {
 	const slot = free ? void 0 : p?.slot ?? ownSide ?? cur?.slot ?? context.home?.(who) ?? context.speakerSide?.(who, p) ?? "left";
 	let portraits = stage.portraits;
 	if (slot) {
-		const there = occupantsOf(stage, slot, who);
+		const placedHere = new Set((step.stage ?? []).flatMap((op) => op.op === "enter" ? [op.who] : []));
+		const there = occupantsOf(stage, slot, who).filter((id) => !placedHere.has(id));
 		if (picture === "stage") portraits = ((p?.ifTaken ?? "replace") === "replace" ? there : there.slice(0, there.length - 1)).reduce(without, portraits);
 	}
 	return {
@@ -1080,6 +1081,10 @@ function createEngine() {
 				if (startOptions.withOpening && opening && !opening.trigger && authored?.id === from.stepId && !authored.hidden && !authored.when) {
 					const at = steps.findIndex((e) => e.sceneId === from.sceneId);
 					if (at >= 0 && at < idx) first = at;
+					if (steps[first]?.step.id === `scene-in:${from.sceneId}`) {
+						const next = steps[first + 1];
+						if (next?.sceneId === from.sceneId && next.step.id === `scene-title:${from.sceneId}`) first += 1;
+					}
 				}
 				let foldFrom = 0;
 				const scene = requireBundle().story.scenes.find((sc) => sc.id === from.sceneId);
@@ -1578,15 +1583,14 @@ function endSceneTime(seq) {
 * so scrubbing and pausing just work. An item without `animation` gives exactly `imageOpacity` and `imageSlide`.
 */
 function itemFrame(seq, img, t, theme) {
-	const animated = itemAnimated(img);
-	const slide = animated ? {
+	const slide = itemAnimated(img) ? {
 		x: 0,
 		y: 0
 	} : imageSlide(seq, img, t, theme);
 	const a = sampleAnimation(img.animation, t - img.startTime);
 	const scaleAnimated = img.animation?.scale !== void 0;
 	return {
-		opacity: Math.max(0, Math.min(1, (animated ? 1 : imageOpacity(seq, img, t, theme)) * a.opacity)),
+		opacity: Math.max(0, Math.min(1, (img.animation?.opacity?.length ? 1 : imageOpacity(seq, img, t, theme)) * a.opacity)),
 		x: slide.x + a.x,
 		y: slide.y + a.y,
 		scale: a.scale,
