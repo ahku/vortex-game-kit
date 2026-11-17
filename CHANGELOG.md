@@ -2,15 +2,15 @@
 
 ## 0.22.1
 
+- **Portraits.** A dimmed portrait keeps its dimmed look while it fades out. A portrait that jumps across the stage fades
+  out, is gone for a beat and fades in, with its speech bubble following. A line that places the speaker's picture no
+  longer sends away a portrait the step places itself.
 - **Fades play the same every time** (built from the Studio at v0.23.1). Portraits and sequence pictures fade along a
   gentler curve, and a portrait or sequence picture that is not loaded yet waits for its picture before it fades in, so
   a fade is no longer cut short by a slow first draw. The pictures of coming steps are decoded ahead of time. A
   sequence's clock starts when its first pictures are drawn.
 - **A held sequence keeps its pictures** while it hands over to its held picture, so a scene fade covers them instead of
   them blinking out first. Pictures that only move, or are Animated with no opacity keyframes, fade like the others.
-- **Portraits.** A dimmed portrait keeps its dimmed look while it fades out. A portrait that jumps across the stage fades
-  out, is gone for a beat and fades in, with its speech bubble following. A line that places the speaker's picture no
-  longer sends away a portrait the step places itself.
 - **A scene started from its title** shows the scene at once and fades the title card in. No story format change:
   `PLAYER_CONTRACT` stays 1, and stories play as before.
 
