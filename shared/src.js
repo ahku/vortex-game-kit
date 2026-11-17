@@ -1326,8 +1326,8 @@ var transitionLength = (t) => t.outMs + t.holdMs + t.inMs;
 //#region ../schema/src/character.ts
 /** Framing of a dialog portrait; the original asset stays intact. Percent positions and cover zoom. */
 var PortraitCropSchema = z.strictObject({
-	x: z.number().min(0).max(100),
-	y: z.number().min(0).max(100),
+	x: z.number().min(-100).max(200),
+	y: z.number().min(-100).max(200),
 	zoom: z.number().min(.05).max(8)
 });
 /**
@@ -1777,6 +1777,26 @@ function resolveNameTag(settings) {
 }
 //#endregion
 //#region ../schema/src/story.ts
+/**
+* A file the story needs that the library does not have yet (plan 015): the name the story will use, what kind of
+* file it is and what it should be, for the author to supply. Editor only: it is not in the published bundle.
+*/
+var RequestedFileSchema = z.strictObject({
+	name: AssetKey,
+	/** What the file is for. Every role but `normal`, which is made from a picture, never supplied. */
+	role: z.enum([
+		"portrait",
+		"background",
+		"scene",
+		"object",
+		"music",
+		"sfx",
+		"voice",
+		"video"
+	]),
+	description: z.string().min(1).max(500)
+});
+var MAX_REQUESTED_FILES = 100;
 var FlagDeclSchema = z.strictObject({
 	type: z.enum([
 		"boolean",
@@ -1872,6 +1892,8 @@ var StorySchema = z.strictObject({
 	}),
 	/** Story-level settings (text speed, dialog looks, editor switches). Absent means all defaults. */
 	settings: StorySettingsSchema.optional(),
+	/** Files the author is asked to supply (plan 015). Absent until something is requested. */
+	requestedFiles: z.array(RequestedFileSchema).max(100).optional(),
 	contract: ContractSchema.prefault({}),
 	/** Flags private to this story. Shared flags live in the workspace registry. */
 	flags: z.record(FlagName, FlagDeclSchema).default({}),
@@ -2271,6 +2293,8 @@ function forEachAssetRef(node, found) {
 		for (const ref of Object.values(value)) if (typeof ref === "string") found(ref);
 	} else forEachAssetRef(value, found);
 }
+/** The longest note an asset can have: what it is, its mood and where it fits (editor only, never exported). */
+var ASSET_NOTE_MAX = 500;
 /** `bytes=500-` or `bytes=0-999` as numbers; null when absent or not a single plain range. */
 function parseByteRange(header) {
 	const m = /^bytes=(\d+)-(\d*)$/.exec(header ?? "");
@@ -2371,6 +2395,99 @@ var GraphicAppearanceSchema = z.strictObject({
 	opacity: z.number().min(0).max(1),
 	blendMode: z.enum(GRAPHIC_BLEND_MODES)
 });
+//#endregion
+//#region ../schema/src/characterChanges.ts
+/**
+* Changes an AI app suggests to a library character (plan 015, section 13): the part of a character it may ask to
+* set, applied to a copy, and described field by field for a person who reviews it. The server uses this to check a
+* suggestion and to apply it on Accept; the Characters page uses it to show before and after.
+*/
+var MAP_FIELDS = [
+	"names",
+	"fullNames",
+	"expressions",
+	"faces"
+];
+var TEXT_FIELDS = ["note", "label"];
+var MAX_KEYS = 60;
+var isObject$1 = (v) => typeof v === "object" && v !== null && !Array.isArray(v);
+/** Reads a suggestion's changes. Returns what is wrong in plain words, or the changes. */
+function parseCharacterChanges(raw) {
+	if (!isObject$1(raw)) return "set is an object like {\"names\":{\"en\":\"Ana\"},\"note\":\"...\"}";
+	const out = {};
+	for (const key of Object.keys(raw)) if (!MAP_FIELDS.includes(key) && !TEXT_FIELDS.includes(key)) return `set has "${key.slice(0, 30)}", which cannot be changed this way. Allowed: ${[...MAP_FIELDS, ...TEXT_FIELDS].join(", ")}`;
+	for (const field of MAP_FIELDS) {
+		const value = raw[field];
+		if (value === void 0) continue;
+		if (!isObject$1(value) || Object.keys(value).length === 0 || Object.keys(value).length > MAX_KEYS) return `${field} is an object with 1 to ${MAX_KEYS} entries`;
+		const map = {};
+		for (const [k, v] of Object.entries(value)) {
+			if (typeof v !== "string" || !v.trim() || v.length > 200) return `${field} "${k.slice(0, 30)}" is text of 1 to 200 characters`;
+			map[k] = v.trim();
+		}
+		out[field] = map;
+	}
+	for (const field of TEXT_FIELDS) {
+		const value = raw[field];
+		if (value === void 0) continue;
+		if (typeof value !== "string" || !value.trim() || value.length > (field === "note" ? 2e3 : 80)) return `${field} is text of 1 to ${field === "note" ? 2e3 : 80} characters`;
+		out[field] = value.trim();
+	}
+	if (Object.keys(out).length === 0) return "set has nothing to change";
+	return out;
+}
+/** The character with the changes applied, or what is wrong with the result. The input is not touched. */
+function applyCharacterChanges(character, changes) {
+	const next = JSON.parse(JSON.stringify(character));
+	for (const field of MAP_FIELDS) {
+		const values = changes[field];
+		if (!values) continue;
+		next[field] = {
+			...next[field] ?? {},
+			...values
+		};
+	}
+	for (const field of TEXT_FIELDS) {
+		const value = changes[field];
+		if (value !== void 0) next[field] = value;
+	}
+	if (next.expressionOrder && changes.expressions) {
+		for (const name of Object.keys(changes.expressions)) if (!next.expressionOrder.includes(name)) next.expressionOrder.push(name);
+	}
+	const parsed = CharacterSchema.safeParse(next);
+	if (!parsed.success) return {
+		ok: false,
+		message: parsed.error.issues[0]?.message ?? "invalid"
+	};
+	return {
+		ok: true,
+		character: parsed.data
+	};
+}
+/** What the changes would do to this character, leaving out entries that already hold the same value. */
+function describeCharacterChanges(character, changes) {
+	const lines = [];
+	for (const field of MAP_FIELDS) for (const [key, after] of Object.entries(changes[field] ?? {})) {
+		const before = (character[field] ?? {})[key] ?? null;
+		if (before !== after) lines.push({
+			field,
+			key,
+			before,
+			after
+		});
+	}
+	for (const field of TEXT_FIELDS) {
+		const after = changes[field];
+		if (after === void 0) continue;
+		const before = character[field] ?? null;
+		if ((before ?? "") !== after) lines.push({
+			field,
+			before: before === "" ? null : before,
+			after
+		});
+	}
+	return lines;
+}
 //#endregion
 //#region ../schema/src/workspace.ts
 /** The workspace's shared flags: the interface between stories and between a story and a game. */
@@ -3252,4 +3369,4 @@ function storyDraftJsonSchema() {
 	};
 }
 //#endregion
-export { assetSlugFromName as $, SequenceStepSchema as $n, FaceSideSchema as $r, TEXT_SPEED_CPS as $t, GraphicSizeSchema as A, SetOpSchema as Ai, applyRoutes as An, resolveAutoplaySettings as Ar, BACKGROUND_PRESETS as At, AssetEntrySchema as B, LangCode as Bi, DelayStepSchema as Bn, SequenceIdSchema as Br, DEFAULT_SCENE_TITLE_MS as Bt, ExportBundleSchema as C, EFFECT_SPECS as Ci, portraitOf as Cn, patchNarrationPresentation as Cr, StorySchema as Ct, ThemeSchema as D, effectSettingsShape as Di, TRANSITION_DEFAULTS as Dn, AutoplaySettingsSchema as Dr, storyScenes as Dt, FlagRegistrySchema as E, Speed as Ei, stagePictureOf as En, resolveNarrationPresentation as Er, TriggerSchema as Et, spriteStartOffset as F, DurationMs as Fi, routeIndex as Fn, IMAGE_FOCUS as Fr, DEFAULT_NAME_TAG as Ft, IMAGE_WIDTHS as G, StringKey as Gi, ForkRouteSchema as Gn, BRIGHTNESS_MIN as Gr, SCENE_CARD_MIN_MS as Gt, AssetManifestSchema as H, SCHEMA_VERSION as Hi, EndStepSchema as Hn, SequenceSchema as Hr, DEFAULT_TEXT_SPEED as Ht, ASSET_KINDS as I, FlagName as Ii, AutoplayEndStepSchema as In, ImageFitSchema as Ir, DEFAULT_SCENE_FADE_MS as It, UPLOAD_ACCEPT as J, HoldEndStepSchema as Jn, TONE_MOODS as Jr, StorySettingsSchema as Jt, ROLE_MEDIA as K, Unit as Ki, ForkStepSchema as Kn, BgStyleSchema as Kr, SCENE_STARTS as Kt, ASSET_ORIGIN_KINDS as L, FlagValue as Li, AutoplayStartStepSchema as Ln, ImageFocusSchema as Lr, DEFAULT_SCENE_GAP_MS as Lt, spriteCell as M, conditionUsesCompleted as Mi, forkBlockEnd as Mn, AnimationSchema as Mr, BoxStyleSchema as Mt, spriteFrame as N, AssetKey as Ni, leaveTarget as Nn, EASINGS as Nr, CORNERS as Nt, GRAPHIC_BLEND_MODES as O, resolveEffect as Oi, resolveTransition as On, DEFAULT_AUTOPLAY_DELAY_MS as Or, triggerPresentation as Ot, spriteFrameRect as P, AssetRefOrEmpty as Pi, routeChain as Pn, EasingSchema as Pr, CornersSchema as Pt, VIDEO_WARN_BYTES as Q, NarrationStepSchema as Qn, FACE_SIDES as Qr, TEXT_SPEEDS as Qt, ASSET_PREFIX as R, HexColor as Ri, ChoiceOptionSchema as Rn, ImageMotionSchema as Rr, DEFAULT_SCENE_START as Rt, newStoryDocument as S, EFFECT_NAMES as Si, nameForLanguage as Sn, lineModeIsAutomatic as Sr, SceneSchema as St, CollectionSchema as T, Size as Ti, stageArtOf as Tn, resolveLinePresentation as Tr, TriggerPresentationSchema as Tt, HIDDEN_ROLES as U, SLOTS as Ui, EventStepSchema as Un, BG_STYLES as Ur, DEFAULT_TEXT_STYLE as Ut, AssetKind as V, Pos as Vi, EXPR_CHANGES as Vn, SequenceItemSchema as Vr, DEFAULT_STYLES as Vt, IMAGE_SIZE as W, Slot as Wi, ExprChangeSchema as Wn, BRIGHTNESS_MAX as Wr, NameTagStyleSchema as Wt, UPLOAD_MAX_BYTES as X, LineStepSchema as Xn, DEFAULT_PORTRAIT_POSITION as Xr, TAG_BORDER_PRESETS as Xt, UPLOAD_ACCEPT_ALL as Y, LeaveStepSchema as Yn, ToneMood as Yr, TAG_BACKGROUND_PRESETS as Yt, UPLOAD_TYPES as Z, MarkStepSchema as Zn, DEFAULT_PORTRAIT_SETTINGS as Zr, TEXT_PRESETS as Zt, SchemaVersionError as _, resolvePortraitEmphasis as _i, faceOf as _n, SpeakerBadgeSchema as _r, translationEntry as _t, stepReference as a, PORTRAIT_PICTURES as ai, resolveNameTag as an, TransitionModeSchema as ar, parseAssetOriginRequest as at, MAX_DOCUMENT_BYTES as b, showsStage as bi, looksOf as bn, TextPositionSchema as br, DEFAULT_TRIGGER_PRESENTATION as bt, referencedCharacters as c, PORTRAIT_TONES as ci, CharacterSchema as cn, DEFAULT_NARRATION_PRESENTATION as cr, snapImageWidth as ct, branchingEventSteps as d, PortraitLayerSchema as di, LooksSchema as dn, LineEntranceSchema as dr, StringTableSchema as dt, LinePortraitSchema as ei, TEXT_STYLES as en, SetStepSchema as er, collectAssetRoles as et, deriveContract as f, PortraitPictureSchema as fi, PortraitCropSchema as fn, LinePresentationSchema as fr, extractMarkupTags as ft, STORY_MIGRATIONS as g, TONE_LOOK as gi, expressionNames as gn, SPEAKER_BADGES as gr, textOf as gt, validateStory as h, PortraitToneSchema as hi, characterIdFromName as hn, PresentationDefaultsSchema as hr, markupMatches as ht, stageReference as i, PORTRAIT_LAYERS as ii, resolveBoxStyle as in, TransitionChannelSchema as ir, isAssetRole as it, SpriteSheetSchema as j, conditionFlags as ji, effectiveWhen as jn, resolveDialogPlayback as jr, BORDER_PRESETS as jt, GraphicAppearanceSchema as k, ConditionSchema as ki, transitionLength as kn, DialogPlaybackSchema as kr, triggeredScenes as kt, renameCharacterRefs as l, PortraitAnimationSchema as li, DEFAULT_HEAD as ln, LINE_ENTRANCES as lr, sniffUploadType as lt, hasErrors as m, PortraitShowSchema as mi, characterFullName as mn, NarrationPresentationSchema as mr, findStaleTranslations as mt, sequenceDraftJsonSchema as n, PORTRAIT_ANIMATIONS as ni, TextStyleSchema as nn, TRANSITION_CHANNELS as nr, formatAssetOriginRequest as nt, storyDraftJsonSchema as o, PORTRAIT_POSITIONS as oi, CharacterFitSchema as on, TransitionStepSchema as or, parseByteRange as ot, eventResultFlag as p, PortraitSettingsSchema as pi, autoFlip as pn, NARRATION_MODES as pr, findMissingTranslations as pt, ROLE_PREFIX as q, GotoStepSchema as qn, StageOpSchema as qr, SceneStartSchema as qt, sequenceItemReference as r, PORTRAIT_IF_TAKEN as ri, cpsOf as rn, TRANSITION_MODES as rr, isAssetPrefix as rt, autoplayBlockAt as s, PORTRAIT_SHOWS as si, CharacterHeadSchema as sn, DEFAULT_LINE_PRESENTATION as sr, renameAssetRefs as st, describeType as t, MAX_DIM_EXTRA as ti, TextSpeedSchema as tn, StepSchema as tr, forEachAssetRef as tt, standInCharacters as u, PortraitIfTakenSchema as ui, LOOKS as un, LINE_MODES as ur, StringEntrySchema as ut, migrateStoryDocument as v, resolvePortraitSettings as vi, fitOf as vn, TEXT_ALIGNMENTS as vr, hashText as vt, CollectionNodeSchema as w, EffectName as wi, publicCharacter as wn, presentationForNewStep as wr, TRIGGER_PRESENTATIONS as wt, StoryDocumentSchema as x, toneLookFor as xi, mergeCharacters as xn, automaticLineMode as xr, FlagDeclSchema as xt, parseStory as y, showsDialog as yi, headOf as yn, TEXT_POSITIONS as yr, ContractSchema as yt, ASSET_ROLES as z, Id as zi, ChoiceStepSchema as zn, SequenceDefaultsSchema as zr, DEFAULT_SCENE_TITLE_GAP_MS as zt };
+export { UPLOAD_ACCEPT_ALL as $, GotoStepSchema as $n, StageOpSchema as $r, SceneStartSchema as $t, parseCharacterChanges as A, EffectName as Ai, publicCharacter as An, presentationForNewStep as Ar, TRIGGER_PRESENTATIONS as At, ASSET_NOTE_MAX as B, AssetRefOrEmpty as Bi, routeChain as Bn, EasingSchema as Br, CornersSchema as Bt, ExportBundleSchema as C, resolvePortraitEmphasis as Ci, faceOf as Cn, SpeakerBadgeSchema as Cr, ContractSchema as Ct, ThemeSchema as D, toneLookFor as Di, mergeCharacters as Dn, automaticLineMode as Dr, RequestedFileSchema as Dt, FlagRegistrySchema as E, showsStage as Ei, looksOf as En, TextPositionSchema as Er, MAX_REQUESTED_FILES as Et, spriteCell as F, ConditionSchema as Fi, transitionLength as Fn, DialogPlaybackSchema as Fr, triggeredScenes as Ft, AssetKind as G, Id as Gi, ChoiceStepSchema as Gn, SequenceDefaultsSchema as Gr, DEFAULT_SCENE_TITLE_GAP_MS as Gt, ASSET_PREFIX as H, FlagName as Hi, AutoplayEndStepSchema as Hn, ImageFitSchema as Hr, DEFAULT_SCENE_FADE_MS as Ht, spriteFrame as I, SetOpSchema as Ii, applyRoutes as In, resolveAutoplaySettings as Ir, BACKGROUND_PRESETS as It, IMAGE_SIZE as J, SCHEMA_VERSION as Ji, EndStepSchema as Jn, SequenceSchema as Jr, DEFAULT_TEXT_SPEED as Jt, AssetManifestSchema as K, LangCode as Ki, DelayStepSchema as Kn, SequenceIdSchema as Kr, DEFAULT_SCENE_TITLE_MS as Kt, spriteFrameRect as L, conditionFlags as Li, effectiveWhen as Ln, resolveDialogPlayback as Lr, BORDER_PRESETS as Lt, GraphicAppearanceSchema as M, Speed as Mi, stagePictureOf as Mn, resolveNarrationPresentation as Mr, TriggerSchema as Mt, GraphicSizeSchema as N, effectSettingsShape as Ni, TRANSITION_DEFAULTS as Nn, AutoplaySettingsSchema as Nr, storyScenes as Nt, applyCharacterChanges as O, EFFECT_NAMES as Oi, nameForLanguage as On, lineModeIsAutomatic as Or, SceneSchema as Ot, SpriteSheetSchema as P, resolveEffect as Pi, resolveTransition as Pn, DEFAULT_AUTOPLAY_DELAY_MS as Pr, triggerPresentation as Pt, UPLOAD_ACCEPT as Q, Unit as Qi, ForkStepSchema as Qn, BgStyleSchema as Qr, SCENE_STARTS as Qt, spriteStartOffset as R, conditionUsesCompleted as Ri, forkBlockEnd as Rn, AnimationSchema as Rr, BoxStyleSchema as Rt, newStoryDocument as S, TONE_LOOK as Si, expressionNames as Sn, SPEAKER_BADGES as Sr, hashText as St, CollectionSchema as T, showsDialog as Ti, headOf as Tn, TEXT_POSITIONS as Tr, FlagDeclSchema as Tt, ASSET_ROLES as U, FlagValue as Ui, AutoplayStartStepSchema as Un, ImageFocusSchema as Ur, DEFAULT_SCENE_GAP_MS as Ut, ASSET_ORIGIN_KINDS as V, DurationMs as Vi, routeIndex as Vn, IMAGE_FOCUS as Vr, DEFAULT_NAME_TAG as Vt, AssetEntrySchema as W, HexColor as Wi, ChoiceOptionSchema as Wn, ImageMotionSchema as Wr, DEFAULT_SCENE_START as Wt, ROLE_MEDIA as X, Slot as Xi, ExprChangeSchema as Xn, BRIGHTNESS_MAX as Xr, NameTagStyleSchema as Xt, IMAGE_WIDTHS as Y, SLOTS as Yi, EventStepSchema as Yn, BG_STYLES as Yr, DEFAULT_TEXT_STYLE as Yt, ROLE_PREFIX as Z, StringKey as Zi, ForkRouteSchema as Zn, BRIGHTNESS_MIN as Zr, SCENE_CARD_MIN_MS as Zt, SchemaVersionError as _, PortraitLayerSchema as _i, LooksSchema as _n, LineEntranceSchema as _r, findMissingTranslations as _t, stepReference as a, FaceSideSchema as ai, TEXT_SPEED_CPS as an, SequenceStepSchema as ar, forEachAssetRef as at, MAX_DOCUMENT_BYTES as b, PortraitShowSchema as bi, characterFullName as bn, NarrationPresentationSchema as br, textOf as bt, referencedCharacters as c, PORTRAIT_ANIMATIONS as ci, TextStyleSchema as cn, TRANSITION_CHANNELS as cr, isAssetRole as ct, branchingEventSteps as d, PORTRAIT_PICTURES as di, resolveNameTag as dn, TransitionModeSchema as dr, renameAssetRefs as dt, TONE_MOODS as ei, StorySettingsSchema as en, HoldEndStepSchema as er, UPLOAD_MAX_BYTES as et, deriveContract as f, PORTRAIT_POSITIONS as fi, CharacterFitSchema as fn, TransitionStepSchema as fr, snapImageWidth as ft, STORY_MIGRATIONS as g, PortraitIfTakenSchema as gi, LOOKS as gn, LINE_MODES as gr, extractMarkupTags as gt, validateStory as h, PortraitAnimationSchema as hi, DEFAULT_HEAD as hn, LINE_ENTRANCES as hr, StringTableSchema as ht, stageReference as i, FACE_SIDES as ii, TEXT_SPEEDS as in, NarrationStepSchema as ir, collectAssetRoles as it, GRAPHIC_BLEND_MODES as j, Size as ji, stageArtOf as jn, resolveLinePresentation as jr, TriggerPresentationSchema as jt, describeCharacterChanges as k, EFFECT_SPECS as ki, portraitOf as kn, patchNarrationPresentation as kr, StorySchema as kt, renameCharacterRefs as l, PORTRAIT_IF_TAKEN as li, cpsOf as ln, TRANSITION_MODES as lr, parseAssetOriginRequest as lt, hasErrors as m, PORTRAIT_TONES as mi, CharacterSchema as mn, DEFAULT_NARRATION_PRESENTATION as mr, StringEntrySchema as mt, sequenceDraftJsonSchema as n, DEFAULT_PORTRAIT_POSITION as ni, TAG_BORDER_PRESETS as nn, LineStepSchema as nr, VIDEO_WARN_BYTES as nt, storyDraftJsonSchema as o, LinePortraitSchema as oi, TEXT_STYLES as on, SetStepSchema as or, formatAssetOriginRequest as ot, eventResultFlag as p, PORTRAIT_SHOWS as pi, CharacterHeadSchema as pn, DEFAULT_LINE_PRESENTATION as pr, sniffUploadType as pt, HIDDEN_ROLES as q, Pos as qi, EXPR_CHANGES as qn, SequenceItemSchema as qr, DEFAULT_STYLES as qt, sequenceItemReference as r, DEFAULT_PORTRAIT_SETTINGS as ri, TEXT_PRESETS as rn, MarkStepSchema as rr, assetSlugFromName as rt, autoplayBlockAt as s, MAX_DIM_EXTRA as si, TextSpeedSchema as sn, StepSchema as sr, isAssetPrefix as st, describeType as t, ToneMood as ti, TAG_BACKGROUND_PRESETS as tn, LeaveStepSchema as tr, UPLOAD_TYPES as tt, standInCharacters as u, PORTRAIT_LAYERS as ui, resolveBoxStyle as un, TransitionChannelSchema as ur, parseByteRange as ut, migrateStoryDocument as v, PortraitPictureSchema as vi, PortraitCropSchema as vn, LinePresentationSchema as vr, findStaleTranslations as vt, CollectionNodeSchema as w, resolvePortraitSettings as wi, fitOf as wn, TEXT_ALIGNMENTS as wr, DEFAULT_TRIGGER_PRESENTATION as wt, StoryDocumentSchema as x, PortraitToneSchema as xi, characterIdFromName as xn, PresentationDefaultsSchema as xr, translationEntry as xt, parseStory as y, PortraitSettingsSchema as yi, autoFlip as yn, NARRATION_MODES as yr, markupMatches as yt, ASSET_KINDS as z, AssetKey as zi, leaveTarget as zn, EASINGS as zr, CORNERS as zt };

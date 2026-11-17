@@ -12,6 +12,7 @@ export * from './hash';
 export * from './assets';
 export * from './spriteSheet';
 export * from './character';
+export * from './characterChanges';
 export * from './workspace';
 export * from './collection';
 export * from './bundle';

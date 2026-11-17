@@ -1,4 +1,24 @@
 import { z } from 'zod';
+/**
+ * A file the story needs that the library does not have yet (plan 015): the name the story will use, what kind of
+ * file it is and what it should be, for the author to supply. Editor only: it is not in the published bundle.
+ */
+export declare const RequestedFileSchema: z.ZodObject<{
+    name: z.ZodString;
+    role: z.ZodEnum<{
+        object: "object";
+        music: "music";
+        sfx: "sfx";
+        video: "video";
+        voice: "voice";
+        portrait: "portrait";
+        scene: "scene";
+        background: "background";
+    }>;
+    description: z.ZodString;
+}, z.core.$strict>;
+export type RequestedFile = z.infer<typeof RequestedFileSchema>;
+export declare const MAX_REQUESTED_FILES = 100;
 export declare const FlagDeclSchema: z.ZodObject<{
     type: z.ZodEnum<{
         string: "string";
@@ -2880,6 +2900,20 @@ export declare const StorySchema: z.ZodObject<{
             }, z.core.$strict>>;
         }, z.core.$strict>>;
     }, z.core.$strict>>;
+    requestedFiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        role: z.ZodEnum<{
+            object: "object";
+            music: "music";
+            sfx: "sfx";
+            video: "video";
+            voice: "voice";
+            portrait: "portrait";
+            scene: "scene";
+            background: "background";
+        }>;
+        description: z.ZodString;
+    }, z.core.$strict>>>;
     contract: z.ZodPrefault<z.ZodObject<{
         exits: z.ZodDefault<z.ZodArray<z.ZodString>>;
         reads: z.ZodDefault<z.ZodArray<z.ZodString>>;

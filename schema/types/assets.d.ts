@@ -45,6 +45,8 @@ export interface AssetOrigin {
     id?: string;
     name?: string;
     guess?: boolean;
+    /** How many times an AI app swapped the contents of this file (`replace_file`), which has a limit. */
+    replaced?: number;
 }
 /** What an upload says about where it comes from: `story:<id>`, `module:<game id>`, or just `assets`, `import`, `ai`. */
 export interface AssetOriginRequest {
@@ -185,6 +187,8 @@ export declare function collectAssetRoles(node: unknown, found: Map<string, Asse
  * story's `assets` list and a character's `expressions`. Dialogue that reads the same as a name is not counted.
  */
 export declare function forEachAssetRef(node: unknown, found: (name: string) => void): void;
+/** The longest note an asset can have: what it is, its mood and where it fits (editor only, never exported). */
+export declare const ASSET_NOTE_MAX = 500;
 /** `bytes=500-` or `bytes=0-999` as numbers; null when absent or not a single plain range. */
 export declare function parseByteRange(header: string | undefined): {
     start: number;

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.21.0
+
+- **Speech bubbles** (built from the Studio at v0.22.0). A bubble no longer waits when its speaker is already standing on
+  the stage; it waits only while the portrait is arriving with that line. When the speaker changes, the new bubble fades
+  in over a short moment instead of jumping. Fixed boxes and narration are unchanged.
+- **Scene title over a sequence.** The scene title in the top-left corner is drawn above a sequence, like the story title and
+  the reading progress.
+- **Portrait crops can stand partly outside the frame.** `PortraitCropSchema` accepts `x` and `y` from -100 to 200 (it was 0
+  to 100), and the picture is placed from them in pixels, so the old values look exactly as before.
+- **Update before you import new stories.** A character whose dialog portrait was dragged past the frame has a crop that the
+  schema in 0.20.x refuses, so a game on an older kit refuses that story. Stories made earlier are unaffected.
+- **New in the schema.** `characterChanges` (the changes an AI app proposes for a character, with `parseCharacterChanges`,
+  `applyCharacterChanges` and `describeCharacterChanges`), `RequestedFileSchema` and `MAX_REQUESTED_FILES` for files a story
+  asks its author to supply (editor only, not in a published bundle), and `AssetOrigin.replaced`. A game does not need any of
+  them. `PLAYER_CONTRACT` stays 1.
+
 ## 0.20.0
 
 - **Portraits turn toward the center by themselves** (built from the Studio after v0.19.0). A character, or a single

@@ -194,6 +194,20 @@ export declare const StoryDocumentSchema: z.ZodObject<{
                 }, z.core.$strict>>;
             }, z.core.$strict>>;
         }, z.core.$strict>>;
+        requestedFiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            role: z.ZodEnum<{
+                object: "object";
+                music: "music";
+                sfx: "sfx";
+                video: "video";
+                voice: "voice";
+                portrait: "portrait";
+                scene: "scene";
+                background: "background";
+            }>;
+            description: z.ZodString;
+        }, z.core.$strict>>>;
         contract: z.ZodPrefault<z.ZodObject<{
             exits: z.ZodDefault<z.ZodArray<z.ZodString>>;
             reads: z.ZodDefault<z.ZodArray<z.ZodString>>;
