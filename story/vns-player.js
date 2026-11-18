@@ -15307,12 +15307,12 @@ var XE = {
 			};
 			l.decode ? l.decode().then(u, u) : (l.onload = u, l.onerror = u, l.complete && u());
 		}), (e, t) => (R(), B(ns, {
+			ref_key: "root",
+			ref: o,
 			name: I(r),
 			tag: "div",
 			class: "grid h-full grid-rows-[100%]",
 			duration: I(n).change === "in-out" ? 250 : void 0,
-			ref_key: "root",
-			ref: o,
 			style: M(I(s))
 		}, {
 			default: Nn(() => [I(n).head ? (R(), z("span", {
@@ -15493,10 +15493,10 @@ var XE = {
 		}), E = W(() => n.animation ?? f.value.animation), D = /* @__PURE__ */ F(null);
 		Bn(() => T.value.map((e) => [e.who, e.homeX]), (e) => {
 			let t = /* @__PURE__ */ new Set();
-			for (let [n, r] of e) {
-				t.add(n);
-				let e = y[n];
-				y[n] = r, e !== void 0 && E.value !== "cut" && D.value?.who !== n && Math.abs(r - e) >= uD && C(n, e);
+			for (let [r, i] of e) {
+				t.add(r);
+				let e = y[r];
+				y[r] = i, e !== void 0 && E.value !== "cut" && !n.selectable && D.value?.who !== r && Math.abs(i - e) >= uD && C(r, e);
 			}
 			for (let e of Object.keys(y)) t.has(e) || Reflect.deleteProperty(y, e);
 		}, { flush: "pre" });
@@ -15614,7 +15614,11 @@ var XE = {
 			}
 		], le = /* @__PURE__ */ F(null);
 		function ue(e, t, r) {
-			if (!n.headEditable || r.button !== 0) return;
+			if (!n.headEditable) {
+				r.stopPropagation();
+				return;
+			}
+			if (r.button !== 0) return;
 			let i = r.currentTarget.closest("[data-head-guide]"), a = i?.closest("[data-stage-portrait]");
 			if (!i || !a) return;
 			r.stopPropagation(), r.preventDefault(), r.currentTarget.setPointerCapture(r.pointerId);
@@ -15758,8 +15762,8 @@ var XE = {
 					},
 					"data-enter-delayed": !!e.enterDelayMs,
 					tag: "div",
-					onBeforeLeave: w,
-					class: "pointer-events-none absolute inset-0"
+					class: "pointer-events-none absolute inset-0",
+					onBeforeLeave: w
 				}, {
 					default: Nn(() => [(R(!0), z(L, null, Nr(I(T), (t) => (R(), z("div", {
 						key: t.who,
@@ -15771,7 +15775,7 @@ var XE = {
 								kind: "portrait",
 								id: t.who
 							}),
-							I(D)?.who === t.who || t.hop === "jump" ? "" : t.hop ? "transition-opacity ease-in-out" : "transition-[left,bottom,height,filter] duration-1000 ease-in-out",
+							I(D)?.who === t.who || t.hop === "jump" || e.selectable ? "" : t.hop ? "transition-opacity ease-in-out" : "transition-[left,bottom,height,filter] duration-1000 ease-in-out",
 							A(t.who) ? "cursor-grab touch-none active:cursor-grabbing" : ""
 						]]),
 						style: M(t.hop ? {
@@ -15809,7 +15813,7 @@ var XE = {
 						])),
 						t.head && e.headGuide ? (R(), z("span", {
 							key: 2,
-							class: N(["absolute z-20 aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-amber-300 shadow-[0_0_0_1px_rgb(0_0_0/0.45)] transition-opacity", [e.headGuide === "focus" ? "bg-amber-300/25 opacity-100" : "bg-amber-300/10 opacity-75", e.headEditable ? "group pointer-events-auto cursor-move touch-none" : "pointer-events-none"]]),
+							class: N(["absolute z-20 aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-amber-300 shadow-[0_0_0_1px_rgb(0_0_0/0.45)] transition-opacity", [e.headGuide === "focus" ? "bg-amber-300/25 opacity-100" : "bg-amber-300/10 opacity-75", e.headEditable ? "group pointer-events-auto cursor-move touch-none" : "pointer-events-auto cursor-pointer"]]),
 							style: M(t.head),
 							"data-head-dragging": I(le)?.who === t.who || void 0,
 							"data-head-guide": "",
