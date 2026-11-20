@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.22.2
+
+- **The story player mounts again in a game** (built from the Studio at v0.23.5). Since 0.21.0 the player failed to mount
+  outside the Studio with `TypeError: t.languageKey is not a function`, because the stand-alone build left the helper that
+  maps a story's language to the page's `lang` attribute undefined. The player now carries it itself, so a game needs
+  nothing extra. A game that added a `languageKey` of its own as a workaround can remove it.
+
 ## 0.22.1
 
 - **Portraits.** A dimmed portrait keeps its dimmed look while it fades out. A portrait that jumps across the stage fades

@@ -17155,7 +17155,7 @@ var VD = ["lang"], HD = ["data-stage-layout", "data-text-style"], UD = {
 				ref: m,
 				"data-owns-keys": "",
 				class: N(I(b).outer()),
-				lang: t.languageKey(I(a).lang.value)
+				lang: I(Ly)(I(a).lang.value)
 			}, [
 				V("div", {
 					ref_key: "stageEl",
@@ -17456,7 +17456,7 @@ var VD = ["lang"], HD = ["data-stage-layout", "data-text-style"], UD = {
 			], 10, VD);
 		};
 	}
-}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-c0b4d762]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-c0b4d762"]]), ZD = {
+}), [["styles", ["@media (pointer:coarse){.vn-player[data-v-39693805]{-webkit-user-select:none;user-select:none}}"]], ["__scopeId", "data-v-39693805"]]), ZD = {
 	en: {
 		progress: "Story progress",
 		progressExact: "{current} / {total}",
